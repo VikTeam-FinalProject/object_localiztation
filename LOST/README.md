@@ -270,7 +270,7 @@ python tools/convert_pretrained_to_detectron_format.py --input ./data/dino_resne
 
 # Prepare the clustered LOST pseudo-box data for training
 python tools/prepare_voc_LOST_OD_pseudo_boxes_in_detectron2_format.py --year 2007 --pboxes $LOST/data/LOST_predictions/LOST_VOC07_clustered_20clu.pkl
-
+w
 # Format VOC data to fit COCO style
 python tools/prepare_voc_data_in_coco_style.py --voc07_dir  $LOST/datasets/VOC2007 --voc12_dir $LOST/datasets/VOC2012
 

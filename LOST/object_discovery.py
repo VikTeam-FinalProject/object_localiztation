@@ -35,12 +35,16 @@ def lost(feats, dims, scales, init_image_size, k_patches=100):
         scores: lowest degree scores for all patches
         seed: selected patch corresponding to an object
     """
+    print("feats.shape", feats.shape)
+    print('init_image_size', init_image_size)
+    print('dims', dims)
     # Compute the similarity
     A = (feats @ feats.transpose(1, 2)).squeeze()
 
     # Compute the inverse degree centrality measure per patch
     sorted_patches, scores = patch_scoring(A)
-
+    print('shap of sorted_patches', sorted_patches.shape)
+    print('sorted_patches', sorted_patches)
     # Select the initial seed
     seed = sorted_patches[0]
 
@@ -82,22 +86,28 @@ def detect_box(A, seed, dims, initial_im_size=None, scales=None):
     """
     Extract a box corresponding to the seed patch. Among connected components extract from the affinity matrix, select the one corresponding to the seed patch.
     """
-    w_featmap, h_featmap = dims
-
+    w_featmap, h_featmap = dims # (24, 32)
+    print('A 6 6: ', A[ :6])
     correl = A.reshape(w_featmap, h_featmap).float()
-
+    print('correl.shape', correl.shape,  '\n',correl[:6, :6])
     # Compute connected components
     labeled_array, num_features = scipy.ndimage.label(correl.cpu().numpy() > 0.0)
-
+    print('num_features', num_features)
+    print('labeled_array.shape', labeled_array.shape, '\n', labeled_array[:6, :6])
     # Find connected component corresponding to the initial seed
-    cc = labeled_array[np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))]
-
+    print('seed shape', seed.shape)
+    print('seed', seed)
+    seed_xy = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+    print('tmp_xyz', seed_xy)
+    seed_type_fore_or_background = labeled_array[seed_xy]
+    print('cc', seed_type_fore_or_background)
+    
     # Should not happen with LOST
-    if cc == 0:
+    if seed_type_fore_or_background == 0:
         raise ValueError("The seed is in the background component.")
 
     # Find box
-    mask = np.where(labeled_array == cc)
+    mask = np.where(labeled_array == seed_type_fore_or_background)
     # Add +1 because excluded max
     ymin, ymax = min(mask[0]), max(mask[0]) + 1
     xmin, xmax = min(mask[1]), max(mask[1]) + 1

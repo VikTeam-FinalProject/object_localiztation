@@ -19,7 +19,12 @@ from torchvision.models.resnet import resnet50
 from torchvision.models.vgg import vgg16
 
 import dino.vision_transformer as vits
-
+import sys
+sys.path.append('/home/thekhoi/futme/RTD-ueh/dinov2_ueh')
+sys.path.remove('/home/thekhoi/anaconda3/envs/env_dinoconda/lib/python3.9/site-packages/dinov2-0.0.1-py3.9.egg')
+for i in sys.path:
+    print(i)
+from dinov2.models.vision_transformer import vit_small
 def get_model(arch, patch_size, resnet_dilate, device):
     if "resnet" in arch:
         if resnet_dilate == 1:
@@ -44,6 +49,12 @@ def get_model(arch, patch_size, resnet_dilate, device):
             model = vgg16(pretrained=True)
         else:
             model = vgg16(pretrained=False)
+    elif "dinov2" in arch:
+        model = vit_small(patch_size=14,       
+                    img_size=526,
+                    init_values=1.0,
+                    block_chunks=0
+                )
     else:
         model = vits.__dict__[arch](patch_size=patch_size, num_classes=0)
 
@@ -63,10 +74,23 @@ def get_model(arch, patch_size, resnet_dilate, device):
             url = "dino_vitbase8_pretrain/dino_vitbase8_pretrain.pth"
         elif arch == "resnet50":
             url = "dino_resnet50_pretrain/dino_resnet50_pretrain.pth"
+        elif "dinov2" in arch:
+            # url = "dinov2_vitl14_pretrain.pth"
+            print("loading dinov2...")
+            MODEL_PATH = '/home/thekhoi/futme/RTD-ueh/dinov2_ueh/model/dinov2_vits14_pretrain.pth'
+            model.load_state_dict(torch.load(MODEL_PATH, map_location='cuda:0'))
+            for p in model.parameters():
+                p.requires_grad = False
+
+            #model = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
+            model.eval()
+            model.to(device)
+            return model
         if url is not None:
             print(
                 "Since no pretrained weights have been provided, we load the reference pretrained DINO weights."
             )
+
             state_dict = torch.hub.load_state_dict_from_url(
                 url="https://dl.fbaipublicfiles.com/dino/" + url
             )
