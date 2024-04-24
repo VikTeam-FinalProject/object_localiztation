@@ -36,11 +36,27 @@ def lost(feats, dims, scales, init_image_size, k_patches=100):
         seed: selected patch corresponding to an object
     """
     print("feats.shape", feats.shape)
+    feats_binary = feats.clone()
+    feats_binary[feats_binary>0] = 0
+    feats_binary[feats_binary<0] = 1
+    feats_binary = feats_binary.cpu().numpy()*255
+    feats_binary = np.expand_dims(feats_binary.squeeze(), -1)
+    print('feats bin', feats_binary)
+    print('feats_binary.shape', feats_binary.shape)
+    import cv2
+    cv2.imwrite(f'feats_binary_{feats.shape[1]}.png', feats_binary)
+    
+    feat_file = 'feat_tensor.txt'
+    with open(feat_file, 'w') as f:
+        for line in feats[0]:
+            f.write(str(line) + '\n')
     print('init_image_size', init_image_size)
     print('dims', dims)
     # Compute the similarity
+    print('feats is: ', feats) # 1, 672, 384
+    print('sum feature of first patch: ', torch.sum(feats[0][0]))   # 1 con so
     A = (feats @ feats.transpose(1, 2)).squeeze()
-
+    print('A is: ', A)
     # Compute the inverse degree centrality measure per patch
     sorted_patches, scores = patch_scoring(A)
     print('shap of sorted_patches', sorted_patches.shape)
@@ -67,7 +83,6 @@ def patch_scoring(M, threshold=0.):
     """
     # Cloning important
     A = M.clone()
-
     # Zero diagonal
     A.fill_diagonal_(0)
 
@@ -77,6 +92,7 @@ def patch_scoring(M, threshold=0.):
 
     # Sort pixels by inverse degree
     cent = -torch.sum(A > threshold, dim=1).type(torch.float32)
+    print('cent', cent)
     sel = torch.argsort(cent, descending=True)
 
     return sel, cent
