@@ -291,7 +291,7 @@ if __name__ == "__main__":
 
         # ------------ Apply LOST -------------------------------------------
         if not args.dinoseg:
-            pred, A, scores, seed, potentials = lost(
+            pred, A, scores, seed, potentials, similars = lost(
                 feats,
                 [w_featmap, h_featmap],
                 scales,
@@ -319,7 +319,7 @@ if __name__ == "__main__":
 
             elif args.visualize == "pred":
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, potentials=potentials)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, potentials=potentials, similars=similars)
 
         # Save the prediction
         preds_dict[im_name] = pred

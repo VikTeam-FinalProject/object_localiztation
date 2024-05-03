@@ -54,7 +54,7 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
         M, seed, dims, scales=scales, initial_im_size=init_image_size[1:]
     )
 
-    return np.asarray(pred), A, scores, seed, potentials
+    return np.asarray(pred), A, scores, seed, potentials, similars
 
 
 def patch_scoring(M, dynamic_threshold: bool, threshold=0.):

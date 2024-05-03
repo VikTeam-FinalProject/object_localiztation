@@ -21,7 +21,7 @@ from PIL import Image
 
 import matplotlib.pyplot as plt
 
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=True, potentials=None):
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=True, potentials=None, similars=None):
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
@@ -61,6 +61,17 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
                 ),
                 (128, 0, 128), 1, # Purple
+            )
+        for seed in similars:
+            s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+            size = np.asarray(scales) / 2
+            cv2.rectangle(
+                image,
+                (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
+                ),
+                (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
+                ),
+                (0, 128, 128), 1, # Teal
             )
         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
         Image.fromarray(image).save(pltname)
