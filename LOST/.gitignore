@@ -1,0 +1,4 @@
+outputs/*
+*.pyc
+datasets/
+dino/

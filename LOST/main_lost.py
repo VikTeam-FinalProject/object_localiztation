@@ -26,6 +26,8 @@ from PIL import Image
 
 from networks import get_model
 from datasets import ImageDataset, Dataset, bbox_iou
+import sys
+# sys.path.append('..')
 from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion
 from object_discovery import lost, detect_box, dino_seg
 
@@ -114,7 +116,12 @@ if __name__ == "__main__":
     parser.add_argument("--dinoseg", action="store_true", help="Apply DINO-seg baseline.")
     parser.add_argument("--dinoseg_head", type=int, default=4)
 
+    # Dynamic threshold
+    parser.add_argument("--dynamic_thres", action="store_true", help="Use dynamic thresholding.")
     args = parser.parse_args()
+
+    if args.dynamic_thres:
+        print("Using dynamic thresholding.")
 
     if args.image_path is not None:
         args.save_predictions = False
@@ -236,7 +243,6 @@ if __name__ == "__main__":
                     pred = dino_seg(attentions, (w_featmap, h_featmap), args.patch_size, head=args.dinoseg_head)
                     pred = np.asarray(pred)
                 else:
-                    print('qkv shape: ', feat_out["qkv"].shape)
                     # Extract the qkv features of the last attention layer
                     qkv = (
                         feat_out["qkv"]
@@ -247,7 +253,7 @@ if __name__ == "__main__":
                     k = k.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     q = q.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     v = v.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
-                    print('q k v shape: ', q.shape, k.shape, v.shape)
+
                     # Modality selection
                     if args.which_features == "k":
                         feats = k[:, 1:, :]
@@ -285,12 +291,13 @@ if __name__ == "__main__":
 
         # ------------ Apply LOST -------------------------------------------
         if not args.dinoseg:
-            pred, A, scores, seed = lost(
+            pred, A, scores, seed, potentials = lost(
                 feats,
                 [w_featmap, h_featmap],
                 scales,
                 init_image_size,
                 k_patches=args.k_patches,
+                dynamic_thres=args.dynamic_thres
             )
 
             # ------------ Visualizations -------------------------------------------
@@ -312,7 +319,7 @@ if __name__ == "__main__":
 
             elif args.visualize == "pred":
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, potentials=potentials)
 
         # Save the prediction
         preds_dict[im_name] = pred
@@ -326,7 +333,7 @@ if __name__ == "__main__":
 
         if torch.any(ious >= 0.5):
             corloc[im_id] = 1
-        
+
         cnt += 1
         if cnt % 50 == 0:
             pbar.set_description(f"Found {int(np.sum(corloc))}/{cnt}")

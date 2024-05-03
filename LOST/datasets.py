@@ -113,7 +113,7 @@ class Dataset:
         Load the image corresponding to the im_name
         """
         if "VOC" in self.dataset_name:
-            image = skimage.io.imread(f"/datasets_local/VOC{self.year}/JPEGImages/{im_name}")
+            image = skimage.io.imread(f"{self.root_path}/VOCdevkit/VOC{self.year}/JPEGImages/{im_name}")
         elif "COCO" in self.dataset_name:
             im_path = self.path_20k[self.sel_20k.index(im_name)]
             image = skimage.io.imread(f"/datasets_local/COCO/images/{im_path}")

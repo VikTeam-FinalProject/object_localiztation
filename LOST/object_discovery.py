@@ -20,7 +20,7 @@ import numpy as np
 from datasets import bbox_iou
 
 
-def lost(feats, dims, scales, init_image_size, k_patches=100):
+def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False):
     """
     Implementation of LOST method.
     Inputs
@@ -35,32 +35,12 @@ def lost(feats, dims, scales, init_image_size, k_patches=100):
         scores: lowest degree scores for all patches
         seed: selected patch corresponding to an object
     """
-    print("feats.shape", feats.shape)
-    feats_binary = feats.clone()
-    feats_binary[feats_binary>0] = 0
-    feats_binary[feats_binary<0] = 1
-    feats_binary = feats_binary.cpu().numpy()*255
-    feats_binary = np.expand_dims(feats_binary.squeeze(), -1)
-    print('feats bin', feats_binary)
-    print('feats_binary.shape', feats_binary.shape)
-    import cv2
-    cv2.imwrite(f'feats_binary_{feats.shape[1]}.png', feats_binary)
-    
-    feat_file = 'feat_tensor.txt'
-    with open(feat_file, 'w') as f:
-        for line in feats[0]:
-            f.write(str(line) + '\n')
-    print('init_image_size', init_image_size)
-    print('dims', dims)
     # Compute the similarity
-    print('feats is: ', feats) # 1, 672, 384
-    print('sum feature of first patch: ', torch.sum(feats[0][0]))   # 1 con so
     A = (feats @ feats.transpose(1, 2)).squeeze()
-    print('A is: ', A)
+
     # Compute the inverse degree centrality measure per patch
-    sorted_patches, scores = patch_scoring(A)
-    print('shap of sorted_patches', sorted_patches.shape)
-    print('sorted_patches', sorted_patches)
+    sorted_patches, scores = patch_scoring(A, dynamic_thres)
+
     # Select the initial seed
     seed = sorted_patches[0]
 
@@ -74,15 +54,19 @@ def lost(feats, dims, scales, init_image_size, k_patches=100):
         M, seed, dims, scales=scales, initial_im_size=init_image_size[1:]
     )
 
-    return np.asarray(pred), A, scores, seed
+    return np.asarray(pred), A, scores, seed, potentials
 
 
-def patch_scoring(M, threshold=0.):
+def patch_scoring(M, dynamic_threshold: bool, threshold=0.):
     """
     Patch scoring based on the inverse degree.
+        dynamic_threshold: set to True will override the threshold value by mean of the matrix
     """
+    if dynamic_threshold:
+        threshold = torch.mean(M)
     # Cloning important
     A = M.clone()
+
     # Zero diagonal
     A.fill_diagonal_(0)
 
@@ -92,7 +76,6 @@ def patch_scoring(M, threshold=0.):
 
     # Sort pixels by inverse degree
     cent = -torch.sum(A > threshold, dim=1).type(torch.float32)
-    print('cent', cent)
     sel = torch.argsort(cent, descending=True)
 
     return sel, cent
@@ -102,28 +85,22 @@ def detect_box(A, seed, dims, initial_im_size=None, scales=None):
     """
     Extract a box corresponding to the seed patch. Among connected components extract from the affinity matrix, select the one corresponding to the seed patch.
     """
-    w_featmap, h_featmap = dims # (24, 32)
-    print('A 6 6: ', A[ :6])
+    w_featmap, h_featmap = dims
+
     correl = A.reshape(w_featmap, h_featmap).float()
-    print('correl.shape', correl.shape,  '\n',correl[:6, :6])
+
     # Compute connected components
     labeled_array, num_features = scipy.ndimage.label(correl.cpu().numpy() > 0.0)
-    print('num_features', num_features)
-    print('labeled_array.shape', labeled_array.shape, '\n', labeled_array[:6, :6])
+
     # Find connected component corresponding to the initial seed
-    print('seed shape', seed.shape)
-    print('seed', seed)
-    seed_xy = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
-    print('tmp_xyz', seed_xy)
-    seed_type_fore_or_background = labeled_array[seed_xy]
-    print('cc', seed_type_fore_or_background)
-    
+    cc = labeled_array[np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))]
+
     # Should not happen with LOST
-    if seed_type_fore_or_background == 0:
+    if cc == 0:
         raise ValueError("The seed is in the background component.")
 
     # Find box
-    mask = np.where(labeled_array == seed_type_fore_or_background)
+    mask = np.where(labeled_array == cc)
     # Add +1 because excluded max
     ymin, ymax = min(mask[0]), max(mask[0]) + 1
     xmin, xmax = min(mask[1]), max(mask[1]) + 1

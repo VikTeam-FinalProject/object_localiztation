@@ -18,12 +18,11 @@ import torch.nn as nn
 from torchvision.models.resnet import resnet50
 from torchvision.models.vgg import vgg16
 
-import dino.vision_transformer as vits
 import sys
 sys.path.append('/home/thekhoi/futme/RTD-ueh/dinov2_ueh')
 sys.path.remove('/home/thekhoi/anaconda3/envs/env_dinoconda/lib/python3.9/site-packages/dinov2-0.0.1-py3.9.egg')
-for i in sys.path:
-    print(i)
+import dino.vision_transformer as vits
+
 from dinov2.models.vision_transformer import vit_small
 def get_model(arch, patch_size, resnet_dilate, device):
     if "resnet" in arch:
@@ -55,6 +54,7 @@ def get_model(arch, patch_size, resnet_dilate, device):
                     init_values=1.0,
                     block_chunks=0
                 )
+    
     else:
         model = vits.__dict__[arch](patch_size=patch_size, num_classes=0)
 
@@ -90,7 +90,6 @@ def get_model(arch, patch_size, resnet_dilate, device):
             print(
                 "Since no pretrained weights have been provided, we load the reference pretrained DINO weights."
             )
-
             state_dict = torch.hub.load_state_dict_from_url(
                 url="https://dl.fbaipublicfiles.com/dino/" + url
             )
