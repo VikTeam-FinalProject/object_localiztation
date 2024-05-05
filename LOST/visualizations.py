@@ -37,7 +37,10 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
 
     # Plot the seed
     if plot_seed:
-        s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+        if type(seed) == torch.Tensor:
+            s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+        else:
+            s_ = np.unravel_index(seed, (w_featmap, h_featmap))
         size_ = np.asarray(scales) / 2
         cv2.rectangle(
             image,
@@ -52,7 +55,10 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
 
     if potentials is not None:
         for seed in potentials:
-            s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+            if type(seed) == torch.Tensor:
+                s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+            else:
+                s = np.unravel_index(seed, (w_featmap, h_featmap))
             size = np.asarray(scales) / 2
             cv2.rectangle(
                 image,
@@ -62,17 +68,17 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (128, 0, 128), 1, # Purple
             )
-        for seed in similars:
-            s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
-            size = np.asarray(scales) / 2
-            cv2.rectangle(
-                image,
-                (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
-                ),
-                (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
-                ),
-                (0, 128, 128), 1, # Teal
-            )
+        # for seed in similars:
+        #     s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+        #     size = np.asarray(scales) / 2
+        #     cv2.rectangle(
+        #         image,
+        #         (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
+        #         ),
+        #         (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
+        #         ),
+        #         (0, 128, 128), 1, # Teal
+        #     )
         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
         Image.fromarray(image).save(pltname)
         print(f"Predictions saved at {pltname}.")

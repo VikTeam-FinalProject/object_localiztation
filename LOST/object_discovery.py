@@ -46,6 +46,27 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
 
     # Seed expansion
     potentials = sorted_patches[:k_patches]
+
+    # NEW: add DBSCAN to find the largest cluster, from not_potentials 
+    not_potentials = [p for p in sorted_patches if p not in potentials]
+    not_potentials_xy = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in not_potentials]
+    print('dims, not_potentials[0], not_potentials_xy[0]: ', dims, not_potentials[0], not_potentials_xy[0])
+
+    
+    from sklearn.cluster import DBSCAN
+    clustering = DBSCAN(eps=1, min_samples=5).fit(not_potentials_xy)
+    clustering.labels_
+    # get id of the largest cluster
+    from collections import Counter
+    element_counts = Counter(clustering.labels_)
+    most_common_element, count = element_counts.most_common(1)[0]
+    if most_common_element == -1:
+        most_common_element, _ = element_counts.most_common(2)[1]
+
+    print('result dbscan: ', clustering.labels_)
+    not_potentials_xy_filtered = [not_potentials_xy[i] for i in range(len(clustering.labels_)) if clustering.labels_[i] == most_common_element]
+    not_potentials_filtered_index = [np.ravel_multi_index((p[0], p[1]), (dims[0], dims[1])) for p in not_potentials_xy_filtered]
+    
     similars = potentials[A[seed, potentials] > 0.0]
     M = torch.sum(A[similars, :], dim=0)
 
@@ -54,7 +75,7 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
         M, seed, dims, scales=scales, initial_im_size=init_image_size[1:]
     )
 
-    return np.asarray(pred), A, scores, seed, potentials, similars
+    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, similars
 
 
 def patch_scoring(M, dynamic_threshold: bool, threshold=0.):
