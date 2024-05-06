@@ -50,29 +50,34 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
     # NEW: add DBSCAN to find the largest cluster, from not_potentials 
     not_potentials = [p for p in sorted_patches if p not in potentials]
     not_potentials_xy = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in not_potentials]
-    print('dims, not_potentials[0], not_potentials_xy[0]: ', dims, not_potentials[0], not_potentials_xy[0])
-
     
     from sklearn.cluster import DBSCAN
-    clustering = DBSCAN(eps=1, min_samples=5).fit(not_potentials_xy)
-    clustering.labels_
-    # get id of the largest cluster
-    from collections import Counter
-    element_counts = Counter(clustering.labels_)
-    most_common_element, count = element_counts.most_common(1)[0]
-    if most_common_element == -1:
-        most_common_element, _ = element_counts.most_common(2)[1]
-
-    print('result dbscan: ', clustering.labels_)
-    not_potentials_xy_filtered = [not_potentials_xy[i] for i in range(len(clustering.labels_)) if clustering.labels_[i] == most_common_element]
+    if len(not_potentials_xy) == 0:
+        # no object-patch
+        labels = []
+    else:
+        # len > 0
+        clustering = DBSCAN(eps=1, min_samples=5).fit(not_potentials_xy)
+        labels = clustering.labels_
+        # get id of the largest cluster
+        from collections import Counter
+        element_counts = Counter(labels)
+        most_common_element, count = element_counts.most_common(1)[0]
+        if most_common_element == -1:
+            try:
+                most_common_element, _ = element_counts.most_common(2)[1]
+            except:
+                # no object, all are noise
+                labels = []
+    not_potentials_xy_filtered = [not_potentials_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
     not_potentials_filtered_index = [np.ravel_multi_index((p[0], p[1]), (dims[0], dims[1])) for p in not_potentials_xy_filtered]
     
     similars = potentials[A[seed, potentials] > 0.0]
-    M = torch.sum(A[similars, :], dim=0)
+    M = torch.sum(A[not_potentials_filtered_index, :], dim=0)
 
     # Box extraction
     pred, _ = detect_box(
-        M, seed, dims, scales=scales, initial_im_size=init_image_size[1:]
+        M, seed, dims, scales=scales, object_patches = not_potentials_filtered_index, initial_im_size=init_image_size[1:]
     )
 
     return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, similars
@@ -102,26 +107,32 @@ def patch_scoring(M, dynamic_threshold: bool, threshold=0.):
     return sel, cent
 
 
-def detect_box(A, seed, dims, initial_im_size=None, scales=None):
+def detect_box(A, seed, dims, object_patches, initial_im_size=None, scales=None):
     """
     Extract a box corresponding to the seed patch. Among connected components extract from the affinity matrix, select the one corresponding to the seed patch.
     """
-    w_featmap, h_featmap = dims
+    if len(object_patches) == 0:
+        # no object
+        return [0, 0, 0, 0], [0,0,0,0]
+    object_patches_unravel = [np.unravel_index(p, dims) for p in object_patches]
+    mask = np.zeros(dims)
+    for patch_id in object_patches_unravel:
+        mask[patch_id] = 1
+    # w_featmap, h_featmap = dims
 
-    correl = A.reshape(w_featmap, h_featmap).float()
-
+    # correl = A.reshape(w_featmap, h_featmap).float()
     # Compute connected components
-    labeled_array, num_features = scipy.ndimage.label(correl.cpu().numpy() > 0.0)
-
+    # labeled_array, num_features = scipy.ndimage.label(correl.cpu().numpy() > 0.0)
     # Find connected component corresponding to the initial seed
-    cc = labeled_array[np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))]
+    # cc = labeled_array[np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))]
 
     # Should not happen with LOST
-    if cc == 0:
-        raise ValueError("The seed is in the background component.")
+    # if cc == 0:
+    #     pass
+        # raise ValueError("The seed is in the background component.")
 
     # Find box
-    mask = np.where(labeled_array == cc)
+    mask = np.where(mask == 1)
     # Add +1 because excluded max
     ymin, ymax = min(mask[0]), max(mask[0]) + 1
     xmin, xmax = min(mask[1]), max(mask[1]) + 1
