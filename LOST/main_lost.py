@@ -236,7 +236,6 @@ if __name__ == "__main__":
                 nb_im = attentions.shape[0]  # Batch size
                 nh = attentions.shape[1]  # Number of heads
                 nb_tokens = attentions.shape[2]  # Number of tokens
-
                 # Baseline: compute DINO segmentation technique proposed in the DINO paper
                 # and select the biggest component
                 if args.dinoseg:

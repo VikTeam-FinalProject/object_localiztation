@@ -15,12 +15,12 @@
 import torch
 import scipy
 import scipy.ndimage
-
+from sklearn.cluster import DBSCAN
 import numpy as np
 from datasets import bbox_iou
 
 
-def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False):
+def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, dbscan = True):
     """
     Implementation of LOST method.
     Inputs
@@ -37,39 +37,42 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
     """
     # Compute the similarity
     A = (feats @ feats.transpose(1, 2)).squeeze()
-
     # Compute the inverse degree centrality measure per patch
     sorted_patches, scores = patch_scoring(A, dynamic_thres)
-
+    num_0_score = len([s for s in scores if s == 0])
     # Select the initial seed
-    seed = sorted_patches[0]
+    seed = sorted_patches[-1]
 
     # Seed expansion
     potentials = sorted_patches[:k_patches]
 
-    # NEW: add DBSCAN to find the largest cluster, from not_potentials 
     not_potentials = [p for p in sorted_patches if p not in potentials]
     not_potentials_xy = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in not_potentials]
     
-    from sklearn.cluster import DBSCAN
-    if len(not_potentials_xy) == 0:
-        # no object-patch
-        labels = []
+    if dbscan:
+        # dbscan: clustering of the object patches, keep the largest cluster
+        if len(not_potentials_xy) == 0:
+            # no object-patch
+            labels = []
+        else:
+            # len > 0
+            clustering = DBSCAN(eps=1, min_samples=5).fit(not_potentials_xy)
+            labels = clustering.labels_
+            # get id of the largest cluster
+            from collections import Counter
+            element_counts = Counter(labels)
+            most_common_element, count = element_counts.most_common(1)[0]
+            if most_common_element == -1:
+                try:
+                    most_common_element, _ = element_counts.most_common(2)[1]
+                except:
+                    # no object, all are noise
+                    labels = []
+        not_potentials_xy_filtered = [not_potentials_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
     else:
-        # len > 0
-        clustering = DBSCAN(eps=1, min_samples=5).fit(not_potentials_xy)
-        labels = clustering.labels_
-        # get id of the largest cluster
-        from collections import Counter
-        element_counts = Counter(labels)
-        most_common_element, count = element_counts.most_common(1)[0]
-        if most_common_element == -1:
-            try:
-                most_common_element, _ = element_counts.most_common(2)[1]
-            except:
-                # no object, all are noise
-                labels = []
-    not_potentials_xy_filtered = [not_potentials_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
+        # turn off dbscan
+        not_potentials_xy_filtered = not_potentials_xy
+        
     not_potentials_filtered_index = [np.ravel_multi_index((p[0], p[1]), (dims[0], dims[1])) for p in not_potentials_xy_filtered]
     
     similars = potentials[A[seed, potentials] > 0.0]
@@ -83,13 +86,15 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
     return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, similars
 
 
-def patch_scoring(M, dynamic_threshold: bool, threshold=0.):
+def patch_scoring(M, dynamic_threshold: bool):
     """
     Patch scoring based on the inverse degree.
         dynamic_threshold: set to True will override the threshold value by mean of the matrix
     """
     if dynamic_threshold:
         threshold = torch.mean(M)
+    else:
+        threshold = 0.0
     # Cloning important
     A = M.clone()
 
