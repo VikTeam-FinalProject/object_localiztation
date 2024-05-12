@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 import torch
 import torch.nn as nn
@@ -19,11 +20,9 @@ from torchvision.models.resnet import resnet50
 from torchvision.models.vgg import vgg16
 
 import sys
-sys.path.append('/home/thekhoi/futme/RTD-ueh/dinov2_ueh')
-sys.path.remove('/home/thekhoi/anaconda3/envs/env_dinoconda/lib/python3.9/site-packages/dinov2-0.0.1-py3.9.egg')
 import dino.vision_transformer as vits
 
-from dinov2.models.vision_transformer import vit_small
+from dinov2.models.vision_transformer import vit_small,vit_large
 def get_model(arch, patch_size, resnet_dilate, device):
     if "resnet" in arch:
         if resnet_dilate == 1:
@@ -48,13 +47,25 @@ def get_model(arch, patch_size, resnet_dilate, device):
             model = vgg16(pretrained=True)
         else:
             model = vgg16(pretrained=False)
-    elif "dinov2" in arch:
+    elif "dinov2_vits14_pretrain" in arch:
         model = vit_small(patch_size=14,       
                     img_size=526,
                     init_values=1.0,
                     block_chunks=0
                 )
-    
+    elif "dinov2_vitl14_pretrain" in arch:
+        model = vit_large(patch_size=14,
+                    img_size=526,
+                    init_values=1.0,
+                    block_chunks=0
+                )
+    elif "dinov2_vitl14_reg4_pretrain" in arch:
+        model = vit_large(patch_size=14,
+                    img_size=526,
+                    init_values=1.0,
+                    block_chunks=0,
+                    num_register_tokens=4
+                )
     else:
         model = vits.__dict__[arch](patch_size=patch_size, num_classes=0)
 
@@ -77,7 +88,8 @@ def get_model(arch, patch_size, resnet_dilate, device):
         elif "dinov2" in arch:
             # url = "dinov2_vitl14_pretrain.pth"
             print("loading dinov2...")
-            MODEL_PATH = '/home/thekhoi/futme/RTD-ueh/dinov2_ueh/model/dinov2_vits14_pretrain.pth'
+            HOME = os.getcwd()
+            MODEL_PATH = os.path.join(HOME,"dinov2_model", f"{arch}.pth")
             model.load_state_dict(torch.load(MODEL_PATH, map_location='cuda:0'))
             for p in model.parameters():
                 p.requires_grad = False

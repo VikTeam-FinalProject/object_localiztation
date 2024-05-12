@@ -21,12 +21,13 @@ from PIL import Image
 
 import matplotlib.pyplot as plt
 
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=True, potentials=None, similars=None):
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, similars=None):
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
     w_featmap, h_featmap = dims
-
+    print(f"Predictions: {pred}")
+    print(seed)
     # Plot the box
     cv2.rectangle(
         image,
@@ -34,7 +35,8 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
         (int(pred[2]), int(pred[3])),
         (255, 0, 0), 3,
     )
-
+    print(vis_folder)
+    im_name = im_name.split("\\")[-1]
     # Plot the seed
     if plot_seed:
         if type(seed) == torch.Tensor:
@@ -48,7 +50,7 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
             (int(s_[1] * scales[1] + (size_[1] / 2)), int(s_[0] * scales[0] + (size_[0] / 2))),
             (0, 255, 0), -1,
         )
-    pltname = f"{vis_folder}/LOST_{im_name}.png"
+    # pltname = f"{vis_folder}/LOST_{im_name}.png"
     # Image.fromarray(image).save(pltname)
     # print(f"Predictions saved at {pltname}.")
 

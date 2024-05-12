@@ -44,12 +44,14 @@ if __name__ == "__main__":
             "resnet50",
             "vgg16_imagenet",
             "resnet50_imagenet",
-            "dinov2-tesing-vit-ne"
+            "dinov2_vitl14_pretrain",
+            "dinov2_vits14_pretrain",
+            "dinov2_vitl14_reg4_pretrain",
         ],
         help="Model architecture.",
     )
     parser.add_argument(
-        "--patch_size", default=16, type=int, help="Patch resolution of the model."
+        "--patch_size", default=14, type=int, help="Patch resolution of the model."
     )
 
     # Use a dataset
@@ -96,7 +98,9 @@ if __name__ == "__main__":
 
     # For ResNet dilation
     parser.add_argument("--resnet_dilate", type=int, default=2, help="Dilation level of the resnet model.")
-
+    parser.add_argument("--threshold", type=int, default=10, help="Threshold for the dynamic thresholding.")
+    parser.add_argument("--min_samples", type=int, default=2, help="Minimum number of samples for DBSCAN.")
+    parser.add_argument("--eps", type=int, default=1, help="Epsilon for DBSCAN.")
     # LOST parameters
     parser.add_argument(
         "--which_features",
@@ -256,12 +260,12 @@ if __name__ == "__main__":
 
                     # Modality selection
                     if args.which_features == "k":
-                        feats = k[:, 1:, :]
+                        feats = k[:, 1:-4, :]
                     elif args.which_features == "q":
                         feats = q[:, 1:, :]
                     elif args.which_features == "v":
                         feats = v[:, 1:, :]
-
+                    print(feats.shape)
             elif "resnet" in args.arch:
                 x = model.forward(img[None, :, :, :])
                 d, w_featmap, h_featmap = x.shape[1:]
@@ -296,8 +300,9 @@ if __name__ == "__main__":
                 [w_featmap, h_featmap],
                 scales,
                 init_image_size,
-                k_patches=args.k_patches,
-                dynamic_thres=args.dynamic_thres
+                threshold=args.threshold,
+                min_samples=args.min_samples,
+                eps=args.eps,
             )
 
             # ------------ Visualizations -------------------------------------------
