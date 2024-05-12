@@ -1,3 +1,4 @@
+
 # Copyright 2021 - Valeo Comfort and Driving Assistance - Oriane Siméoni @ valeo.ai
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import argparse
-import random
+import os
 import pickle
 
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
-
 from tqdm import tqdm
-from PIL import Image
 
-from networks import get_model
 from datasets import ImageDataset, Dataset, bbox_iou
-import sys
-# sys.path.append('..')
-from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion
+from networks import get_model
 from object_discovery import lost, detect_box, dino_seg
+
+from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Unsupervised object discovery with LOST.")
