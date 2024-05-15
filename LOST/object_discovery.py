@@ -15,14 +15,12 @@
 import torch
 import scipy
 import scipy.ndimage
-from collections import Counter
+from sklearn.cluster import DBSCAN
 import numpy as np
 from datasets import bbox_iou
-from sklearn.cluster import DBSCAN
-from matplotlib import pyplot as plt
 
 
-def lost(feats, dims, scales, init_image_size, eps=1, min_samples=5, threshold=10):
+def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, dbscan = True):
     """
     Implementation of LOST method.
     Inputs
@@ -38,82 +36,67 @@ def lost(feats, dims, scales, init_image_size, eps=1, min_samples=5, threshold=1
         seed: selected patch corresponding to an object
     """
     # Compute the similarity
-    print(feats.shape)
     A = (feats @ feats.transpose(1, 2)).squeeze()
-    print(A.shape)
-    max_indices, max_values = max_indices_visualize(A)
-    torch.set_printoptions(profile="full")
-
-    # print(list(zip(max_values,max_indices)))
     # Compute the inverse degree centrality measure per patch
-    # threshold = torch.mean(att.reshape(nb, -1), dim=1)  # Find threshold per image
-    # sorted_patches, scores = patch_scoring(A, dynamic_thres)
-
+    sorted_patches, scores = patch_scoring(A, dynamic_thres)
+    num_0_score = len([s for s in scores if s == 0])
     # Select the initial seed
-    # seed = sorted_patches[-1]
-    #
+    seed = sorted_patches[-1]
 
     # Seed expansion
-    # potentials = sorted_patches[:k_patches]
+    potentials = sorted_patches[:k_patches]
 
-    # NEW: add DBSCAN to find the largest cluster, from not_potentials
-    patches_sim = Counter(max_indices)
-    sorted_patches_sim = [item for item, count in patches_sim.most_common() if count > threshold]
-    print(patches_sim.most_common())
-    print(sorted_patches_sim)
-    temp = np.where(np.isin(max_indices, sorted_patches_sim))[0]
-    print(temp)
-    not_potentials = [p for p in range(max_indices.shape[0]) if p not in temp]
-    print(not_potentials)
-    not_potentials_xy = [np.unravel_index(p, (dims[0], dims[1])) for p in not_potentials]
-    not_potentials_xy_filtered = seed_choose(not_potentials_xy, dims[0], dims[1], min_samples=min_samples, eps=eps)
-
-    # similars = potentials[A[seed, potentials] > 0.0]
-    M = torch.sum(A[temp, :], dim=0)
-
+    not_potentials = [p for p in sorted_patches if p not in potentials]
+    not_potentials_xy = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in not_potentials]
+    print('Number of not_potentials patches:', len(not_potentials))
+    if dbscan:
+        print('DBSCAN clustering')
+        # dbscan: clustering of the object patches, keep the largest cluster
+        if len(not_potentials_xy) == 0:
+            # no object-patch
+            labels = []
+        else:
+            # len > 0
+            clustering = DBSCAN(eps=1, min_samples=5).fit(not_potentials_xy)
+            labels = clustering.labels_
+            # get id of the largest cluster
+            from collections import Counter
+            element_counts = Counter(labels)
+            print("dbscan element counts:", element_counts)
+            most_common_element, count = element_counts.most_common(1)[0]
+            if most_common_element == -1:
+                try:
+                    most_common_element, _ = element_counts.most_common(2)[1]
+                except:
+                    # no object, all are noise
+                    labels = []
+        not_potentials_xy_filtered = [not_potentials_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
+    else:
+        # turn off dbscan
+        not_potentials_xy_filtered = not_potentials_xy
+        
+    not_potentials_filtered_index = [np.ravel_multi_index((p[0], p[1]), (dims[0], dims[1])) for p in not_potentials_xy_filtered]
+    
+    similars = potentials[A[seed, potentials] > 0.0]
+    M = torch.sum(A[not_potentials_filtered_index, :], dim=0)
+    print('len not_potentials_filtered_index:', len(not_potentials_filtered_index))
     # Box extraction
     pred, _ = detect_box(
-        M, dims, scales=scales, object_patches=not_potentials, initial_im_size=init_image_size[1:]
+        M, seed, dims, scales=scales, object_patches = not_potentials_filtered_index, initial_im_size=init_image_size[1:]
     )
 
-    return np.asarray(pred), A, _, 974, not_potentials, None
+    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, similars
 
 
-def seed_choose(seeds, dims1, dims2, min_samples=5, eps=1):
-    """
-    Choose the seed patch based on the similarity matrix.
-    """
-    if len(seeds) == 0:
-        # no object-patch
-        labels = []
-    else:
-        # len > 0
-        clustering = DBSCAN(eps=eps, min_samples=min_samples).fit(seeds)
-        labels = clustering.labels_
-        # get id of the largest cluster
-
-        element_counts = Counter(labels)
-        most_common_element, count = element_counts.most_common(1)[0]
-        if most_common_element == -1:
-            try:
-                most_common_element, _ = element_counts.most_common(2)[1]
-            except:
-                # no object, all are noise
-                labels = []
-    seeds_xy_filtered = [seeds[i] for i in range(len(labels)) if labels[i] == most_common_element]
-    seeds_filtered_index = [np.ravel_multi_index((p[0], p[1]), (dims1, dims2)) for p in
-                            seeds_xy_filtered]
-    return seeds_filtered_index
-
-
-def patch_scoring(M, dynamic_threshold: bool, threshold=0.):
+def patch_scoring(M, dynamic_threshold: bool):
     """
     Patch scoring based on the inverse degree.
         dynamic_threshold: set to True will override the threshold value by mean of the matrix
     """
-
     if dynamic_threshold:
         threshold = torch.mean(M)
+    else:
+        threshold = 0.0
     # Cloning important
     A = M.clone()
 
@@ -125,20 +108,19 @@ def patch_scoring(M, dynamic_threshold: bool, threshold=0.):
     C = A + A.t()
 
     # Sort pixels by inverse degree
-    cent = -torch.sum(A < threshold, dim=1).type(torch.float32)
+    cent = -torch.sum(A > threshold, dim=1).type(torch.float32)
     sel = torch.argsort(cent, descending=True)
 
     return sel, cent
 
 
-
-def detect_box(A, dims, object_patches, initial_im_size=None, scales=None):
+def detect_box(A, seed, dims, object_patches, initial_im_size=None, scales=None):
     """
     Extract a box corresponding to the seed patch. Among connected components extract from the affinity matrix, select the one corresponding to the seed patch.
     """
     if len(object_patches) == 0:
         # no object
-        return [0, 0, 0, 0], [0, 0, 0, 0]
+        return [0, 0, 0, 0], [0,0,0,0]
     object_patches_unravel = [np.unravel_index(p, dims) for p in object_patches]
     mask = np.zeros(dims)
     for patch_id in object_patches_unravel:
@@ -154,7 +136,7 @@ def detect_box(A, dims, object_patches, initial_im_size=None, scales=None):
     # Should not happen with LOST
     # if cc == 0:
     #     pass
-    # raise ValueError("The seed is in the background component.")
+        # raise ValueError("The seed is in the background component.")
 
     # Find box
     mask = np.where(mask == 1)
@@ -229,22 +211,3 @@ def dino_seg(attn, dims, patch_size, head=0):
     pred = [r_xmin, r_ymin, r_xmax, r_ymax]
 
     return pred
-
-
-def max_indices_visualize(tens, model_name="dino"):
-    arr = tens.cpu().numpy()
-    max_indices = np.argmax(arr, axis=1)
-    print(max_indices.shape)
-    max_values = np.max(arr, axis=1)
-    x = max_indices  # x-axis
-    y = np.arange(len(arr))  # Chỉ số hàng
-    print(max_indices)
-    # Vẽ biểu đồ
-    plt.figure(figsize=(10, 5))
-    plt.scatter(x, y, color='red')
-    plt.xlabel('Index of Maximum Value in Row')
-    plt.ylabel('Row Index')
-    plt.title(f'{model_name}')
-    plt.grid(True)
-    plt.show()
-    return max_indices, max_values

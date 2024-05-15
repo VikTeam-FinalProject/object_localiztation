@@ -26,8 +26,6 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
     Visualization of the predicted box and the corresponding seed patch.
     """
     w_featmap, h_featmap = dims
-    print(f"Predictions: {pred}")
-    print(seed)
     # Plot the box
     cv2.rectangle(
         image,
@@ -35,7 +33,6 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
         (int(pred[2]), int(pred[3])),
         (255, 0, 0), 3,
     )
-    print(vis_folder)
     im_name = im_name.split("\\")[-1]
     # Plot the seed
     if plot_seed:
@@ -56,6 +53,7 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
 
 
     if potentials is not None:
+        print('plotting potentials, len is: ', len(potentials))
         for seed in potentials:
             if type(seed) == torch.Tensor:
                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))

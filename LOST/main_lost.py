@@ -257,12 +257,11 @@ if __name__ == "__main__":
 
                     # Modality selection
                     if args.which_features == "k":
-                        feats = k[:, 1:-4, :]
+                        feats = k[:, 1:, :]
                     elif args.which_features == "q":
                         feats = q[:, 1:, :]
                     elif args.which_features == "v":
                         feats = v[:, 1:, :]
-                    print(feats.shape)
             elif "resnet" in args.arch:
                 x = model.forward(img[None, :, :, :])
                 d, w_featmap, h_featmap = x.shape[1:]
@@ -297,9 +296,8 @@ if __name__ == "__main__":
                 [w_featmap, h_featmap],
                 scales,
                 init_image_size,
-                threshold=args.threshold,
-                min_samples=args.min_samples,
-                eps=args.eps,
+                k_patches=args.k_patches,
+                dynamic_thres=args.dynamic_thres,
             )
 
             # ------------ Visualizations -------------------------------------------
