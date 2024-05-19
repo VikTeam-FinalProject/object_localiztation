@@ -53,7 +53,6 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
 
 
     if potentials is not None:
-        print('plotting potentials, len is: ', len(potentials))
         for seed in potentials:
             if type(seed) == torch.Tensor:
                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))

@@ -39,6 +39,9 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
     A = (feats @ feats.transpose(1, 2)).squeeze()
     # Compute the inverse degree centrality measure per patch
     sorted_patches, scores = patch_scoring(A, dynamic_thres)
+    print("sorted patches", sorted_patches)
+    print("scores", scores)
+    
     num_0_score = len([s for s in scores if s == 0])
     # Select the initial seed
     seed = sorted_patches[-1]
@@ -48,9 +51,7 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
 
     not_potentials = [p for p in sorted_patches if p not in potentials]
     not_potentials_xy = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in not_potentials]
-    print('Number of not_potentials patches:', len(not_potentials))
     if dbscan:
-        print('DBSCAN clustering')
         # dbscan: clustering of the object patches, keep the largest cluster
         if len(not_potentials_xy) == 0:
             # no object-patch
@@ -62,7 +63,6 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
             # get id of the largest cluster
             from collections import Counter
             element_counts = Counter(labels)
-            print("dbscan element counts:", element_counts)
             most_common_element, count = element_counts.most_common(1)[0]
             if most_common_element == -1:
                 try:
@@ -79,13 +79,13 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
     
     similars = potentials[A[seed, potentials] > 0.0]
     M = torch.sum(A[not_potentials_filtered_index, :], dim=0)
-    print('len not_potentials_filtered_index:', len(not_potentials_filtered_index))
     # Box extraction
     pred, _ = detect_box(
         M, seed, dims, scales=scales, object_patches = not_potentials_filtered_index, initial_im_size=init_image_size[1:]
     )
 
-    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, similars
+    return np.asarray(pred), A, scores, seed, sorted_patches, similars
+    # return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, similars
 
 
 def patch_scoring(M, dynamic_threshold: bool):
@@ -104,14 +104,31 @@ def patch_scoring(M, dynamic_threshold: bool):
     A.fill_diagonal_(0)
 
     # Make sure symmetric and non nul
-    A[A < 0] = 0
+    A[A < threshold] = 0
     C = A + A.t()
 
     # Sort pixels by inverse degree
-    cent = -torch.sum(A > threshold, dim=1).type(torch.float32)
-    sel = torch.argsort(cent, descending=True)
+    cent = -torch.sum(A > threshold, dim=1).type(torch.float32) # score
+    sel = torch.argsort(cent, descending=True) # id
+    cent = cent[sel]
+    jumps = []
+    for i in range(1, len(cent)):
+        jumps.append(int(float((cent[i] - cent[i-1]).cpu().numpy())))
+    print('jumps: ', jumps)
+    jump_is_high = []
+    for j in range(len(jumps)):
+        if jumps[j] > 1 or jumps[j] < -1:
+            jump_is_high.append(1)
+        else:
+            jump_is_high.append(0)
+    print('jump_is_high: ', jump_is_high)
+    
+    # mask = (cent > -400) & (cent < -300)
+    mask = (cent > -300)
+    filtered_sel = sel[mask]
 
-    return sel, cent
+    print('filtered sel: ', filtered_sel)
+    return filtered_sel, cent
 
 
 def detect_box(A, seed, dims, object_patches, initial_im_size=None, scales=None):

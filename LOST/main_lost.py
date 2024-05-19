@@ -113,6 +113,8 @@ if __name__ == "__main__":
         help="Number of patches with the lowest degree considered."
     )
 
+    parser.add_argument("--nodbscan", action="store_true", help="Apply DBSCAN clustering.")
+
     # Use dino-seg proposed method
     parser.add_argument("--dinoseg", action="store_true", help="Apply DINO-seg baseline.")
     parser.add_argument("--dinoseg_head", type=int, default=4)
@@ -257,7 +259,8 @@ if __name__ == "__main__":
 
                     # Modality selection
                     if args.which_features == "k":
-                        feats = k[:, 1:, :]
+                        feats = k[:, 1:-4, :]
+                        print('*using reg version, feats shape: ', feats.shape)
                     elif args.which_features == "q":
                         feats = q[:, 1:, :]
                     elif args.which_features == "v":
@@ -298,6 +301,7 @@ if __name__ == "__main__":
                 init_image_size,
                 k_patches=args.k_patches,
                 dynamic_thres=args.dynamic_thres,
+                dbscan = not args.nodbscan,
             )
 
             # ------------ Visualizations -------------------------------------------
@@ -319,7 +323,7 @@ if __name__ == "__main__":
 
             elif args.visualize == "pred":
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, potentials=potentials, similars=similars)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, similars=similars)
 
         # Save the prediction
         preds_dict[im_name] = pred
