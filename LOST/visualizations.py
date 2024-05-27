@@ -35,6 +35,10 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
     )
     im_name = im_name.split("\\")[-1]
     # Plot the seed
+    # potentials = [max(po-4, 0) for po in potentials]
+    # potentials-=4
+    # print('dim is: ', dims)
+    # print('min patch is: ', [min([i for i in potentials if i > dims[0]])])
     if plot_seed:
         if type(seed) == torch.Tensor:
             s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
@@ -53,7 +57,8 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
 
 
     if potentials is not None:
-        for seed in potentials:
+        # plot half of potentials
+        for seed in potentials[:len(potentials)//2]:
             if type(seed) == torch.Tensor:
                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
             else:
@@ -67,6 +72,22 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (128, 0, 128), 1, # Purple
             )
+        # plot the other half of potentials
+        for seed in potentials[len(potentials)//2:]:
+            if type(seed) == torch.Tensor:
+                s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+            else:
+                s = np.unravel_index(seed, (w_featmap, h_featmap))
+            size = np.asarray(scales) / 2
+            cv2.rectangle(
+                image,
+                (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
+                ),
+                (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
+                ),
+                (0, 128, 128), 1, # Teal
+            )
+        
         # for seed in similars:
         #     s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
         #     size = np.asarray(scales) / 2

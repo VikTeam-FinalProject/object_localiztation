@@ -125,7 +125,9 @@ if __name__ == "__main__":
 
     if args.dynamic_thres:
         print("Using dynamic thresholding.")
-
+    if not args.nodbscan:
+        print("Using DBSCAN clustering.")
+        
     if args.image_path is not None:
         args.save_predictions = False
         args.no_evaluation = True
@@ -259,12 +261,13 @@ if __name__ == "__main__":
 
                     # Modality selection
                     if args.which_features == "k":
-                        feats = k[:, 1:-4, :]
-                        print('*using reg version, feats shape: ', feats.shape)
+                        feats = k[:, 1:, :]
                     elif args.which_features == "q":
                         feats = q[:, 1:, :]
                     elif args.which_features == "v":
                         feats = v[:, 1:, :]
+                    if 'reg' in args.arch:
+                        feats = feats[:, 4:, :]
             elif "resnet" in args.arch:
                 x = model.forward(img[None, :, :, :])
                 d, w_featmap, h_featmap = x.shape[1:]
@@ -331,6 +334,8 @@ if __name__ == "__main__":
         # Evaluation
         if args.no_evaluation:
             continue
+        # convert pred to numpy 
+        pred = np.array(pred)
 
         # Compare prediction to GT boxes
         ious = bbox_iou(torch.from_numpy(pred), torch.from_numpy(gt_bbxs))

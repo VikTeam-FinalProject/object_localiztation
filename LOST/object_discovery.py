@@ -38,39 +38,33 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
     # Compute the similarity
     A = (feats @ feats.transpose(1, 2)).squeeze()
     # Compute the inverse degree centrality measure per patch
-    sorted_patches, scores = patch_scoring(A, dynamic_thres)
-    print("sorted patches", sorted_patches)
-    print("scores", scores)
+    sorted_patches, scores = patch_scoring(A, dynamic_thres, k_patches = k_patches)
+    # print("sorted patches", sorted_patches)
+    # print("scores", scores)
     
     num_0_score = len([s for s in scores if s == 0])
     # Select the initial seed
-    seed = sorted_patches[-1]
+    seed = sorted_patches[-1] if len(sorted_patches) > 0 else 0
 
-    # Seed expansion
-    potentials = sorted_patches[:k_patches]
-
-    not_potentials = [p for p in sorted_patches if p not in potentials]
-    not_potentials_xy = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in not_potentials]
-    if dbscan:
-        # dbscan: clustering of the object patches, keep the largest cluster
-        if len(not_potentials_xy) == 0:
-            # no object-patch
-            labels = []
+    if k_patches == -1:
+        if dbscan:  
+            print('dbscan filtering with k= -1')
+            not_potentials_xy_filtered = dbscan_filter([np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in sorted_patches])
         else:
-            # len > 0
-            clustering = DBSCAN(eps=1, min_samples=5).fit(not_potentials_xy)
-            labels = clustering.labels_
-            # get id of the largest cluster
-            from collections import Counter
-            element_counts = Counter(labels)
-            most_common_element, count = element_counts.most_common(1)[0]
-            if most_common_element == -1:
-                try:
-                    most_common_element, _ = element_counts.most_common(2)[1]
-                except:
-                    # no object, all are noise
-                    labels = []
-        not_potentials_xy_filtered = [not_potentials_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
+            not_potentials_xy_filtered = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in sorted_patches]
+        not_potentials_filtered_index = [np.ravel_multi_index((p[0], p[1]), (dims[0], dims[1])) for p in not_potentials_xy_filtered]
+    
+        pred, _ = detect_box(
+        None, seed, dims, scales=scales, object_patches = not_potentials_filtered_index, initial_im_size=init_image_size[1:]
+    )   
+        return pred, A, scores, seed, not_potentials_filtered_index, []
+
+    # k_patches >= 0
+    potentials = sorted_patches[:k_patches]
+    # not_potentials = [p for p in sorted_patches if p not in potentials]
+    not_potentials_xy = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in potentials]
+    if dbscan:
+        not_potentials_xy_filtered = dbscan_filter(not_potentials_xy)
     else:
         # turn off dbscan
         not_potentials_xy_filtered = not_potentials_xy
@@ -84,11 +78,32 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
         M, seed, dims, scales=scales, object_patches = not_potentials_filtered_index, initial_im_size=init_image_size[1:]
     )
 
-    return np.asarray(pred), A, scores, seed, sorted_patches, similars
-    # return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, similars
+    # return np.asarray(pred), A, scores, seed, sorted_patches, similars
+    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, similars
+    
+def dbscan_filter(patches_xy):
+    if len(patches_xy) == 0:
+            # no object-patch
+            labels = []
+    else:
+        # len > 0
+        clustering = DBSCAN(eps=1, min_samples=5).fit(patches_xy)
+        labels = clustering.labels_
+        # get id of the largest cluster
+        from collections import Counter
+        element_counts = Counter(labels)
+        most_common_element, count = element_counts.most_common(1)[0]
+        if most_common_element == -1:
+            try:
+                most_common_element, _ = element_counts.most_common(2)[1]
+            except:
+                # no object, all are noise
+                labels = []
+    not_potentials_xy_filtered = [patches_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
+    print('dbscan filter is returning')
+    return not_potentials_xy_filtered
 
-
-def patch_scoring(M, dynamic_threshold: bool):
+def patch_scoring(M, dynamic_threshold: bool, k_patches: int):
     """
     Patch scoring based on the inverse degree.
         dynamic_threshold: set to True will override the threshold value by mean of the matrix
@@ -111,24 +126,26 @@ def patch_scoring(M, dynamic_threshold: bool):
     cent = -torch.sum(A > threshold, dim=1).type(torch.float32) # score
     sel = torch.argsort(cent, descending=True) # id
     cent = cent[sel]
-    jumps = []
-    for i in range(1, len(cent)):
-        jumps.append(int(float((cent[i] - cent[i-1]).cpu().numpy())))
-    print('jumps: ', jumps)
-    jump_is_high = []
-    for j in range(len(jumps)):
-        if jumps[j] > 1 or jumps[j] < -1:
-            jump_is_high.append(1)
-        else:
-            jump_is_high.append(0)
-    print('jump_is_high: ', jump_is_high)
-    
-    # mask = (cent > -400) & (cent < -300)
-    mask = (cent > -300)
-    filtered_sel = sel[mask]
+    torch.set_printoptions(profile="full")
 
-    print('filtered sel: ', filtered_sel)
-    return filtered_sel, cent
+    if k_patches == -1:
+        jumps = []
+        for i in range(1, len(cent)):
+            jumps.append(int(float((cent[i] - cent[i-1]).cpu().numpy())))
+        # visualize jumps
+        # import matplotlib.pyplot as plt
+        # plt.plot(jumps)
+        # plt.show()
+        
+        k_jump = np.argmin(jumps)
+        while k_jump < 10:
+            jumps[k_jump] += 1e99
+            k_jump = np.argmin(jumps) # get id of second min
+
+        # print('k_jump: ', k_jump)
+        return sel[:k_jump], cent
+    
+    return sel, cent # id, score
 
 
 def detect_box(A, seed, dims, object_patches, initial_im_size=None, scales=None):
