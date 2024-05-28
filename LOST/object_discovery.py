@@ -13,18 +13,18 @@
 # limitations under the License.
 
 import torch
-import scipy
 import scipy.ndimage
 from sklearn.cluster import DBSCAN
 import numpy as np
+import matplotlib.pyplot as plt
 from datasets import bbox_iou
 
 
-def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, dbscan = True):
+def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, dbscan=True):
     """
     Implementation of LOST method.
     Inputs
-        feats: the pixel/patche features of an image
+        feats: the pixel/patch features of an image
         dims: dimension of the map from which the features are used
         scales: from image to map scale
         init_image_size: size of the image
@@ -35,181 +35,115 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
         scores: lowest degree scores for all patches
         seed: selected patch corresponding to an object
     """
-    # Compute the similarity
     A = (feats @ feats.transpose(1, 2)).squeeze()
-    # Compute the inverse degree centrality measure per patch
-    sorted_patches, scores = patch_scoring(A, dynamic_thres, k_patches = k_patches)
-    # print("sorted patches", sorted_patches)
-    # print("scores", scores)
-    
-    num_0_score = len([s for s in scores if s == 0])
-    # Select the initial seed
+    sorted_patches, scores = patch_scoring(A, dynamic_thres, k_patches=k_patches)
     seed = sorted_patches[-1] if len(sorted_patches) > 0 else 0
 
     if k_patches == -1:
-        if dbscan:  
-            print('dbscan filtering with k= -1')
-            not_potentials_xy_filtered = dbscan_filter([np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in sorted_patches])
-        else:
-            not_potentials_xy_filtered = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in sorted_patches]
-        not_potentials_filtered_index = [np.ravel_multi_index((p[0], p[1]), (dims[0], dims[1])) for p in not_potentials_xy_filtered]
-    
-        pred, _ = detect_box(
-        None, seed, dims, scales=scales, object_patches = not_potentials_filtered_index, initial_im_size=init_image_size[1:]
-    )   
-        return pred, A, scores, seed, not_potentials_filtered_index, []
-
-    # k_patches >= 0
-    potentials = sorted_patches[:k_patches]
-    # not_potentials = [p for p in sorted_patches if p not in potentials]
-    not_potentials_xy = [np.unravel_index(p.cpu(), (dims[0], dims[1])) for p in potentials]
-    if dbscan:
-        not_potentials_xy_filtered = dbscan_filter(not_potentials_xy)
+        not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in sorted_patches]
+        not_potentials_xy_filtered = dbscan_filter(not_potentials_xy) if dbscan else not_potentials_xy
+        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy_filtered]
     else:
-        # turn off dbscan
-        not_potentials_xy_filtered = not_potentials_xy
-        
-    not_potentials_filtered_index = [np.ravel_multi_index((p[0], p[1]), (dims[0], dims[1])) for p in not_potentials_xy_filtered]
-    
-    similars = potentials[A[seed, potentials] > 0.0]
-    M = torch.sum(A[not_potentials_filtered_index, :], dim=0)
-    # Box extraction
-    pred, _ = detect_box(
-        M, seed, dims, scales=scales, object_patches = not_potentials_filtered_index, initial_im_size=init_image_size[1:]
-    )
+        potentials = sorted_patches[:k_patches]
+        not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in potentials]
+        not_potentials_xy_filtered = dbscan_filter(not_potentials_xy) if dbscan else not_potentials_xy
+        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy_filtered]
 
-    # return np.asarray(pred), A, scores, seed, sorted_patches, similars
-    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, similars
-    
+    pred, _ = detect_box(dims, scales=scales, object_patches=not_potentials_filtered_index,
+                         initial_im_size=init_image_size[1:])
+
+    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index
+
+
 def dbscan_filter(patches_xy):
     if len(patches_xy) == 0:
-            # no object-patch
-            labels = []
-    else:
-        # len > 0
-        clustering = DBSCAN(eps=1, min_samples=5).fit(patches_xy)
-        labels = clustering.labels_
-        # get id of the largest cluster
-        from collections import Counter
-        element_counts = Counter(labels)
-        most_common_element, count = element_counts.most_common(1)[0]
-        if most_common_element == -1:
-            try:
-                most_common_element, _ = element_counts.most_common(2)[1]
-            except:
-                # no object, all are noise
-                labels = []
-    not_potentials_xy_filtered = [patches_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
-    print('dbscan filter is returning')
-    return not_potentials_xy_filtered
+        return []
+    clustering = DBSCAN(eps=1, min_samples=5).fit(patches_xy)
+    labels = clustering.labels_
+    from collections import Counter
+    element_counts = Counter(labels)
+    most_common_element, count = element_counts.most_common(1)[0]
+    if most_common_element == -1:
+        try:
+            most_common_element, _ = element_counts.most_common(2)[1]
+        except:
+            return []
+    return [patches_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
 
-def patch_scoring(M, dynamic_threshold: bool, k_patches: int):
+
+def patch_scoring(M, dynamic_threshold, k_patches):
     """
     Patch scoring based on the inverse degree.
         dynamic_threshold: set to True will override the threshold value by mean of the matrix
     """
-    if dynamic_threshold:
-        threshold = torch.mean(M)
-    else:
-        threshold = 0.0
-    # Cloning important
+    threshold = torch.mean(M) if dynamic_threshold else 0.0
     A = M.clone()
-
-    # Zero diagonal
     A.fill_diagonal_(0)
-
-    # Make sure symmetric and non nul
     A[A < threshold] = 0
-    C = A + A.t()
-
-    # Sort pixels by inverse degree
-    cent = -torch.sum(A > threshold, dim=1).type(torch.float32) # score
-    sel = torch.argsort(cent, descending=True) # id
+    cent = -torch.sum(A > threshold, dim=1).float()
+    sel = torch.argsort(cent, descending=True)
     cent = cent[sel]
-    torch.set_printoptions(profile="full")
 
+    # Dynamic Patch Selection (if `k_patches == -1`)
     if k_patches == -1:
-        jumps = []
-        for i in range(1, len(cent)):
-            jumps.append(int(float((cent[i] - cent[i-1]).cpu().numpy())))
-        # visualize jumps
-        # import matplotlib.pyplot as plt
-        # plt.plot(jumps)
-        # plt.show()
-        
-        k_jump = np.argmin(jumps)
-        while k_jump < 10:
-            jumps[k_jump] += 1e99
-            k_jump = np.argmin(jumps) # get id of second min
+        jumps = [int(float((cent[i] - cent[i - 1]).cpu().numpy())) for i in range(1, len(cent))]
+        plot_jumps(jumps)
 
-        # print('k_jump: ', k_jump)
+        if len(jumps) > 10:
+            k_jump = 10 + np.argmin(jumps[10:])
+        else:
+            k_jump = np.argmin(jumps)
         return sel[:k_jump], cent
-    
-    return sel, cent # id, score
+
+    return sel, cent
 
 
-def detect_box(A, seed, dims, object_patches, initial_im_size=None, scales=None):
+def plot_jumps(jumps,save_path='jumps.png'):
+    plt.figure(figsize=(10, 6))
+    plt.plot(jumps, marker='o', linestyle='-', color='b')
+    plt.title('Plot of Jumps')
+    plt.xlabel('Index')
+    plt.ylabel('Jump Value')
+    plt.grid(True)
+    plt.savefig(save_path)
+    print(f"Plot saved as {save_path}")
+
+def detect_box(dims, object_patches, initial_im_size=None, scales=None):
     """
     Extract a box corresponding to the seed patch. Among connected components extract from the affinity matrix, select the one corresponding to the seed patch.
     """
     if len(object_patches) == 0:
-        # no object
-        return [0, 0, 0, 0], [0,0,0,0]
+        return [0, 0, 0, 0], [0, 0, 0, 0]
     object_patches_unravel = [np.unravel_index(p, dims) for p in object_patches]
     mask = np.zeros(dims)
     for patch_id in object_patches_unravel:
         mask[patch_id] = 1
-    # w_featmap, h_featmap = dims
 
-    # correl = A.reshape(w_featmap, h_featmap).float()
-    # Compute connected components
-    # labeled_array, num_features = scipy.ndimage.label(correl.cpu().numpy() > 0.0)
-    # Find connected component corresponding to the initial seed
-    # cc = labeled_array[np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))]
-
-    # Should not happen with LOST
-    # if cc == 0:
-    #     pass
-        # raise ValueError("The seed is in the background component.")
-
-    # Find box
     mask = np.where(mask == 1)
-    # Add +1 because excluded max
     ymin, ymax = min(mask[0]), max(mask[0]) + 1
     xmin, xmax = min(mask[1]), max(mask[1]) + 1
 
-    # Rescale to image size
     r_xmin, r_xmax = scales[1] * xmin, scales[1] * xmax
     r_ymin, r_ymax = scales[0] * ymin, scales[0] * ymax
-
     pred = [r_xmin, r_ymin, r_xmax, r_ymax]
 
-    # Check not out of image size (used when padding)
     if initial_im_size:
         pred[2] = min(pred[2], initial_im_size[1])
         pred[3] = min(pred[3], initial_im_size[0])
 
-    # Coordinate predictions for the feature space
-    # Axis different then in image space
-    pred_feats = [ymin, xmin, ymax, xmax]
-
-    return pred, pred_feats
+    return pred, [ymin, xmin, ymax, xmax]
 
 
 def dino_seg(attn, dims, patch_size, head=0):
     """
-    Extraction of boxes based on the DINO segmentation method proposed in https://github.com/facebookresearch/dino. 
+    Extraction of boxes based on the DINO segmentation method proposed in https://github.com/facebookresearch/dino.
     Modified from https://github.com/facebookresearch/dino/blob/main/visualize_attention.py
     """
     w_featmap, h_featmap = dims
     nh = attn.shape[1]
     official_th = 0.6
 
-    # We keep only the output patch attention
-    # Get the attentions corresponding to [CLS] token
     attentions = attn[0, :, 0, 1:].reshape(nh, -1)
-
-    # we keep only a certain percentage of the mass
     val, idx = torch.sort(attentions)
     val /= torch.sum(val, dim=1, keepdim=True)
     cumval = torch.cumsum(val, dim=1)
@@ -219,29 +153,15 @@ def dino_seg(attn, dims, patch_size, head=0):
         th_attn[h] = th_attn[h][idx2[h]]
     th_attn = th_attn.reshape(nh, w_featmap, h_featmap).float()
 
-    # Connected components
     labeled_array, num_features = scipy.ndimage.label(th_attn[head].cpu().numpy())
-
-    # Find the biggest component
     size_components = [np.sum(labeled_array == c) for c in range(np.max(labeled_array))]
 
-    if len(size_components) > 1:
-        # Select the biggest component avoiding component 0 corresponding to background
-        biggest_component = np.argmax(size_components[1:]) + 1
-    else:
-        # Cases of a single component
-        biggest_component = 0
-
-    # Mask corresponding to connected component
+    biggest_component = np.argmax(size_components[1:]) + 1 if len(size_components) > 1 else 0
     mask = np.where(labeled_array == biggest_component)
 
-    # Add +1 because excluded max
     ymin, ymax = min(mask[0]), max(mask[0]) + 1
     xmin, xmax = min(mask[1]), max(mask[1]) + 1
 
-    # Rescale to image
     r_xmin, r_xmax = xmin * patch_size, xmax * patch_size
     r_ymin, r_ymax = ymin * patch_size, ymax * patch_size
-    pred = [r_xmin, r_ymin, r_xmax, r_ymax]
-
-    return pred
+    return [r_xmin, r_ymin, r_xmax, r_ymax]

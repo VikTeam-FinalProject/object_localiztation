@@ -21,7 +21,7 @@ from PIL import Image
 
 import matplotlib.pyplot as plt
 
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, similars=None):
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None):
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
