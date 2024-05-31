@@ -36,7 +36,7 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
         seed: selected patch corresponding to an object
     """
     A = (feats @ feats.transpose(1, 2)).squeeze()
-    sorted_patches, scores = patch_scoring(A, dynamic_thres, k_patches=k_patches)
+    sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches)
     seed = sorted_patches[-1] if len(sorted_patches) > 0 else 0
 
     if k_patches == -1:
@@ -52,7 +52,7 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
     pred, _ = detect_box(dims, scales=scales, object_patches=not_potentials_filtered_index,
                          initial_im_size=init_image_size[1:])
 
-    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index
+    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, jumps
 
 
 def dbscan_filter(patches_xy):
@@ -86,17 +86,33 @@ def patch_scoring(M, dynamic_threshold, k_patches):
 
     # Dynamic Patch Selection (if `k_patches == -1`)
     if k_patches == -1:
-        jumps = [int(float((cent[i] - cent[i - 1]).cpu().numpy())) for i in range(1, len(cent))]
+        jumps = [abs(int(float((cent[i] - cent[i - 1]).cpu().numpy()))) for i in range(1, len(cent))]
         plot_jumps(jumps)
 
-        if len(jumps) > 10:
-            k_jump = 10 + np.argmin(jumps[10:])
-        else:
-            k_jump = np.argmin(jumps)
-        return sel[:k_jump], cent
+        # replace first 10% of the jumps with 0
+        num_10_percent = int(len(jumps) * 0.1)
+        jumps[:num_10_percent] = [0]*num_10_percent
 
-    return sel, cent
+        # replace last 10% of the jumps with 0
+        jumps[-num_10_percent:] = [0]*num_10_percent
+        
+        k_jump = get_last_argmax(jumps)       
 
+        # if len(jumps) > 10:
+        #     k_jump = 10 + np.argmin(jumps[10:-10])
+        # else:
+        #     k_jump = np.argmin(jumps)
+        return sel[:k_jump], cent, jumps
+
+    return sel, cent, jumps
+
+def get_last_argmax(lst):
+    '''
+        [1, 4, 4, 4, 3, 4] --> return 5
+        default argmax would return 1
+    '''
+    lst2 = lst[::-1]
+    return len(lst) - lst2.index(max(lst)) -1
 
 def plot_jumps(jumps,save_path='jumps.png'):
     plt.figure(figsize=(10, 6))

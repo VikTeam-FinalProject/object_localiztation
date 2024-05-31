@@ -18,10 +18,10 @@ import skimage.io
 import numpy as np
 import torch.nn as nn
 from PIL import Image
-
+import os
 import matplotlib.pyplot as plt
 
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None):
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, jumps=None):
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
@@ -88,20 +88,33 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 (0, 128, 128), 1, # Teal
             )
         
-        # for seed in similars:
-        #     s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
-        #     size = np.asarray(scales) / 2
-        #     cv2.rectangle(
-        #         image,
-        #         (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
-        #         ),
-        #         (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
-        #         ),
-        #         (0, 128, 128), 1, # Teal
-        #     )
+        # visualize paths at id= k_jump
+        patch_k_jump = potentials[-1] if len(potentials) > 0 else 0
+        s = np.unravel_index(patch_k_jump, (w_featmap, h_featmap))
+        size = np.asarray(scales) / 2
+        cv2.rectangle(
+            image,
+            (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
+            ),
+            (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
+            ),
+            (0, 0, 255), -1, # Blue
+        )
+
         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
         Image.fromarray(image).save(pltname)
         print(f"Predictions saved at {pltname}.")
+
+        os.makedirs(f"{vis_folder}/jumps", exist_ok=True)
+        # save jumps plot
+        plt.figure(figsize=(10, 6))
+        plt.plot(jumps, marker='o', linestyle='-', color='b')
+        plt.title('Plot of Jumps')
+        plt.xlabel('Index')
+        plt.ylabel('Jump Value')
+        plt.grid(True)
+        # plt.savefig(f"{vis_folder}/jumps/jumps_{im_name}.png")
+        
 
 def visualize_fms(A, seed, scores, dims, scales, output_folder, im_name):
     """
