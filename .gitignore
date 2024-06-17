@@ -1,0 +1,10 @@
+LOST/outputs/*
+venv_dinov
+*.pyc
+TokenCut/.idea
+LOST/.idea
+TokenCut/TokenCut
+LOST/dino
+FOUND/
+LOST/dinov2_model/
+LOST/tmp*
