@@ -26,7 +26,7 @@ Below are visualizations demonstrating the effectiveness of our proposed method 
 
 | Input Image | Background Filtering Result |
 |-------------|-----------------------------|
-| ![image](https://github.com/user-attachments/assets/8d7994e1-d112-4926-87e1-16afc32bdeaf)| ![image](https://github.com/user-attachments/assets/702b6444-07a1-46fc-b363-49b5a6d26d40) |
+| ![image](https://github.com/user-attachments/assets/8d7994e1-d112-4926-87e1-16afc32bdeaf)|![image](https://github.com/user-attachments/assets/79657657-87ac-4f00-baed-a13a0a042716)|
 
 *Fig. 1: Illustration of background filtering capability with our proposed decoding method.*
 
