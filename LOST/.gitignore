@@ -1,5 +1,5 @@
 outputs/*
 *.pyc
-datasets/
-dino/
+datasets/*
+dino/*
 dinov2_model/*

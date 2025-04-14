@@ -22,10 +22,10 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 
+from artifact_det import detect_artifacts
 from datasets import ImageDataset, Dataset, bbox_iou
 from networks import get_model
 from object_discovery import lost, detect_box, dino_seg
-
 from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion, visualize_heatmap
 
 if __name__ == "__main__":
@@ -251,9 +251,13 @@ if __name__ == "__main__":
                     pred = np.asarray(pred)
                 else:
                     # Extract the qkv features of the last attention layer
-                    attn = attentions[0, :, 0, 1:].reshape(nh, -1)
+                    attn = attentions[0, :, 0, 1:]
+                    if args.check_artifacts:
+                        is_artifact = detect_artifacts(attn)["has_artifacts"]
+                        print(f"Image {im_name} has artifacts: {is_artifact}")
+                    print(attn.shape)
                     attn = attn.reshape(nh, w_featmap, h_featmap)
-                    # Upsample heatmap về kích thước ảnh ban đầu:
+
                     attn = nn.functional.interpolate(attn.unsqueeze(0),
                                                      scale_factor=args.patch_size,
                                                      mode='nearest')[0].cpu().numpy()

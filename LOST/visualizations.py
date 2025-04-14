@@ -82,17 +82,6 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
 
         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
         Image.fromarray(image).save(pltname)
-        # print(f"Predictions saved at {pltname}.")
-        #
-        # os.makedirs(f"{vis_folder}/jumps", exist_ok=True)
-        # # save jumps plot
-        # plt.figure(figsize=(10, 6))
-        # plt.plot(jumps, marker='o', linestyle='-', color='b')
-        # plt.title('Plot of Jumps')
-        # plt.xlabel('Index')
-        # plt.ylabel('Jump Value')
-        # plt.grid(True)
-        # plt.savefig(f"{vis_folder}/jumps/jumps_{im_name}.png")
         
 
 def visualize_fms(A, seed, scores, dims, scales, output_folder, im_name):
