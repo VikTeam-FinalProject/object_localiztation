@@ -2,3 +2,4 @@ outputs/*
 *.pyc
 datasets/
 dino/
+dinov2_model/*
