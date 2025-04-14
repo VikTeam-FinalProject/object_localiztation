@@ -17,7 +17,8 @@ import scipy.ndimage
 from sklearn.cluster import DBSCAN
 import numpy as np
 import matplotlib.pyplot as plt
-from datasets import bbox_iou
+import torch.nn.functional as F
+
 
 
 def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, dbscan=True):
@@ -35,23 +36,20 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
         scores: lowest degree scores for all patches
         seed: selected patch corresponding to an object
     """
+
     A = (feats @ feats.transpose(1, 2)).squeeze()
     sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches)
     seed = sorted_patches[-1] if len(sorted_patches) > 0 else 0
 
     if k_patches == -1:
         not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in sorted_patches]
-        not_potentials_xy_filtered = dbscan_filter(not_potentials_xy) if dbscan else not_potentials_xy
-        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy_filtered]
+        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
     else:
         potentials = sorted_patches[:k_patches]
         not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in potentials]
-        not_potentials_xy_filtered = dbscan_filter(not_potentials_xy) if dbscan else not_potentials_xy
-        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy_filtered]
-
+        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
     pred, _ = detect_box(dims, scales=scales, object_patches=not_potentials_filtered_index,
                          initial_im_size=init_image_size[1:])
-
     return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, jumps
 
 
@@ -79,12 +77,12 @@ def patch_scoring(M, dynamic_threshold, k_patches):
     threshold = torch.mean(M) if dynamic_threshold else 0.0
     A = M.clone()
     A.fill_diagonal_(0)
-    A[A < threshold] = 0
     cent = -torch.sum(A > threshold, dim=1).float()
+    # softmax_output = F.softmax(A, dim=1)
+    # visualize_heatmap(softmax_output)
     sel = torch.argsort(cent, descending=True)
     cent = cent[sel]
-
-    # Dynamic Patch Selection (if `k_patches == -1`)
+    jumps = []
     if k_patches == -1:
         jumps = [abs(int(float((cent[i] - cent[i - 1]).cpu().numpy()))) for i in range(1, len(cent))]
         plot_jumps(jumps)
@@ -97,7 +95,6 @@ def patch_scoring(M, dynamic_threshold, k_patches):
         jumps[-num_10_percent:] = [0]*num_10_percent
         
         k_jump = get_last_argmax(jumps)       
-
         # if len(jumps) > 10:
         #     k_jump = 10 + np.argmin(jumps[10:-10])
         # else:
@@ -128,6 +125,11 @@ def detect_box(dims, object_patches, initial_im_size=None, scales=None):
     """
     Extract a box corresponding to the seed patch. Among connected components extract from the affinity matrix, select the one corresponding to the seed patch.
     """
+    if isinstance(object_patches, torch.Tensor):
+        if object_patches.dim() == 0:  # It's a scalar
+            return [0, 0, 0, 0], [0, 0, 0, 0]
+        object_patches = object_patches.tolist()  # Convert to list
+
     if len(object_patches) == 0:
         return [0, 0, 0, 0], [0, 0, 0, 0]
     object_patches_unravel = [np.unravel_index(p, dims) for p in object_patches]
@@ -181,3 +183,4 @@ def dino_seg(attn, dims, patch_size, head=0):
     r_xmin, r_xmax = xmin * patch_size, xmax * patch_size
     r_ymin, r_ymax = ymin * patch_size, ymax * patch_size
     return [r_xmin, r_ymin, r_xmax, r_ymax]
+

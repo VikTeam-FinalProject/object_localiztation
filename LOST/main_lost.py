@@ -26,7 +26,7 @@ from datasets import ImageDataset, Dataset, bbox_iou
 from networks import get_model
 from object_discovery import lost, detect_box, dino_seg
 
-from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion
+from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion, visualize_heatmap
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Unsupervised object discovery with LOST.")
@@ -49,6 +49,10 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--patch_size", default=14, type=int, help="Patch resolution of the model."
+    )
+
+    parser.add_argument(
+        "--check_artifacts", action="store_true", help="Check for artifacts in the attention maps."
     )
 
     # Use a dataset
@@ -74,7 +78,7 @@ if __name__ == "__main__":
         help="If want to apply only on one image, give file path.",
     )
 
-    # Folder used to output visualizations and 
+    # Folder used to output visualizations and
     parser.add_argument(
         "--output_dir", type=str, default="outputs", help="Output directory to store predictions and visualizations."
     )
@@ -127,7 +131,7 @@ if __name__ == "__main__":
         print("Using dynamic thresholding.")
     if not args.nodbscan:
         print("Using DBSCAN clustering.")
-        
+
     if args.image_path is not None:
         args.save_predictions = False
         args.no_evaluation = True
@@ -169,7 +173,7 @@ if __name__ == "__main__":
 
     print(f"Running LOST on the dataset {dataset.name} (exp: {exp_name})")
 
-    # Visualization 
+    # Visualization
     if args.visualize:
         vis_folder = f"{args.output_dir}/visualizations/{exp_name}"
         os.makedirs(vis_folder, exist_ok=True)
@@ -179,14 +183,13 @@ if __name__ == "__main__":
     preds_dict = {}
     cnt = 0
     corloc = np.zeros(len(dataset.dataloader))
-    
+
     pbar = tqdm(dataset.dataloader)
     for im_id, inp in enumerate(pbar):
 
         # ------------ IMAGE PROCESSING -------------------------------------------
         img = inp[0]
         init_image_size = img.shape
-
         # Get the name of the image
         im_name = dataset.get_image_name(inp[1])
 
@@ -209,7 +212,6 @@ if __name__ == "__main__":
         # Size for transformers
         w_featmap = img.shape[-2] // args.patch_size
         h_featmap = img.shape[-1] // args.patch_size
-
         # ------------ GROUND-TRUTH -------------------------------------------
         if not args.no_evaluation:
             gt_bbxs, gt_cls = dataset.extract_gt(inp[1], im_name)
@@ -249,6 +251,12 @@ if __name__ == "__main__":
                     pred = np.asarray(pred)
                 else:
                     # Extract the qkv features of the last attention layer
+                    attn = attentions[0, :, 0, 1:].reshape(nh, -1)
+                    attn = attn.reshape(nh, w_featmap, h_featmap)
+                    # Upsample heatmap về kích thước ảnh ban đầu:
+                    attn = nn.functional.interpolate(attn.unsqueeze(0),
+                                                     scale_factor=args.patch_size,
+                                                     mode='nearest')[0].cpu().numpy()
                     qkv = (
                         feat_out["qkv"]
                         .reshape(nb_im, nb_tokens, 3, nh, -1 // nh)
@@ -268,42 +276,17 @@ if __name__ == "__main__":
                         feats = v[:, 1:, :]
                     if 'reg' in args.arch:
                         feats = feats[:, 4:, :]
-            elif "resnet" in args.arch:
-                x = model.forward(img[None, :, :, :])
-                d, w_featmap, h_featmap = x.shape[1:]
-                feats = x.reshape((1, d, -1)).transpose(2, 1)
-                # Apply layernorm
-                layernorm = nn.LayerNorm(feats.size()[1:]).to(device)
-                feats = layernorm(feats)
-                # Scaling factor
-                scales = [
-                    float(img.shape[1]) / x.shape[2],
-                    float(img.shape[2]) / x.shape[3],
-                ]
-            elif "vgg16" in args.arch:
-                x = model.forward(img[None, :, :, :])
-                d, w_featmap, h_featmap = x.shape[1:]
-                feats = x.reshape((1, d, -1)).transpose(2, 1)
-                # Apply layernorm
-                layernorm = nn.LayerNorm(feats.size()[1:]).to(device)
-                feats = layernorm(feats)
-                # Scaling factor
-                scales = [
-                    float(img.shape[1]) / x.shape[2],
-                    float(img.shape[2]) / x.shape[3],
-                ]
-            else:
-                raise ValueError("Unknown model.")
 
         # ------------ Apply LOST -------------------------------------------
         if not args.dinoseg:
+
             pred, A, scores, seed, potentials, jumps = lost(
                 feats,
                 [w_featmap, h_featmap],
                 scales,
                 init_image_size,
                 k_patches=args.k_patches,
-                dynamic_thres=args.dynamic_thres,
+                dynamic_thres="dinov2" in args.arch,
                 dbscan = not args.nodbscan,
             )
 
@@ -320,13 +303,13 @@ if __name__ == "__main__":
                     seed,
                     [w_featmap, h_featmap],
                     scales=scales,
-                    initial_im_size=init_image_size[1:],
                 )
                 visualize_seed_expansion(image, pred, seed, pred_seed, scales, [w_featmap, h_featmap], vis_folder, im_name)
 
             elif args.visualize == "pred":
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, jumps = jumps)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=False, potentials=potentials)
+                visualize_heatmap(attn, im_name, vis_folder, mean=True)
 
         # Save the prediction
         preds_dict[im_name] = pred
@@ -334,7 +317,7 @@ if __name__ == "__main__":
         # Evaluation
         if args.no_evaluation:
             continue
-        # convert pred to numpy 
+        # convert pred to numpy
         pred = np.array(pred)
 
         # Compare prediction to GT boxes

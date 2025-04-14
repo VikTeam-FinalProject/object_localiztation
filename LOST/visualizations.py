@@ -21,24 +21,13 @@ from PIL import Image
 import os
 import matplotlib.pyplot as plt
 
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, jumps=None):
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None):
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
     w_featmap, h_featmap = dims
     # Plot the box
-    cv2.rectangle(
-        image,
-        (int(pred[0]), int(pred[1])),
-        (int(pred[2]), int(pred[3])),
-        (255, 0, 0), 3,
-    )
     im_name = im_name.split("\\")[-1]
-    # Plot the seed
-    # potentials = [max(po-4, 0) for po in potentials]
-    # potentials-=4
-    # print('dim is: ', dims)
-    # print('min patch is: ', [min([i for i in potentials if i > dims[0]])])
     if plot_seed:
         if type(seed) == torch.Tensor:
             s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
@@ -51,9 +40,7 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
             (int(s_[1] * scales[1] + (size_[1] / 2)), int(s_[0] * scales[0] + (size_[0] / 2))),
             (0, 255, 0), -1,
         )
-    # pltname = f"{vis_folder}/LOST_{im_name}.png"
-    # Image.fromarray(image).save(pltname)
-    # print(f"Predictions saved at {pltname}.")
+
 
 
     if potentials is not None:
@@ -92,27 +79,19 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
         patch_k_jump = potentials[-1] if len(potentials) > 0 else 0
         s = np.unravel_index(patch_k_jump, (w_featmap, h_featmap))
         size = np.asarray(scales) / 2
-        cv2.rectangle(
-            image,
-            (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
-            ),
-            (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
-            ),
-            (0, 0, 255), -1, # Blue
-        )
 
         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
         Image.fromarray(image).save(pltname)
-        print(f"Predictions saved at {pltname}.")
-
-        os.makedirs(f"{vis_folder}/jumps", exist_ok=True)
-        # save jumps plot
-        plt.figure(figsize=(10, 6))
-        plt.plot(jumps, marker='o', linestyle='-', color='b')
-        plt.title('Plot of Jumps')
-        plt.xlabel('Index')
-        plt.ylabel('Jump Value')
-        plt.grid(True)
+        # print(f"Predictions saved at {pltname}.")
+        #
+        # os.makedirs(f"{vis_folder}/jumps", exist_ok=True)
+        # # save jumps plot
+        # plt.figure(figsize=(10, 6))
+        # plt.plot(jumps, marker='o', linestyle='-', color='b')
+        # plt.title('Plot of Jumps')
+        # plt.xlabel('Index')
+        # plt.ylabel('Jump Value')
+        # plt.grid(True)
         # plt.savefig(f"{vis_folder}/jumps/jumps_{im_name}.png")
         
 
@@ -144,6 +123,7 @@ def visualize_fms(A, seed, scores, dims, scales, output_folder, im_name):
     )
 
     # Save correlations
+    im_corr = (im_corr * 255).astype(np.uint8)  # Chuyển về uint8
     skimage.io.imsave(
         fname=f"{output_folder}/corr_{im_name}.png",
         arr=im_corr.transpose((1, 2, 0)),
@@ -198,3 +178,38 @@ def visualize_seed_expansion(image, pred, seed, pred_seed, scales, dims, vis_fol
     pltname = f"{vis_folder}/LOST_seed_expansion_{im_name}.png"
     Image.fromarray(image).save(pltname)
     print(f"Image saved at {pltname}.")
+
+
+def visualize_heatmap(heatmap, im_name, vis_folder, mean=False):
+    """
+    Visualization of the heatmap.
+
+    Args:
+        heatmap: The heatmap to visualize.
+        im_name: The name of the image.
+        vis_folder: The folder to save the visualization.
+        mean: Whether to visualize the mean of the heatmap.
+    """
+    save_dir = os.path.join(vis_folder, "heatmap")
+    os.makedirs(save_dir, exist_ok=True)
+
+    def normalize(img):
+        return (img - np.min(img)) / (np.max(img) - np.min(img) + 1e-8)
+
+    if mean:
+        if heatmap.ndim == 3:
+            heatmap_mean = heatmap.mean(axis=0)
+        else:
+            heatmap_mean = heatmap
+        heatmap_mean = normalize(heatmap_mean)
+        fname = os.path.join(save_dir, f"attn-head_mean_{im_name}.png")
+        plt.imsave(fname=fname, arr=heatmap_mean, format='png')
+        print(f"{fname} saved.")
+    else:
+        for j in range(heatmap.shape[0]):
+            head_map = normalize(heatmap[j])
+            fname = os.path.join(save_dir, f"attn-head_{j}_{im_name}.png")
+            plt.imsave(fname=fname, arr=head_map, format='png')
+            print(f"{fname} saved.")
+
+

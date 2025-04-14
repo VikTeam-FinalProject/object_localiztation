@@ -15,39 +15,12 @@ import os
 
 import torch
 import torch.nn as nn
-
-from torchvision.models.resnet import resnet50
-from torchvision.models.vgg import vgg16
-
 import sys
 import dino.vision_transformer as vits
 
 from dinov2.models.vision_transformer import vit_small,vit_large
 def get_model(arch, patch_size, resnet_dilate, device):
-    if "resnet" in arch:
-        if resnet_dilate == 1:
-            replace_stride_with_dilation = [False, False, False]
-        elif resnet_dilate == 2:
-            replace_stride_with_dilation = [False, False, True]
-        elif resnet_dilate == 4:
-            replace_stride_with_dilation = [False, True, True]
-
-        if "imagenet" in arch:
-            model = resnet50(
-                pretrained=True,
-                replace_stride_with_dilation=replace_stride_with_dilation,
-            )
-        else:
-            model = resnet50(
-                pretrained=False,
-                replace_stride_with_dilation=replace_stride_with_dilation,
-            )
-    elif "vgg16" in arch:
-        if "imagenet" in arch:
-            model = vgg16(pretrained=True)
-        else:
-            model = vgg16(pretrained=False)
-    elif "dinov2_vits14_pretrain" in arch:
+    if "dinov2_vits14_pretrain" in arch:
         model = vit_small(patch_size=14,       
                     img_size=526,
                     init_values=1.0,
@@ -83,10 +56,7 @@ def get_model(arch, patch_size, resnet_dilate, device):
             url = "dino_vitbase16_pretrain/dino_vitbase16_pretrain.pth"
         elif arch == "vit_base" and patch_size == 8:
             url = "dino_vitbase8_pretrain/dino_vitbase8_pretrain.pth"
-        elif arch == "resnet50":
-            url = "dino_resnet50_pretrain/dino_resnet50_pretrain.pth"
         elif "dinov2" in arch:
-            # url = "dinov2_vitl14_pretrain.pth"
             print("loading dinov2...")
             HOME = os.getcwd()
             MODEL_PATH = os.path.join(HOME,"dinov2_model", f"{arch}.pth")
@@ -94,7 +64,6 @@ def get_model(arch, patch_size, resnet_dilate, device):
             for p in model.parameters():
                 p.requires_grad = False
 
-            #model = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
             model.eval()
             model.to(device)
             return model
@@ -105,8 +74,7 @@ def get_model(arch, patch_size, resnet_dilate, device):
             state_dict = torch.hub.load_state_dict_from_url(
                 url="https://dl.fbaipublicfiles.com/dino/" + url
             )
-            strict_loading = False if "resnet" in arch else True
-            msg = model.load_state_dict(state_dict, strict=strict_loading)
+            msg = model.load_state_dict(state_dict, strict=True)
             print(
                 "Pretrained weights found at {} and loaded with msg: {}".format(
                     url, msg
@@ -118,37 +86,7 @@ def get_model(arch, patch_size, resnet_dilate, device):
             )
 
     # If ResNet or VGG16 loose the last fully connected layer
-    if "resnet" in arch:
-        model = ResNet50Bottom(model)
-    elif "vgg16" in arch:
-        model = vgg16Bottom(model)
 
     model.eval()
     model.to(device)
     return model
-
-
-class ResNet50Bottom(nn.Module):
-    # https://forums.fast.ai/t/pytorch-best-way-to-get-at-intermediate-layers-in-vgg-and-resnet/5707/2
-    def __init__(self, original_model):
-        super(ResNet50Bottom, self).__init__()
-        # Remove avgpool and fc layers
-        self.features = nn.Sequential(*list(original_model.children())[:-2])
-
-    def forward(self, x):
-        x = self.features(x)
-        return x
-
-
-class vgg16Bottom(nn.Module):
-    # https://forums.fast.ai/t/pytorch-best-way-to-get-at-intermediate-layers-in-vgg-and-resnet/5707/2
-    def __init__(self, original_model):
-        super(vgg16Bottom, self).__init__()
-        # Remove avgpool and the classifier
-        self.features = nn.Sequential(*list(original_model.children())[:-2])
-        # Remove the last maxPool2d
-        self.features = nn.Sequential(*list(self.features[0][:-1]))
-
-    def forward(self, x):
-        x = self.features(x)
-        return x
