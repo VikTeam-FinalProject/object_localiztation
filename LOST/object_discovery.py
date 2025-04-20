@@ -17,8 +17,6 @@ import scipy.ndimage
 from sklearn.cluster import DBSCAN
 import numpy as np
 import matplotlib.pyplot as plt
-import torch.nn.functional as F
-
 
 
 def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, dbscan=True):
@@ -85,7 +83,7 @@ def patch_scoring(M, dynamic_threshold, k_patches):
     jumps = []
     if k_patches == -1:
         jumps = [abs(int(float((cent[i] - cent[i - 1]).cpu().numpy()))) for i in range(1, len(cent))]
-        plot_jumps(jumps)
+        # plot_jumps(jumps)
 
         # replace first 10% of the jumps with 0
         num_10_percent = int(len(jumps) * 0.1)

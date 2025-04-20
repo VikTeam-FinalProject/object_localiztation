@@ -33,6 +33,7 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
             s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
         else:
             s_ = np.unravel_index(seed, (w_featmap, h_featmap))
+        print(f"Seed: {s_}")
         size_ = np.asarray(scales) / 2
         cv2.rectangle(
             image,

@@ -254,7 +254,7 @@ class DinoVisionTransformer(nn.Module):
     def forward_features(self, x, masks=None):
         if isinstance(x, list):
             return self.forward_features_list(x, masks)
-
+        print(x.shape)
         x = self.prepare_tokens_with_masks(x, masks)
 
         for blk in self.blocks:

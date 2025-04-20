@@ -60,18 +60,17 @@ class Dataset:
 
         self.dataset_name = dataset_name
         self.set = dataset_set
-
         if dataset_name == "VOC07":
             self.root_path = "datasets/VOC2007"
             self.year = "2007"
         elif dataset_name == "VOC12":
-            self.root_path = "datasets/VOC2012"
+            self.root_path = r"../../../dataset/voc"
             self.year = "2012"
         elif dataset_name == "COCO20k":
             self.year = "2014"
             self.root_path = f"datasets/COCO/images/{dataset_set}{self.year}"
             self.sel20k = 'datasets/coco_20k_filenames.txt'
-            # JSON file constructed based on COCO train2014 gt 
+            # JSON file constructed based on COCO train2014 gt
             self.all_annfile = "datasets/COCO/annotations/instances_train2014.json"
             self.annfile = "datasets/instances_train2014_sel20k.json"
             if not os.path.exists(self.annfile):
@@ -107,6 +106,7 @@ class Dataset:
             self.name += f"-nohards"
             self.hards = self.get_hards()
             print(f"Nb images discarded {len(self.hards)}")
+
 
     def load_image(self, im_name):
         """

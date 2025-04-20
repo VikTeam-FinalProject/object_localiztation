@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 virtualenv at D:\CVOnly\CVModel\ueh\object_localiztation\venv_dinov" project-jdk-type="Python SDK" />
+  <component name="Black">
+    <option name="sdkName" value="Python 3.12.9 WSL (Ubuntu-24.04): (/home/victor-ho/miniconda3/envs/LOST/bin/python3)" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12.9 WSL (Ubuntu-24.04): (/home/victor-ho/miniconda3/envs/LOST/bin/python3)" project-jdk-type="Python SDK" />
 </project>

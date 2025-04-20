@@ -1,51 +1,78 @@
 import torch
 import numpy as np
 
+import torch
 
-def detect_artifacts(attention, artifact_factor_threshold=10.0):
+
+def detect_artifacts(features: torch.Tensor, method: str = 'threshold', threshold: float = 80.0,
+                     gap_threshold: float = 30.0) -> dict:
     """
-    Kiểm tra artifacts theo phương pháp relative, dựa trên tensor attention có shape [num_heads, num_tokens].
+    Detects artifacts in token features based on L2 norms using the specified method.
 
-    Quy trình:
-      1. Tính L2 norm cho mỗi patch token, tổng hợp qua các head (norm được tính theo chiều 0).
-      2. Tính giá trị trung vị (median) của các norm.
-      3. Đánh dấu token là artifact nếu norm của nó lớn hơn
-         artifact_factor_threshold * median.
-      4. Tính artifact_ratio = số token artifact / tổng số token.
-      5. Nếu artifact_ratio > artifact_ratio_threshold (ở đây đặt = 0),
-         mẫu được coi là có artifacts (dù chỉ có 1 token).
-
-    Parameters:
-      attention (torch.Tensor): Tensor attention có shape [nh, tokens] (ví dụ [16, 1008]).
-      artifact_factor_threshold (float): Hệ số nhân với median để xác định token artifact.
-                                          Ví dụ, nếu artifact_factor_threshold=10.0, token nào có norm > 10*median sẽ được đánh dấu.
-      artifact_ratio_threshold (float): Ngưỡng tỷ lệ token artifact. Ở đây, nếu > 0 thì có artifact.
+    Args:
+        features (torch.Tensor): Output features, shape [1, num_tokens, feature_dim].
+        method (str): Detection method ('threshold' or 'gap').
+        threshold (float): Norm threshold for 'threshold' method (default: 80.0).
+        gap_threshold (float): Threshold to flag artifacts in 'gap' method (default: 10.0).
 
     Returns:
-      artifact_ratio (float): Tỷ lệ token có artifact.
-      has_artifacts (bool): True nếu artifact_ratio > artifact_ratio_threshold.
-      norms (np.ndarray): Mảng các L2 norm của từng token (shape [tokens]).
-      artifact_mask (np.ndarray): Mask Boolean đánh dấu token artifact (shape [tokens]).
+        dict: Contains:
+            - artifacts (torch.Tensor): Boolean tensor indicating artifacts, shape [1, num_tokens].
+            - indices (list): Indices of artifact tokens.
+            - norms (torch.Tensor): L2 norms of tokens, shape [1, num_tokens].
+            - top_5_norms (torch.Tensor): Top 5 norms after sorting, shape [5].
+            - top_5_indices (list): Indices of top 5 norms.
+            - gap (float): Gap between highest norm and fifth highest norm (for 'gap' method).
     """
-    # Tính L2 norm cho từng token, qua các head (dọc theo chiều 0)
-    norms = torch.norm(attention, dim=0)  # shape: [tokens]
+    # Validate input
+    if not isinstance(features, torch.Tensor):
+        features = torch.tensor(features, dtype=torch.float32)
+    if len(features.shape) != 3 or features.shape[0] != 1:
+        raise ValueError("Expected shape [1, num_tokens, feature_dim]")
 
-    min_norm = torch.min(norms).item()
-    max_norm = torch.max(norms).item()
-    median_norm = torch.median(norms).item()
+    # Compute L2 norms
+    norms = torch.norm(features, dim=2)  # [1, num_tokens]
 
-    print("Min norm:", min_norm)
-    print("Max norm:", max_norm)
-    print("Median norm:", median_norm)
+    # Sort norms in descending order
+    if method == 'threshold':
+        # Simple threshold method
+        artifacts = norms > threshold
+        indices = torch.where(artifacts[0])[0].tolist()
 
-    # Đánh dấu artifact nếu norm của token > (artifact_factor_threshold * median)
-    artifact_mask = norms > (artifact_factor_threshold * median_norm)
-    artifact_ratio = artifact_mask.float().mean().item()  # tỷ lệ token artifact
-    has_artifacts = artifact_ratio > 0
+        return {
+            "artifacts": artifacts,
+            "indices": indices,
+            "norms": norms,
+        }
+    elif method == 'gap':
+        sorted_norms, sorted_indices = torch.sort(norms[0], descending=True)
+
+        # Get top 5 norms and indices
+        top_5_norms = sorted_norms[:min(5, len(sorted_norms))]  # [5] or fewer
+        top_5_indices = sorted_indices[:min(5, len(sorted_norms))].tolist()
+        if len(sorted_norms) < 5:
+            raise ValueError("Need at least 5 tokens to use 'gap' method.")
+
+        highest_norm = top_5_norms[0]
+        fifth_norm = top_5_norms[4]
+        gap = highest_norm - fifth_norm
+
+        # Flag artifacts: norms exceeding fifth_norm + gap_threshold
+        dynamic_threshold = fifth_norm + gap_threshold
+        artifacts = norms > dynamic_threshold
+    else:
+        raise ValueError("Method must be 'threshold' or 'gap'")
+
+    # Get indices of artifacts
+    indices = torch.where(artifacts[0])[0].tolist()
 
     return {
-        'artifact_ratio': artifact_ratio,
-        'has_artifacts': has_artifacts,
-        'norms': norms.cpu().numpy(),
-        'artifact_mask': artifact_mask.cpu().numpy()
+        "artifacts": artifacts,
+        "indices": indices,
+        "norms": norms,
+        "top_5_norms": top_5_norms,
+        "top_5_indices": top_5_indices,
+        "gap": gap if method == 'gap' else None
     }
+
+

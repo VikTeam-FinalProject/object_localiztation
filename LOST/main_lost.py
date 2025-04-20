@@ -92,7 +92,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--visualize",
         type=str,
-        choices=["fms", "seed_expansion", "pred", None],
+        choices=["fms", "seed_expansion", "pred", None, "heatmap"],
         default=None,
         help="Select the different type of visualizations.",
     )
@@ -185,14 +185,13 @@ if __name__ == "__main__":
     corloc = np.zeros(len(dataset.dataloader))
 
     pbar = tqdm(dataset.dataloader)
+    hard_ds = []
     for im_id, inp in enumerate(pbar):
-
         # ------------ IMAGE PROCESSING -------------------------------------------
         img = inp[0]
         init_image_size = img.shape
         # Get the name of the image
         im_name = dataset.get_image_name(inp[1])
-
         # Pass in case of no gt boxes in the image
         if im_name is None:
             continue
@@ -235,7 +234,7 @@ if __name__ == "__main__":
 
                 # Forward pass in the model
                 attentions = model.get_last_selfattention(img[None, :, :, :])
-
+                output = model(img[None,:,:,:],is_training = True)['x_norm_patchtokens']
                 # Scaling factor
                 scales = [args.patch_size, args.patch_size]
 
@@ -251,12 +250,18 @@ if __name__ == "__main__":
                     pred = np.asarray(pred)
                 else:
                     # Extract the qkv features of the last attention layer
-                    attn = attentions[0, :, 0, 1:]
+
                     if args.check_artifacts:
-                        is_artifact = detect_artifacts(attn)["has_artifacts"]
-                        print(f"Image {im_name} has artifacts: {is_artifact}")
-                    print(attn.shape)
-                    attn = attn.reshape(nh, w_featmap, h_featmap)
+                        artifacts, art_indices, norms,_,_,gap = detect_artifacts(output, method='gap').values()
+                        is_artifact = torch.any(artifacts[0])
+                        # check_artifacts_is_seed
+                        if is_artifact:
+                            # Save the image name in the hard dataset
+                            if not args.dataset:
+                                print(f"Image {im_name} has an artifact.")
+                            hard_ds.append(im_name)
+
+                    attn = attentions[0, :, 0, 1:].reshape(nh, w_featmap, h_featmap)
 
                     attn = nn.functional.interpolate(attn.unsqueeze(0),
                                                      scale_factor=args.patch_size,
@@ -283,7 +288,7 @@ if __name__ == "__main__":
 
         # ------------ Apply LOST -------------------------------------------
         if not args.dinoseg:
-
+            # Apply LOST
             pred, A, scores, seed, potentials, jumps = lost(
                 feats,
                 [w_featmap, h_featmap],
@@ -293,6 +298,14 @@ if __name__ == "__main__":
                 dynamic_thres="dinov2" in args.arch,
                 dbscan = not args.nodbscan,
             )
+
+            # if check artifacts, then also check if that artifacts is the same as seed or not
+            if args.check_artifacts:
+                # check_artifacts_is_seed
+                print(" check artifacts ")
+                print(art_indices)
+                print(seed)
+
 
             # ------------ Visualizations -------------------------------------------
             if args.visualize == "fms":
@@ -312,7 +325,8 @@ if __name__ == "__main__":
 
             elif args.visualize == "pred":
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=False, potentials=potentials)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials)
+            elif args.visualize == "heatmap":
                 visualize_heatmap(attn, im_name, vis_folder, mean=True)
 
         # Save the prediction
@@ -332,9 +346,16 @@ if __name__ == "__main__":
 
         cnt += 1
         if cnt % 50 == 0:
-            pbar.set_description(f"Found {int(np.sum(corloc))}/{cnt}")
+            pbar.set_description(f"Found {int(np.sum(corloc))}/{cnt}, is_artifact: {len(hard_ds)}")
 
-
+    if args.check_artifacts:
+        artifacts_ds_path = os.path.join("datasets", "hard_VOC12_trainval_2012.txt")
+        # Save the hard dataset
+        if len(hard_ds) > 1:
+            with open(artifacts_ds_path, "w") as f:
+                for item in hard_ds:
+                    f.write("%s\n" % item)
+            print("Hard dataset saved at %s" % artifacts_ds_path)
     # Save predicted bounding boxes
     if args.save_predictions:
         folder = f"{args.output_dir}/{exp_name}"
