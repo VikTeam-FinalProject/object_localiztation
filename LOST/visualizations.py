@@ -21,19 +21,97 @@ from PIL import Image
 import os
 import matplotlib.pyplot as plt
 
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None):
+# def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None):
+#     """
+#     Visualization of the predicted box and the corresponding seed patch.
+#     """
+#     w_featmap, h_featmap = dims
+#     # Plot the box
+#     im_name = im_name.split("\\")[-1]
+#     if plot_seed:
+#         if type(seed) == torch.Tensor:
+#             s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+#         else:
+#             s_ = np.unravel_index(seed, (w_featmap, h_featmap))
+#         print(f"Seed: {s_}")
+#         size_ = np.asarray(scales) / 2
+#         cv2.rectangle(
+#             image,
+#             (int(s_[1] * scales[1] - (size_[1] / 2)), int(s_[0] * scales[0] - (size_[0] / 2))),
+#             (int(s_[1] * scales[1] + (size_[1] / 2)), int(s_[0] * scales[0] + (size_[0] / 2))),
+#             (0, 255, 0), -1,
+#         )
+
+
+
+#     if potentials is not None:
+#         # plot half of potentials
+#         for seed in potentials[:len(potentials)//2]:
+#             if type(seed) == torch.Tensor:
+#                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+#             else:
+#                 s = np.unravel_index(seed, (w_featmap, h_featmap))
+#             size = np.asarray(scales) / 2
+#             cv2.rectangle(
+#                 image,
+#                 (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
+#                 ),
+#                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
+#                 ),
+#                 (128, 0, 128), 1, # Purple
+#             )
+#         # plot the other half of potentials
+#         for seed in potentials[len(potentials)//2:]:
+#             if type(seed) == torch.Tensor:
+#                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+#             else:
+#                 s = np.unravel_index(seed, (w_featmap, h_featmap))
+#             size = np.asarray(scales) / 2
+#             cv2.rectangle(
+#                 image,
+#                 (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
+#                 ),
+#                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
+#                 ),
+#                 (0, 128, 128), 1, # Teal
+#             )
+        
+#         # visualize paths at id= k_jump
+#         patch_k_jump = potentials[-1] if len(potentials) > 0 else 0
+#         s = np.unravel_index(patch_k_jump, (w_featmap, h_featmap))
+#         size = np.asarray(scales) / 2
+
+#         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
+#         Image.fromarray(image).save(pltname)
+
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, jumps=None, gt_boxes=None, char=None):
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
     w_featmap, h_featmap = dims
     # Plot the box
+    cv2.rectangle(
+        image,
+        (int(pred[0]), int(pred[1])),
+        (int(pred[2]), int(pred[3])),
+        (255, 0, 0), 3,
+    )
+    if gt_boxes is not None:
+        for (xmin, ymin, xmax, ymax) in gt_boxes:
+            cv2.rectangle(
+                image,
+                (int(xmin), int(ymin)),
+                (int(xmax), int(ymax)),
+                (0, 255, 0),    # green
+                2               # thickness
+            )
     im_name = im_name.split("\\")[-1]
+
     if plot_seed:
         if type(seed) == torch.Tensor:
             s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
         else:
             s_ = np.unravel_index(seed, (w_featmap, h_featmap))
-        print(f"Seed: {s_}")
         size_ = np.asarray(scales) / 2
         cv2.rectangle(
             image,
@@ -41,11 +119,25 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
             (int(s_[1] * scales[1] + (size_[1] / 2)), int(s_[0] * scales[0] + (size_[0] / 2))),
             (0, 255, 0), -1,
         )
-
+    position = (10, 40) 
+    font_scale = 2
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    color = (255, 255, 0) 
+    thickness = 8
+    cv2.putText(
+        image,
+        char,
+        position,
+        font,
+        font_scale,
+        color,
+        thickness,
+    )
 
 
     if potentials is not None:
         # plot half of potentials
+        
         for seed in potentials[:len(potentials)//2]:
             if type(seed) == torch.Tensor:
                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
@@ -58,7 +150,7 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
                 ),
-                (128, 0, 128), 1, # Purple
+                (0, 0, 255), 1, # Purple
             )
         # plot the other half of potentials
         for seed in potentials[len(potentials)//2:]:
@@ -73,17 +165,13 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
                 ),
-                (0, 128, 128), 1, # Teal
+                (255, 215, 0), 1, # Teal
             )
-        
-        # visualize paths at id= k_jump
-        patch_k_jump = potentials[-1] if len(potentials) > 0 else 0
-        s = np.unravel_index(patch_k_jump, (w_featmap, h_featmap))
-        size = np.asarray(scales) / 2
 
         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
         Image.fromarray(image).save(pltname)
-        
+        print(f"Predictions saved at {pltname}.")
+
 
 def visualize_fms(A, seed, scores, dims, scales, output_folder, im_name):
     """

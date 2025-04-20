@@ -60,7 +60,7 @@ def get_model(arch, patch_size, device):
             print("loading dinov2...")
             HOME = os.getcwd()
             MODEL_PATH = os.path.join(HOME,"dinov2_model", f"{arch}.pth")
-            model.load_state_dict(torch.load(MODEL_PATH, map_location='cuda:0'))
+            model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
             for p in model.parameters():
                 p.requires_grad = False
 

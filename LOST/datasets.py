@@ -64,7 +64,7 @@ class Dataset:
             self.root_path = "datasets/VOC2007"
             self.year = "2007"
         elif dataset_name == "VOC12":
-            self.root_path = r"../../../dataset/voc"
+            self.root_path = "../../LOST/datasets/VOC2012"
             self.year = "2012"
         elif dataset_name == "COCO20k":
             self.year = "2014"

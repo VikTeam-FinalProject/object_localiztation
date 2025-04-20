@@ -27,7 +27,7 @@ from datasets import ImageDataset, Dataset, bbox_iou
 from networks import get_model
 from object_discovery import lost, detect_box, dino_seg
 from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion, visualize_heatmap
-
+from count_patches_inside import potentials_in_boxes
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Unsupervised object discovery with LOST.")
     parser.add_argument(
@@ -210,7 +210,7 @@ if __name__ == "__main__":
         img = paded
 
         # Move to gpu
-        img = img.cuda(non_blocking=True)
+        #img = img.cuda(non_blocking=True)
         # Size for transformers
         w_featmap = img.shape[-2] // args.patch_size
         h_featmap = img.shape[-1] // args.patch_size
@@ -301,6 +301,15 @@ if __name__ == "__main__":
                 dbscan = not args.nodbscan,
             )
 
+            # ------Count patches in GT box-----------------------------------------
+            if (not args.no_evaluation) and (gt_bbxs is not None):
+                per_box_counts, outside_cnt = potentials_in_boxes(
+                                            potentials, w_featmap, h_featmap,
+                                            args.patch_size, gt_bbxs)
+                print(f"Potentials per GT box  : {per_box_counts}")
+                print(f"Potentials outside all : {outside_cnt} / {len(potentials)}")
+                
+
 
             # ------------ Visualizations -------------------------------------------
             if args.visualize == "fms":
@@ -320,7 +329,7 @@ if __name__ == "__main__":
 
             elif args.visualize == "pred":
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, gt_boxes=gt_bbxs, char=args.which_features)
             elif args.visualize == "heatmap":
                 visualize_heatmap(attn, im_name, vis_folder, mean=True)
 
