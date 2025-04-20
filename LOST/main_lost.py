@@ -125,6 +125,9 @@ if __name__ == "__main__":
 
     # Dynamic threshold
     parser.add_argument("--dynamic_thres", action="store_true", help="Use dynamic thresholding.")
+
+    # masked artifact
+    parser.add_argument("--masked_artifact", action="store_true", help="Use masked artifact.")
     args = parser.parse_args()
 
     if args.dynamic_thres:
@@ -149,7 +152,7 @@ if __name__ == "__main__":
     # -------------------------------------------------------------------------------------------------------
     # Model
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    model = get_model(args.arch, args.patch_size, args.resnet_dilate, device)
+    model = get_model(args.arch, args.patch_size, device)
 
     # -------------------------------------------------------------------------------------------------------
     # Directories
@@ -234,7 +237,6 @@ if __name__ == "__main__":
 
                 # Forward pass in the model
                 attentions = model.get_last_selfattention(img[None, :, :, :])
-                output = model(img[None,:,:,:],is_training = True)['x_norm_patchtokens']
                 # Scaling factor
                 scales = [args.patch_size, args.patch_size]
 
@@ -251,15 +253,15 @@ if __name__ == "__main__":
                 else:
                     # Extract the qkv features of the last attention layer
 
-                    if args.check_artifacts:
-                        artifacts, art_indices, norms,_,_,gap = detect_artifacts(output, method='gap').values()
-                        is_artifact = torch.any(artifacts[0])
-                        # check_artifacts_is_seed
-                        if is_artifact:
-                            # Save the image name in the hard dataset
-                            if not args.dataset:
-                                print(f"Image {im_name} has an artifact.")
-                            hard_ds.append(im_name)
+                    # if args.check_artifacts:
+                    #     artifacts, art_indices, norms,_,_,gap = detect_artifacts(output, method='gap').values()
+                    #     is_artifact = torch.any(artifacts[0])
+                    #     # check_artifacts_is_seed
+                    #     if is_artifact:
+                    #         # Save the image name in the hard dataset
+                    #         if not args.dataset:
+                    #             print(f"Image {im_name} has an artifact.")
+                    #         hard_ds.append(im_name)
 
                     attn = attentions[0, :, 0, 1:].reshape(nh, w_featmap, h_featmap)
 
@@ -298,13 +300,6 @@ if __name__ == "__main__":
                 dynamic_thres="dinov2" in args.arch,
                 dbscan = not args.nodbscan,
             )
-
-            # if check artifacts, then also check if that artifacts is the same as seed or not
-            if args.check_artifacts:
-                # check_artifacts_is_seed
-                print(" check artifacts ")
-                print(art_indices)
-                print(seed)
 
 
             # ------------ Visualizations -------------------------------------------

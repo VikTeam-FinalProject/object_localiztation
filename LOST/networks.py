@@ -19,7 +19,7 @@ import sys
 import dino.vision_transformer as vits
 
 from dinov2.models.vision_transformer import vit_small,vit_large
-def get_model(arch, patch_size, resnet_dilate, device):
+def get_model(arch, patch_size, device):
     if "dinov2_vits14_pretrain" in arch:
         model = vit_small(patch_size=14,       
                     img_size=526,
