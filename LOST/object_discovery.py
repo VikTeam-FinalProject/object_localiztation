@@ -19,7 +19,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, dbscan=True):
+def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False):
     """
     Implementation of LOST method.
     Inputs
@@ -34,11 +34,12 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
         scores: lowest degree scores for all patches
         seed: selected patch corresponding to an object
     """
-
+    print(feats.shape)
     A = (feats @ feats.transpose(1, 2)).squeeze()
     sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches)
-    seed = sorted_patches[-1] if len(sorted_patches) > 0 else 0
-
+    seed = sorted_patches[0] if len(sorted_patches) > 0 else 0
+    row, col = torch.unravel_index(seed, dims)
+    print(f"seed: {seed}, row: {row}, col: {col}")
     if k_patches == -1:
         not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in sorted_patches]
         not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
@@ -75,10 +76,9 @@ def patch_scoring(M, dynamic_threshold, k_patches):
     threshold = torch.mean(M) if dynamic_threshold else 0.0
     A = M.clone()
     A.fill_diagonal_(0)
-    cent = -torch.sum(A > threshold, dim=1).float()
-    # softmax_output = F.softmax(A, dim=1)
-    # visualize_heatmap(softmax_output)
-    sel = torch.argsort(cent, descending=True)
+    cent = torch.sum(A > threshold, dim=1).float()
+
+    sel = torch.argsort(cent, descending=False)
     cent = cent[sel]
     jumps = []
     if k_patches == -1:

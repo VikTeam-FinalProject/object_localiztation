@@ -51,10 +51,6 @@ if __name__ == "__main__":
         "--patch_size", default=14, type=int, help="Patch resolution of the model."
     )
 
-    parser.add_argument(
-        "--check_artifacts", action="store_true", help="Check for artifacts in the attention maps."
-    )
-
     # Use a dataset
     parser.add_argument(
         "--dataset",
@@ -82,7 +78,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output_dir", type=str, default="outputs", help="Output directory to store predictions and visualizations."
     )
-
+    parser.add_argument(
+        "--artifact_remove", action="store_true", help="Remove artifacts from the image."
+    )
     # Evaluation setup
     parser.add_argument("--no_hard", action="store_true", help="Only used in the case of the VOC_all setup (see the paper).")
     parser.add_argument("--no_evaluation", action="store_true", help="Compute the evaluation.")
@@ -117,7 +115,6 @@ if __name__ == "__main__":
         help="Number of patches with the lowest degree considered."
     )
 
-    parser.add_argument("--nodbscan", action="store_true", help="Apply DBSCAN clustering.")
 
     # Use dino-seg proposed method
     parser.add_argument("--dinoseg", action="store_true", help="Apply DINO-seg baseline.")
@@ -127,13 +124,10 @@ if __name__ == "__main__":
     parser.add_argument("--dynamic_thres", action="store_true", help="Use dynamic thresholding.")
 
     # masked artifact
-    parser.add_argument("--masked_artifact", action="store_true", help="Use masked artifact.")
     args = parser.parse_args()
 
     if args.dynamic_thres:
         print("Using dynamic thresholding.")
-    if not args.nodbscan:
-        print("Using DBSCAN clustering.")
 
     if args.image_path is not None:
         args.save_predictions = False
@@ -210,7 +204,7 @@ if __name__ == "__main__":
         img = paded
 
         # Move to gpu
-        #img = img.cuda(non_blocking=True)
+        img = img.cuda(non_blocking=True)
         # Size for transformers
         w_featmap = img.shape[-2] // args.patch_size
         h_featmap = img.shape[-1] // args.patch_size
@@ -237,6 +231,7 @@ if __name__ == "__main__":
 
                 # Forward pass in the model
                 attentions = model.get_last_selfattention(img[None, :, :, :])
+
                 # Scaling factor
                 scales = [args.patch_size, args.patch_size]
 
@@ -251,20 +246,19 @@ if __name__ == "__main__":
                     pred = dino_seg(attentions, (w_featmap, h_featmap), args.patch_size, head=args.dinoseg_head)
                     pred = np.asarray(pred)
                 else:
-                    # Extract the qkv features of the last attention layer
 
-                    # if args.check_artifacts:
-                    #     artifacts, art_indices, norms,_,_,gap = detect_artifacts(output, method='gap').values()
-                    #     is_artifact = torch.any(artifacts[0])
-                    #     # check_artifacts_is_seed
-                    #     if is_artifact:
-                    #         # Save the image name in the hard dataset
-                    #         if not args.dataset:
-                    #             print(f"Image {im_name} has an artifact.")
-                    #         hard_ds.append(im_name)
+                    attn = attentions[0, :, 0, 1:].reshape(nh,-1)
+                    if args.artifact_remove:
 
-                    attn = attentions[0, :, 0, 1:].reshape(nh, w_featmap, h_featmap)
+                        def det_artifact(attn):
+                            max_indices = torch.argmax(attn, dim=1)  # shape: (nh,)
+                            counts = torch.bincount(max_indices)
+                            idx = torch.argmax(counts)
+                            return idx.item()
 
+                        art_id = det_artifact(attn)
+                        attn[:,art_id] = 0
+                    attn = attn.reshape(nh, w_featmap, h_featmap)
                     attn = nn.functional.interpolate(attn.unsqueeze(0),
                                                      scale_factor=args.patch_size,
                                                      mode='nearest')[0].cpu().numpy()
@@ -298,7 +292,6 @@ if __name__ == "__main__":
                 init_image_size,
                 k_patches=args.k_patches,
                 dynamic_thres="dinov2" in args.arch,
-                dbscan = not args.nodbscan,
             )
 
             # ------Count patches in GT box-----------------------------------------
@@ -329,9 +322,9 @@ if __name__ == "__main__":
 
             elif args.visualize == "pred":
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, gt_boxes=gt_bbxs, char=args.which_features)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, char=args.which_features)
             elif args.visualize == "heatmap":
-                visualize_heatmap(attn, im_name, vis_folder, mean=True)
+                visualize_heatmap(attn, im_name, vis_folder,mean=True)
 
         # Save the prediction
         preds_dict[im_name] = pred
@@ -352,14 +345,6 @@ if __name__ == "__main__":
         if cnt % 50 == 0:
             pbar.set_description(f"Found {int(np.sum(corloc))}/{cnt}, is_artifact: {len(hard_ds)}")
 
-    if args.check_artifacts:
-        artifacts_ds_path = os.path.join("datasets", "hard_VOC12_trainval_2012.txt")
-        # Save the hard dataset
-        if len(hard_ds) > 1:
-            with open(artifacts_ds_path, "w") as f:
-                for item in hard_ds:
-                    f.write("%s\n" % item)
-            print("Hard dataset saved at %s" % artifacts_ds_path)
     # Save predicted bounding boxes
     if args.save_predictions:
         folder = f"{args.output_dir}/{exp_name}"

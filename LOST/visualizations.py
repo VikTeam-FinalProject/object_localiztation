@@ -84,7 +84,7 @@ import matplotlib.pyplot as plt
 #         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
 #         Image.fromarray(image).save(pltname)
 
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, jumps=None, gt_boxes=None, char=None):
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, char=None):
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
@@ -96,15 +96,6 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
         (int(pred[2]), int(pred[3])),
         (255, 0, 0), 3,
     )
-    if gt_boxes is not None:
-        for (xmin, ymin, xmax, ymax) in gt_boxes:
-            cv2.rectangle(
-                image,
-                (int(xmin), int(ymin)),
-                (int(xmax), int(ymax)),
-                (0, 255, 0),    # green
-                2               # thickness
-            )
     im_name = im_name.split("\\")[-1]
 
     if plot_seed:
