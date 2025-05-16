@@ -4,7 +4,6 @@ from typing import List, Tuple
 def potentials_in_boxes(
     potentials: torch.Tensor,
     w_fmap: int,
-    h_fmap: int,
     patch_size: int,
     gt_boxes: np.ndarray
 ) -> Tuple[List[int], int]:

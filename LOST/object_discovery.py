@@ -19,7 +19,50 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False):
+def test_magnitude_vs_dot(A,feats, feats_, eps=1e-8):
+    """
+    feats, feats_: [1, N, D]  (batch size = 1)
+    Trả về:
+      thresh: ngưỡng mean(dot)
+      idxs:   tensor [K,2] các cặp (i,j) sao cho dot>thresh
+      dot:    tensor [K]           các giá trị dot tương ứng
+      norm:   tensor [K]           các giá trị ||v_i||*||v_j||
+      cos:    tensor [K]           các giá trị cosine = dot/norm
+    """
+    # 1) Dot-matrix [N,N]
+    # 2) Norm-vectors [N]
+    norms_f  = feats.norm(p=2, dim=-1).squeeze(0)     # [N]
+    norms_f_ = feats_.norm(p=2, dim=-1).squeeze(0)    # [N]
+
+    # 3) Norm-product matrix [N,N]
+    P = norms_f.unsqueeze(1) * norms_f_.unsqueeze(0)  # [N, N]
+
+    # 4) Cosine matrix [N,N]
+    C = A / (P + eps)
+
+    # 5) Threshold
+    thresh = A.mean()
+
+    # 6) Mask và advanced indexing
+    mask = A > thresh               # [N,N] boolean
+    num_selected = mask.sum().item()
+
+    # 2) Tổng số cặp
+    total_pairs = mask.numel()
+
+    # 3) Tỷ lệ %
+    ratio = num_selected / total_pairs * 100.0
+    print(f"Selected pairs: {num_selected}/{total_pairs} ({ratio:.2f}%)")
+    idxs = mask.nonzero(as_tuple=False)  # [K,2]
+
+    dot_vals      = A[mask]         # [K]
+    norm_vals     = P[mask]         # [K]
+    cosine_vals   = C[mask]         # [K]
+
+    return thresh, idxs, dot_vals, norm_vals, cosine_vals
+
+
+def lost(feats,feats_, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, artifact_idx=None):
     """
     Implementation of LOST method.
     Inputs
@@ -34,12 +77,11 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
         scores: lowest degree scores for all patches
         seed: selected patch corresponding to an object
     """
-    print(feats.shape)
-    A = (feats @ feats.transpose(1, 2)).squeeze()
-    sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches)
+    A = (feats @ feats_.transpose(1, 2)).squeeze()
+    print(test_magnitude_vs_dot(A, feats, feats_))
+    sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches, ar_idx=artifact_idx)
+
     seed = sorted_patches[0] if len(sorted_patches) > 0 else 0
-    row, col = torch.unravel_index(seed, dims)
-    print(f"seed: {seed}, row: {row}, col: {col}")
     if k_patches == -1:
         not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in sorted_patches]
         not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
@@ -50,6 +92,8 @@ def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=Fals
     pred, _ = detect_box(dims, scales=scales, object_patches=not_potentials_filtered_index,
                          initial_im_size=init_image_size[1:])
     return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, jumps
+
+
 
 
 def dbscan_filter(patches_xy):
@@ -68,7 +112,7 @@ def dbscan_filter(patches_xy):
     return [patches_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
 
 
-def patch_scoring(M, dynamic_threshold, k_patches):
+def patch_scoring(M, dynamic_threshold, k_patches, ar_idx=None):
     """
     Patch scoring based on the inverse degree.
         dynamic_threshold: set to True will override the threshold value by mean of the matrix

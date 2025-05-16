@@ -271,10 +271,11 @@ if __name__ == "__main__":
                     k = k.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     q = q.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     v = v.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
-
+                    feats1 = None
                     # Modality selection
                     if args.which_features == "k":
                         feats = k[:, 1:, :]
+                        # feats1 = q[:, 1:, :]
                     elif args.which_features == "q":
                         feats = q[:, 1:, :]
                     elif args.which_features == "v":
@@ -287,11 +288,13 @@ if __name__ == "__main__":
             # Apply LOST
             pred, A, scores, seed, potentials, jumps = lost(
                 feats,
+                feats1 if feats1 is not None else feats,
                 [w_featmap, h_featmap],
                 scales,
                 init_image_size,
                 k_patches=args.k_patches,
                 dynamic_thres="dinov2" in args.arch,
+                artifact_idx = art_id if args.artifact_remove else None,
             )
 
             # ------Count patches in GT box-----------------------------------------
