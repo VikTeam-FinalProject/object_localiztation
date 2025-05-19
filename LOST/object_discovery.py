@@ -19,7 +19,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def test_magnitude_vs_dot(A,feats, feats_, eps=1e-8):
+def visualize_index(N,idxs):
+    flat = idxs.reshape(-1).cpu()
+
+    counts = torch.bincount(flat, minlength=N)  # [N]
+
+    # Vẽ bar chart
+    x = torch.arange(N).numpy()
+    y = counts.numpy()
+
+    plt.figure(figsize=(6, 4))
+    plt.bar(x, y, color='c')
+    plt.xlabel("Index")
+    plt.ylabel("Số cặp có chứa index")
+    plt.title("Tần suất xuất hiện của mỗi index")
+    plt.xticks(x)
+    plt.grid(axis='y', alpha=0.5)
+    plt.savefig("counts.png")
+
+def test_magnitude_vs_dot(A,feats, feats_):
     """
     feats, feats_: [1, N, D]  (batch size = 1)
     Trả về:
@@ -31,34 +49,35 @@ def test_magnitude_vs_dot(A,feats, feats_, eps=1e-8):
     """
     # 1) Dot-matrix [N,N]
     # 2) Norm-vectors [N]
+    N = feats.shape[1]  # [1, N, D]
     norms_f  = feats.norm(p=2, dim=-1).squeeze(0)     # [N]
     norms_f_ = feats_.norm(p=2, dim=-1).squeeze(0)    # [N]
 
     # 3) Norm-product matrix [N,N]
     P = norms_f.unsqueeze(1) * norms_f_.unsqueeze(0)  # [N, N]
-
+    print(P.shape)
     # 4) Cosine matrix [N,N]
-    C = A / (P + eps)
+    C = A / (P + 1e-8)
 
     # 5) Threshold
     thresh = A.mean()
-
     # 6) Mask và advanced indexing
-    mask = A > thresh               # [N,N] boolean
+    mask = torch.triu(P, diagonal=1) > thresh
+    idxs = mask.nonzero(as_tuple=False)
     num_selected = mask.sum().item()
-
+    torch.set_printoptions(profile="full")
     # 2) Tổng số cặp
-    total_pairs = mask.numel()
-
+    total_pairs = N*(N-1)/2
     # 3) Tỷ lệ %
     ratio = num_selected / total_pairs * 100.0
-    print(f"Selected pairs: {num_selected}/{total_pairs} ({ratio:.2f}%)")
-    idxs = mask.nonzero(as_tuple=False)  # [K,2]
+    visualize_index(N,idxs)
+    # print(f"Selected pairs: {num_selected}/{total_pairs} ({ratio:.2f}%)")
 
+    # exit()
     dot_vals      = A[mask]         # [K]
     norm_vals     = P[mask]         # [K]
     cosine_vals   = C[mask]         # [K]
-
+    print(C)
     return thresh, idxs, dot_vals, norm_vals, cosine_vals
 
 
@@ -78,7 +97,7 @@ def lost(feats,feats_, dims, scales, init_image_size, k_patches=100, dynamic_thr
         seed: selected patch corresponding to an object
     """
     A = (feats @ feats_.transpose(1, 2)).squeeze()
-    print(test_magnitude_vs_dot(A, feats, feats_))
+    test_magnitude_vs_dot(A, feats, feats_)
     sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches, ar_idx=artifact_idx)
 
     seed = sorted_patches[0] if len(sorted_patches) > 0 else 0
@@ -121,7 +140,11 @@ def patch_scoring(M, dynamic_threshold, k_patches, ar_idx=None):
     A = M.clone()
     A.fill_diagonal_(0)
     cent = torch.sum(A > threshold, dim=1).float()
-
+    total_elements = A.numel() - A.shape[0]  # trừ đi phần tử đường chéo
+    num_above_threshold = torch.sum(A > threshold).item()
+    # Tính tỉ lệ phần trăm
+    percent_above = (num_above_threshold / total_elements) * 100
+    print(f"Tỉ lệ phần tử > threshold: {percent_above:.2f}%")
     sel = torch.argsort(cent, descending=False)
     cent = cent[sel]
     jumps = []

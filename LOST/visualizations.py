@@ -158,6 +158,47 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (255, 215, 0), 1, # Teal
             )
+        # 4. Enhanced connection lines
+        # if idxs is not None:
+        #     # Calculate connection strengths
+        #     connection_strengths = torch.zeros(w_featmap * h_featmap)
+        #     for i, j in idxs:
+        #         connection_strengths[i] += 1
+        #         connection_strengths[j] += 1
+        #
+        #     max_strength = connection_strengths.max().item() or 1  # Avoid division by zero
+        #     for p in torch.where(connection_strengths > connection_strengths.mean() + 2 * connection_strengths.std())[
+        #         0]:
+        #         y, x = np.unravel_index(p.item(), (w_featmap, h_featmap))
+        #         cv2.circle(image,
+        #                    (int((x + 0.5) * scales[1]), int((y + 0.5) * scales[0])),
+        #                    10, (0, 255, 0), -1)
+        #
+        #     for i, j in idxs:
+        #         y1, x1 = np.unravel_index(i.item(), (w_featmap, h_featmap))
+        #         y2, x2 = np.unravel_index(j.item(), (w_featmap, h_featmap))
+        #
+        #         # Calculate normalized strength (0–1)
+        #         strength = ((connection_strengths[i] + connection_strengths[j]) / 2) / max_strength
+        #
+        #         # High-contrast color gradient: Blue (weak) → Magenta (strong)
+        #         line_color = (
+        #             int(255 * strength),  # Increasing red
+        #             0,
+        #             int(255 * (1 - strength))  # Decreasing blue
+        #         )
+        #
+        #         # Dynamic thickness (1–3px)
+        #         thickness = max(1, int(3 * strength))
+        #
+        #         cv2.line(
+        #             viz,
+        #             (int((x1 + 0.5) * scales[1]), int((y1 + 0.5) * scales[0])),
+        #             (int((x2 + 0.5) * scales[1]), int((y2 + 0.5) * scales[0])),
+        #             line_color,
+        #             thickness,
+        #             lineType=cv2.LINE_AA
+        #         )
 
         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
         Image.fromarray(image).save(pltname)
