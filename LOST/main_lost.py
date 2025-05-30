@@ -43,6 +43,7 @@ if __name__ == "__main__":
             "resnet50_imagenet",
             "dinov2_vitl14_pretrain",
             "dinov2_vits14_pretrain",
+            "dinov2_vitb14_pretrain",
             "dinov2_vitl14_reg4_pretrain",
         ],
         help="Model architecture.",
