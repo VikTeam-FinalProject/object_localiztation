@@ -59,8 +59,20 @@ def test_magnitude_vs_dot(A,feats, feats_, eps=1e-8):
     norm_vals     = P[mask]         # [K]
     cosine_vals   = C[mask]         # [K]
 
+    print("idx", idxs)
+    print("dot val", dot_vals)
+    print("norm val", norm_vals)
+    print("cosine val", cosine_vals)
+
     return thresh, idxs, dot_vals, norm_vals, cosine_vals
 
+def check_affinity_outliers(A: torch.Tensor, threshold_std: float = 3.0) -> torch.Tensor:
+    # Flatten A and detect outliers (ignore diagonal if needed)
+    A_flat = A.flatten()
+
+    mean, std = A_flat.mean(), A_flat.std()
+    outliers = (A_flat - mean).abs() > threshold_std * std
+    return outliers.reshape(A.shape)
 
 def lost(feats,feats_, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, artifact_idx=None):
     """
@@ -78,7 +90,15 @@ def lost(feats,feats_, dims, scales, init_image_size, k_patches=100, dynamic_thr
         seed: selected patch corresponding to an object
     """
     A = (feats @ feats_.transpose(1, 2)).squeeze()
-    print(test_magnitude_vs_dot(A, feats, feats_))
+    affinity_outliers = check_affinity_outliers(A)
+    print(f"Outlier similarities in A: {affinity_outliers.sum().item()}")
+    print("total rows", len(A.flatten()))
+    diag = A.diag()
+    print(f"Max self-similarity: {diag.max().item()}")
+    off_diag = A - torch.diag(diag)
+    print(f"Max cross-similarity: {off_diag.max().item()}")
+    thresh, idxs, dot_vals, norm_vals, cosine_vals = test_magnitude_vs_dot(A, feats, feats_)
+    print("idx", idxs)
     sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches, ar_idx=artifact_idx)
 
     seed = sorted_patches[0] if len(sorted_patches) > 0 else 0
@@ -87,14 +107,59 @@ def lost(feats,feats_, dims, scales, init_image_size, k_patches=100, dynamic_thr
         not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
     else:
         potentials = sorted_patches[:k_patches]
+        print("potentials", potentials)
+        # Should be empty or very small
         not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in potentials]
         not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
     pred, _ = detect_box(dims, scales=scales, object_patches=not_potentials_filtered_index,
                          initial_im_size=init_image_size[1:])
-    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, jumps
+    
+    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, jumps, idxs
 
+def compute_dynamic_k(image_size, base_k=100, scale_factor=0.0005):
+    """
+    Compute k_patches based on image area.
+    Args:
+        image_size: Tuple (height, width) of the image.
+        base_k: Base number of patches (for a reference image size).
+        scale_factor: Scaling factor to adjust k_patches proportionally.
+    Returns:
+        Adjusted k_patches (int).
+    """
+    height, width = image_size
+    image_area = height * width
+    dynamic_k = int(scale_factor * image_area)
+    return max(dynamic_k, 10)
 
+def compute_k_from_bboxes(gt_bbxs, image_size, base_k=25):
+    """
+    Compute dynamic k_patches based on GT bounding boxes.
+    
+    Args:
+        gt_bbxs: np.array of shape (N, 4) - bounding boxes
+        image_size: tuple (H, W)
+        base_k: starting value to scale from
 
+    Returns:
+        int - dynamically computed k_patches
+    """
+    if gt_bbxs is None or len(gt_bbxs) == 0:
+        return base_k
+
+    H, W = image_size
+    img_area = H * W
+
+    # Calculate area for each box
+    box_areas = (gt_bbxs[:, 2] - gt_bbxs[:, 0]) * (gt_bbxs[:, 3] - gt_bbxs[:, 1])
+    total_bbox_area = np.sum(box_areas)
+    box_density = len(gt_bbxs) / (H * W)
+
+    # Adjust k using both density and area coverage
+    area_ratio = total_bbox_area / img_area
+    scale_factor = (box_density * 1e5) + area_ratio
+
+    dynamic_k = int(base_k * (1 + scale_factor * 2.0))
+    return max(25, min(dynamic_k, 500))
 
 def dbscan_filter(patches_xy):
     if len(patches_xy) == 0:
@@ -128,7 +193,6 @@ def patch_scoring(M, dynamic_threshold, k_patches, ar_idx=None):
     if k_patches == -1:
         jumps = [abs(int(float((cent[i] - cent[i - 1]).cpu().numpy()))) for i in range(1, len(cent))]
         # plot_jumps(jumps)
-
         # replace first 10% of the jumps with 0
         num_10_percent = int(len(jumps) * 0.1)
         jumps[:num_10_percent] = [0]*num_10_percent

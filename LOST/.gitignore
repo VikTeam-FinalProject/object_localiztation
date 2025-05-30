@@ -4,3 +4,4 @@ datasets/*
 dino/*
 dinov2_model/*
 LOST/dino
+dino/

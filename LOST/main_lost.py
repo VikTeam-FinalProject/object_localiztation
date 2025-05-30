@@ -25,9 +25,9 @@ from tqdm import tqdm
 from artifact_det import detect_artifacts
 from datasets import ImageDataset, Dataset, bbox_iou
 from networks import get_model
-from object_discovery import lost, detect_box, dino_seg
+from object_discovery import lost, detect_box, dino_seg, compute_dynamic_k, compute_k_from_bboxes
 from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion, visualize_heatmap
-from count_patches_inside import potentials_in_boxes
+from count_patches_inside import *
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Unsupervised object discovery with LOST.")
     parser.add_argument(
@@ -109,6 +109,16 @@ if __name__ == "__main__":
         help="Which features to use",
     )
     parser.add_argument(
+        '--dynamic_k', 
+        action='store_true',
+        help='Enable dynamic k_patches based on image size')
+    parser.add_argument(
+    '--dynamic_k_bbox',
+    action='store_true',
+    help='Enable dynamic k_patches based on ground-truth bounding boxes'
+)
+
+    parser.add_argument(
         "--k_patches",
         type=int,
         default=100,
@@ -187,6 +197,11 @@ if __name__ == "__main__":
         # ------------ IMAGE PROCESSING -------------------------------------------
         img = inp[0]
         init_image_size = img.shape
+        image_size = init_image_size[1:3]  # (height, width)
+
+# Override k_patches if dynamic mode is enabled
+        
+        
         # Get the name of the image
         im_name = dataset.get_image_name(inp[1])
         # Pass in case of no gt boxes in the image
@@ -204,14 +219,20 @@ if __name__ == "__main__":
         img = paded
 
         # Move to gpu
-        img = img.cuda(non_blocking=True)
+        #mg = img.cuda(non_blocking=True)
         # Size for transformers
         w_featmap = img.shape[-2] // args.patch_size
         h_featmap = img.shape[-1] // args.patch_size
         # ------------ GROUND-TRUTH -------------------------------------------
         if not args.no_evaluation:
             gt_bbxs, gt_cls = dataset.extract_gt(inp[1], im_name)
-
+            if args.dynamic_k:  # Add this flag to your argument parser
+                args.k_patches = compute_dynamic_k(image_size)
+                print("k patch size ", args.k_patches)
+            elif args.dynamic_k_bbox and not args.no_evaluation and gt_bbxs is not None:
+                args.k_patches = compute_k_from_bboxes(gt_bbxs, image_size)
+                print(f"[Dynamic K from BBox] k_patches set to {args.k_patches}")
+            print("image shape", init_image_size)
             if gt_bbxs is not None:
                 # Discard images with no gt annotations
                 # Happens only in the case of VOC07 and VOC12
@@ -275,7 +296,7 @@ if __name__ == "__main__":
                     # Modality selection
                     if args.which_features == "k":
                         feats = k[:, 1:, :]
-                        # feats1 = q[:, 1:, :]
+                        feats1 = q[:, 1:, :]
                     elif args.which_features == "q":
                         feats = q[:, 1:, :]
                     elif args.which_features == "v":
@@ -286,7 +307,12 @@ if __name__ == "__main__":
         # ------------ Apply LOST -------------------------------------------
         if not args.dinoseg:
             # Apply LOST
-            pred, A, scores, seed, potentials, jumps = lost(
+            # k = 5  # Top 5% values
+            # threshold = torch.quantile(feats.abs().flatten(), 1 - k/100)
+            # V_high = feats.clone()
+            # V_high[feats.abs() > threshold] *= 2  # Amplify high values
+
+            pred, A, scores, seed, potentials, jumps, idxs = lost(
                 feats,
                 feats1 if feats1 is not None else feats,
                 [w_featmap, h_featmap],
@@ -304,7 +330,6 @@ if __name__ == "__main__":
                                             args.patch_size, gt_bbxs)
                 print(f"Potentials per GT box  : {per_box_counts}")
                 print(f"Potentials outside all : {outside_cnt} / {len(potentials)}")
-                
 
 
             # ------------ Visualizations -------------------------------------------
@@ -325,7 +350,7 @@ if __name__ == "__main__":
 
             elif args.visualize == "pred":
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, char=args.which_features)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, idxs=idxs, char=args.which_features, gt_boxes=gt_bbxs, per_box_counts=per_box_counts, outside_cnt=outside_cnt)
             elif args.visualize == "heatmap":
                 visualize_heatmap(attn, im_name, vis_folder,mean=True)
 

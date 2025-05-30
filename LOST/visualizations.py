@@ -21,88 +21,25 @@ from PIL import Image
 import os
 import matplotlib.pyplot as plt
 
-# def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None):
-#     """
-#     Visualization of the predicted box and the corresponding seed patch.
-#     """
-#     w_featmap, h_featmap = dims
-#     # Plot the box
-#     im_name = im_name.split("\\")[-1]
-#     if plot_seed:
-#         if type(seed) == torch.Tensor:
-#             s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
-#         else:
-#             s_ = np.unravel_index(seed, (w_featmap, h_featmap))
-#         print(f"Seed: {s_}")
-#         size_ = np.asarray(scales) / 2
-#         cv2.rectangle(
-#             image,
-#             (int(s_[1] * scales[1] - (size_[1] / 2)), int(s_[0] * scales[0] - (size_[0] / 2))),
-#             (int(s_[1] * scales[1] + (size_[1] / 2)), int(s_[0] * scales[0] + (size_[0] / 2))),
-#             (0, 255, 0), -1,
-#         )
-
-
-
-#     if potentials is not None:
-#         # plot half of potentials
-#         for seed in potentials[:len(potentials)//2]:
-#             if type(seed) == torch.Tensor:
-#                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
-#             else:
-#                 s = np.unravel_index(seed, (w_featmap, h_featmap))
-#             size = np.asarray(scales) / 2
-#             cv2.rectangle(
-#                 image,
-#                 (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
-#                 ),
-#                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
-#                 ),
-#                 (128, 0, 128), 1, # Purple
-#             )
-#         # plot the other half of potentials
-#         for seed in potentials[len(potentials)//2:]:
-#             if type(seed) == torch.Tensor:
-#                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
-#             else:
-#                 s = np.unravel_index(seed, (w_featmap, h_featmap))
-#             size = np.asarray(scales) / 2
-#             cv2.rectangle(
-#                 image,
-#                 (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
-#                 ),
-#                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
-#                 ),
-#                 (0, 128, 128), 1, # Teal
-#             )
-        
-#         # visualize paths at id= k_jump
-#         patch_k_jump = potentials[-1] if len(potentials) > 0 else 0
-#         s = np.unravel_index(patch_k_jump, (w_featmap, h_featmap))
-#         size = np.asarray(scales) / 2
-
-#         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
-#         Image.fromarray(image).save(pltname)
-
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, char=None):
+# def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None,  idxs=None, ):
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
+                          plot_seed=False, potentials=None, idxs=None, char=None, gt_boxes = None, per_box_counts=None, outside_cnt=None):   
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
     w_featmap, h_featmap = dims
     # Plot the box
-    cv2.rectangle(
-        image,
-        (int(pred[0]), int(pred[1])),
-        (int(pred[2]), int(pred[3])),
-        (255, 0, 0), 3,
-    )
     im_name = im_name.split("\\")[-1]
-
+    if gt_boxes is not None:
+        for box in gt_boxes:
+            xmin, ymin, xmax, ymax = map(int, box)
+            cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
     if plot_seed:
         if type(seed) == torch.Tensor:
             s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
         else:
             s_ = np.unravel_index(seed, (w_featmap, h_featmap))
+        print(f"Seed: {s_}")
         size_ = np.asarray(scales) / 2
         cv2.rectangle(
             image,
@@ -110,25 +47,10 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
             (int(s_[1] * scales[1] + (size_[1] / 2)), int(s_[0] * scales[0] + (size_[0] / 2))),
             (0, 255, 0), -1,
         )
-    position = (10, 40) 
-    font_scale = 2
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    color = (255, 255, 0) 
-    thickness = 8
-    cv2.putText(
-        image,
-        char,
-        position,
-        font,
-        font_scale,
-        color,
-        thickness,
-    )
 
 
     if potentials is not None:
         # plot half of potentials
-        
         for seed in potentials[:len(potentials)//2]:
             if type(seed) == torch.Tensor:
                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
@@ -141,7 +63,7 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
                 ),
-                (0, 0, 255), 1, # Purple
+                (0, 0, 255), 1, # Blue
             )
         # plot the other half of potentials
         for seed in potentials[len(potentials)//2:]:
@@ -156,13 +78,227 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
                 ),
-                (255, 215, 0), 1, # Teal
+                (255, 255, 0), 1, # Yellow
             )
-
-        pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
+        
+        # visualize paths at id= k_jump
+        patch_k_jump = potentials[-1] if len(potentials) > 0 else 0
+        s = np.unravel_index(patch_k_jump, (w_featmap, h_featmap))
+        size = np.asarray(scales) / 2
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 0.8
+        thickness = 2
+        cv2.putText(image, f"Potentials outside: {outside_cnt}/{len(potentials)}", (10, 30), font, font_scale, (255, 255, 100), thickness)
+        pltname = f"{vis_folder}/LOST_{im_name}_potentials_1.png"
         Image.fromarray(image).save(pltname)
+    
         print(f"Predictions saved at {pltname}.")
 
+# def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, idxs=None, char=None):
+#     """
+#     Visualization of the predicted box and the corresponding seed patch.
+#     """
+#     w_featmap, h_featmap = dims
+#     # Plot the box
+#     cv2.rectangle(
+#         image,
+#         (int(pred[0]), int(pred[1])),
+#         (int(pred[2]), int(pred[3])),
+#         (255, 0, 0), 3,
+#     )
+#     im_name = im_name.split("\\")[-1]
+
+#     if plot_seed:
+#         if type(seed) == torch.Tensor:
+#             s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+#         else:
+#             s_ = np.unravel_index(seed, (w_featmap, h_featmap))
+#         size_ = np.asarray(scales) / 2
+#         cv2.rectangle(
+#             image,
+#             (int(s_[1] * scales[1] - (size_[1] / 2)), int(s_[0] * scales[0] - (size_[0] / 2))),
+#             (int(s_[1] * scales[1] + (size_[1] / 2)), int(s_[0] * scales[0] + (size_[0] / 2))),
+#             (0, 255, 0), -1,
+#         )
+#     position = (10, 40) 
+#     font_scale = 2
+#     font = cv2.FONT_HERSHEY_SIMPLEX
+#     color = (255, 255, 0) 
+#     thickness = 8
+#     cv2.putText(
+#         image,
+#         char,
+#         position,
+#         font,
+#         font_scale,
+#         color,
+#         thickness,
+#     )
+
+
+#     if potentials is not None:
+#         # plot half of potentials
+        
+#         for seed in potentials[:len(potentials)//2]:
+#             if type(seed) == torch.Tensor:
+#                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+#             else:
+#                 s = np.unravel_index(seed, (w_featmap, h_featmap))
+#             size = np.asarray(scales) / 2
+#             cv2.rectangle(
+#                 image,
+#                 (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
+#                 ),
+#                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
+#                 ),
+#                 (0, 0, 255), 1, # Purple
+#             )
+#         # plot the other half of potentials
+#         for seed in potentials[len(potentials)//2:]:
+#             if type(seed) == torch.Tensor:
+#                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
+#             else:
+#                 s = np.unravel_index(seed, (w_featmap, h_featmap))
+#             size = np.asarray(scales) / 2
+#             cv2.rectangle(
+#                 image,
+#                 (int(s[1] * scales[1] - (size[1] / 2)), int(s[0] * scales[0] - (size[0] / 2)),
+#                 ),
+#                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
+#                 ),
+#                 (255, 215, 0), 1, # Teal
+#             )
+#     if idxs is not None:
+#         for i, j in idxs:
+#             # Convert 1D indices to 2D coordinates
+#             y1, x1 = np.unravel_index(i.item(), (w_featmap, h_featmap))
+#             y2, x2 = np.unravel_index(j.item(), (w_featmap, h_featmap))
+            
+#             # Calculate center points
+#             pt1 = (int(x1 * scales[1] + scales[1]/2), int(y1 * scales[0] + scales[0]/2))
+#             pt2 = (int(x2 * scales[1] + scales[1]/2), int(y2 * scales[0] + scales[0]/2))
+            
+#             # Draw line between centers
+#             cv2.line(
+#                 image,
+#                 pt1,
+#                 pt2,
+#                 (0, 255, 255),  # Yellow
+#                 1,
+#                 lineType=cv2.LINE_AA
+#             )
+            
+#             # Optionally mark the patches
+#             cv2.circle(image, pt1, 3, (255, 0, 255), -1)  # Purple dot
+#             cv2.circle(image, pt2, 3, (255, 0, 255), -1)  # Purple dot
+
+#         pltname = f"{vis_folder}/LOST_{im_name}_potentials_1.png"
+#         Image.fromarray(image).save(pltname)
+#         print(f"Predictions saved at {pltname}.")
+
+
+# def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
+#                          plot_seed=False, potentials=None, idxs=None, char=None):
+#     """
+#     Visualization with high-contrast connection lines
+#     """
+#     # Convert image to RGB if needed
+#     if len(image.shape) == 2:
+#         image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+#     viz = image.copy()
+#     w_featmap, h_featmap = dims
+#     im_name = im_name.split("\\")[-1]
+
+#     # 1. Draw predicted bounding box (Red)
+#     cv2.rectangle(
+#         viz,
+#         (int(pred[0]), int(pred[1])),
+#         (int(pred[2]), int(pred[3])),
+#         (255, 0, 0), 3  # Red
+#     )
+
+#     # 2. Draw seed patch (Green)
+#     if plot_seed:
+#         s_ = np.unravel_index(seed.cpu().numpy() if isinstance(seed, torch.Tensor) else seed, 
+#                             (w_featmap, h_featmap))
+#         cv2.rectangle(
+#             viz,
+#             (int(s_[1] * scales[1]), int(s_[0] * scales[0])),
+#             (int((s_[1]+1) * scales[1]), int((s_[0]+1) * scales[0])),
+#             (0, 255, 0), -1  # Solid green
+#         )
+
+#     # 3. Draw potential patches (Purple/Teal)
+#     if potentials is not None:
+#         for i, seed in enumerate(potentials):
+#             s = np.unravel_index(seed.cpu().numpy() if isinstance(seed, torch.Tensor) else seed,
+#                                (w_featmap, h_featmap))
+#             color = (255, 0, 0) if i < len(potentials)//2 else (0, 255, 255)  # Red/Cyan
+#             cv2.rectangle(
+#                 viz,
+#                 (int(s[1] * scales[1]), int(s[0] * scales[0])),
+#                 (int((s[1]+1) * scales[1]), int((s[0]+1) * scales[0])),
+#                 color, 1
+#             )
+
+#     # 4. Enhanced connection lines
+#     if idxs is not None:
+#         # Calculate connection strengths
+#         connection_strengths = torch.zeros(w_featmap * h_featmap)
+#         for i,j in idxs:
+#             connection_strengths[i] += 1
+#             connection_strengths[j] += 1
+        
+#         max_strength = connection_strengths.max().item() or 1  # Avoid division by zero
+#         for p in torch.where(connection_strengths > connection_strengths.mean() + 2*connection_strengths.std())[0]:
+#             y, x = np.unravel_index(p.item(), dims)
+#             cv2.circle(image, 
+#                   (int((x+0.5)*scales[1]), int((y+0.5)*scales[0])), 
+#                   10, (0, 0, 255), -1)
+            
+#         for i,j in idxs:
+#             y1, x1 = np.unravel_index(i.item(), (w_featmap, h_featmap))
+#             y2, x2 = np.unravel_index(j.item(), (w_featmap, h_featmap))
+            
+#             # Calculate normalized strength (0-1)
+#             strength = ((connection_strengths[i] + connection_strengths[j])/2) / max_strength
+            
+#             # High-contrast color gradient: Blue (weak) -> Magenta (strong)
+#             line_color = (
+#                 int(255 * strength),  # Increasing red
+#                 0,
+#                 int(255 * (1 - strength))  # Decreasing blue
+#             )
+            
+#             # Dynamic thickness (1-3px)
+#             thickness = max(1, int(3 * strength))
+            
+#             cv2.line(
+#                 viz,
+#                 (int((x1+0.5)*scales[1]), int((y1+0.5)*scales[0])),
+#                 (int((x2+0.5)*scales[1]), int((y2+0.5)*scales[0])),
+#                 line_color,
+#                 thickness,
+#                 lineType=cv2.LINE_AA
+#             )
+
+#     # 5. Add character label
+#     if char is not None:
+#         cv2.putText(
+#             viz,
+#             char,
+#             (20, 40),
+#             cv2.FONT_HERSHEY_SIMPLEX,
+#             1,
+#             (255, 255, 0),  # Yellow
+#             2
+#         )
+
+#     # Save output
+#     output_path = f"{vis_folder}/LOST_{im_name}_highcontrast.png"
+#     cv2.imwrite(output_path, viz)
+#     print(f"Visualization saved to {output_path}")
+#     return viz
 
 def visualize_fms(A, seed, scores, dims, scales, output_folder, im_name):
     """
