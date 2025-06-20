@@ -21,13 +21,15 @@ import numpy as np
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-
+import math 
+import torch.nn.functional as F
 from artifact_det import detect_artifacts
 from datasets import ImageDataset, Dataset, bbox_iou
 from networks import get_model
 from object_discovery import lost, detect_box, dino_seg
 from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion, visualize_heatmap
 from count_patches_inside import potentials_in_boxes
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Unsupervised object discovery with LOST.")
     parser.add_argument(
@@ -115,6 +117,12 @@ if __name__ == "__main__":
         help="Number of patches with the lowest degree considered."
     )
 
+    parser.add_argument(
+    "--dynamic_k",
+    action="store_true",
+    help="Compute k_patches on-the-fly from the size of the GT bounding box(es)."
+)
+
 
     # Use dino-seg proposed method
     parser.add_argument("--dinoseg", action="store_true", help="Apply DINO-seg baseline.")
@@ -183,8 +191,19 @@ if __name__ == "__main__":
 
     pbar = tqdm(dataset.dataloader)
     hard_ds = []
+    all_blocks_out = []            # global list, reused each image
+
+    def make_hook():
+        def fn(module, inp, out):
+            # out shape: (B, N_tokens, D). keep batch-0, drop CLS
+            all_blocks_out.append(out[0, 1:].detach())   # (N_patches, D)
+        return fn
+
+    hooks = [blk.register_forward_hook(make_hook()) for blk in model.blocks]
+    all_image_means = []
     for im_id, inp in enumerate(pbar):
         # ------------ IMAGE PROCESSING -------------------------------------------
+        all_blocks_out.clear() 
         img = inp[0]
         init_image_size = img.shape
         # Get the name of the image
@@ -204,14 +223,15 @@ if __name__ == "__main__":
         img = paded
 
         # Move to gpu
-        img = img.cuda(non_blocking=True)
+        #img = img.cuda(non_blocking=True)
         # Size for transformers
         w_featmap = img.shape[-2] // args.patch_size
         h_featmap = img.shape[-1] // args.patch_size
         # ------------ GROUND-TRUTH -------------------------------------------
+        gt_bbxs = None   
         if not args.no_evaluation:
             gt_bbxs, gt_cls = dataset.extract_gt(inp[1], im_name)
-
+            print("bbox", gt_bbxs)
             if gt_bbxs is not None:
                 # Discard images with no gt annotations
                 # Happens only in the case of VOC07 and VOC12
@@ -273,10 +293,13 @@ if __name__ == "__main__":
                     v = v.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
 
                     # Modality selection
+                    feats1 = None
                     if args.which_features == "k":
                         feats = k[:, 1:, :]
+                        feats1 = q[:,1:, :]
                     elif args.which_features == "q":
                         feats = q[:, 1:, :]
+
                     elif args.which_features == "v":
                         feats = v[:, 1:, :]
                     if 'reg' in args.arch:
@@ -285,23 +308,176 @@ if __name__ == "__main__":
         # ------------ Apply LOST -------------------------------------------
         if not args.dinoseg:
             # Apply LOST
+            def k_from_bboxes(gt_boxes, img_h, img_w, patch_size,
+                  scale_factor=0.3, k_min=50, k_max=200):
+                """
+                Estimate k (number of lowest-degree patches) from GT boxes.
+                - gt_boxes:  (N,4)  ndarray | tensor  [x0,y0,x1,y1] in pixels
+                - img_h, img_w:      original image size in pixels
+                - patch_size:        ViT patch edge length in pixels
+                Returns an integer between k_min and k_max.
+                """
+                if gt_boxes is None or len(gt_boxes) == 0:
+                    return k_min                        # fallback when no GT
+                # total GT area
+                areas = (gt_boxes[:,2] - gt_boxes[:,0]) * (gt_boxes[:,3] - gt_boxes[:,1])
+                gt_area   = areas.sum()
+                img_area  = img_h * img_w
+                # fraction of the image covered by all objects
+                frac = float(gt_area) / (img_area + 1e-6)
+                # how many patches does that fraction correspond to?
+                tot_patches = math.ceil(img_h / patch_size) * math.ceil(img_w / patch_size)
+                k_est = int(scale_factor * frac * tot_patches)
+                print(f"Estimated k={k_est} from GT boxes,")
+                return max(k_min, min(k_est, k_max))
+            if args.dynamic_k:
+                cur_k = k_from_bboxes(
+                    gt_bbxs,                         # can be None in inference mode
+                    init_image_size[1],              # height
+                    init_image_size[2],              # width
+                    args.patch_size
+                )
+            else:
+                cur_k = args.k_patches
+            print(f"Using k={cur_k} patches for {im_name}")
+
+            
             pred, A, scores, seed, potentials, jumps = lost(
                 feats,
                 [w_featmap, h_featmap],
                 scales,
                 init_image_size,
-                k_patches=args.k_patches,
+                k_patches=cur_k,
                 dynamic_thres="dinov2" in args.arch,
             )
+            
+            # ------------------------------------------------------------------
+            # 2.  inside the image loop, AFTER you have `potentials`
+            # ------------------------------------------------------------------
+           # ------------------------------------------------------------------
+# forward once so hooks collect the per-block outputs
+# ------------------------------------------------------------------
+        #     all_blocks_out.clear()
+        #     ### anomoly detection
+        #     from singular_defect import anomaly_dir_attn, anomaly_dir_mlp_ls, singular_defect_directions
+        #    #anamolies = singular_defect_directions(model)
+        #     _ = model.forward_features(img[None].to(device))
+
+        #     has_reg = "dinov2" in args.arch or "reg" in args.arch
+        #     N_REG   = 4 if has_reg else 0
+
+        #     patch_idx_full = torch.as_tensor(potentials,
+        #                                     device=all_blocks_out[0].device) + N_REG
+
+
+        #     angles_evo, angles_ref0 = [], []
+
+        #     for b in range(1, len(all_blocks_out)):
+        #         tokens_b = all_blocks_out[b]                    # (T_b, D)
+        #         tokens_prev = all_blocks_out[b-1]               # (T_{b-1}, D)
+
+        #         # keep only the indices that exist in this block
+        #         mask = (patch_idx_full < tokens_b.size(0)) & \
+        #         (patch_idx_full < tokens_prev.size(0))
+        #         keep = patch_idx_full[mask]
+                
+        #         if keep.numel() == 0:
+        #             continue                                    # no common tokens
+
+        #         cur  = tokens_b[keep]                           # (k', D)
+        #         prev = tokens_prev[keep]                        # (k', D)
+
+        #         cos  = F.cosine_similarity(cur, prev, dim=1).clamp(-1+1e-7, 1-1e-7)
+        #         ang  = torch.acos(cos) * 180.0 / math.pi
+        #         angles_evo.append(ang.cpu())
+
+        #     # ---------- optional: drift w.r.t. first block ---------------------
+        #     ref0 = all_blocks_out[0]
+        #     keep0 = patch_idx_full[patch_idx_full < ref0.size(0)]
+        #     ref0_sel = ref0[keep0]
+
+        #     for b in range(1, len(all_blocks_out)):
+        #         tb = all_blocks_out[b]
+        #         keep = patch_idx_full[patch_idx_full < tb.size(0)]
+        #         if keep.numel() == 0:
+        #             continue
+
+        #         cur = tb[keep]
+        #         ref = ref0_sel[: keep.numel()]                  # align lengths
+        #         cos = F.cosine_similarity(cur, ref, dim=1).clamp(-1+1e-7, 1-1e-7)
+        #         ang = torch.acos(cos) * 180.0 / math.pi
+        #         angles_ref0.append(ang.cpu())
+
+        #     if angles_evo:
+        #         print(f"[{im_name}] mean per-block turn = "
+        #             f"{torch.cat(angles_evo).mean():.1f}°  "
+        #             f"final drift = {torch.cat(angles_ref0).mean():.1f}°")
+        #     else:
+        #         print(f"[{im_name}]  no patch survives token-merging layers")
+
+        #     print("\n=====  θ(k-patch) between successive blocks  =====")
+        #     for b, ang in enumerate(angles_evo, start=1):          # b = 1 … L-1
+        #         # ang is a 1-D tensor of length k′ (might be < k if some patches skipped)
+        #         vals = ", ".join(f"{x:.2f}" for x in ang.tolist())
+        #         print(f"block {b-1:02d} → {b:02d}:  [{vals}]  (mean={ang.mean():.2f}°)")
+
+        #     print("\n=====  θ(k-patch) vs. first block (drift)  =====")
+        #     for b, ang in enumerate(angles_ref0, start=1):
+        #         vals = ", ".join(f"{x:.2f}" for x in ang.tolist())
+        #         print(f"block 00 → {b:02d}:  [{vals}]  (mean={ang.mean():.2f}°)")
+            
+        #     print("")
+
+        #     k = patch_idx_full.numel()
+        #     pairwise_stats = []
+        #     for b, tokens_b in enumerate(all_blocks_out):
+        #         valid = patch_idx_full < tokens_b.size(0)
+        #         if not valid.any():
+        #             # none of the k patches survived in this block
+        #             pairwise_stats.append(float('nan'))
+        #             continue
+
+        #         keep = patch_idx_full[valid]           # (k_b,)
+        #         sel  = tokens_b[keep]             # (k_b, D)
+
+
+        #         # pair-wise cosine similarities
+        #         cos = F.cosine_similarity(
+        #                 sel.unsqueeze(1),      # (k,1,D)
+        #                 sel.unsqueeze(0),      # (1,k,D)
+        #                 dim=-1)                # -> (k,k)
+
+        #         # mask out the diagonal
+        #         off_diag = cos[~torch.eye(cos.size(0), dtype=torch.bool, device=cos.device)]
+
+        #         # convert to angles (radians → degrees)
+        #         angles = torch.acos(off_diag.clamp(-1+1e-7, 1-1e-7)) * (180.0 / math.pi)
+
+        #         # average angle
+        #         mean_angle = angles.mean().item()
+        #         pairwise_stats.append(mean_angle)
+            # print('Per-block mean off-diagonal *angle*:')
+            # for b, ang in enumerate(pairwise_stats):
+            #     print(f'  block {b:02d}:  {ang:6.2f}°')
 
             # ------Count patches in GT box-----------------------------------------
+            
+            per_box_counts = []
+            outside_cnt    = 0
             if (not args.no_evaluation) and (gt_bbxs is not None):
                 per_box_counts, outside_cnt = potentials_in_boxes(
                                             potentials, w_featmap, h_featmap,
                                             args.patch_size, gt_bbxs)
                 print(f"Potentials per GT box  : {per_box_counts}")
                 print(f"Potentials outside all : {outside_cnt} / {len(potentials)}")
-                
+
+                if per_box_counts:
+                    mean_per_box = sum(per_box_counts) / len(per_box_counts)
+                else:
+                    mean_per_box = 0.0
+                print(f"Mean patches inside per GT box: {mean_per_box:.2f}")
+
+                all_image_means.append(mean_per_box)
 
 
             # ------------ Visualizations -------------------------------------------
@@ -321,8 +497,9 @@ if __name__ == "__main__":
                 visualize_seed_expansion(image, pred, seed, pred_seed, scales, [w_featmap, h_featmap], vis_folder, im_name)
 
             elif args.visualize == "pred":
+                
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, char=args.which_features)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, char=args.which_features, perbox_counts=per_box_counts, outside_counts=outside_cnt, gt_bboxes=gt_bbxs)
             elif args.visualize == "heatmap":
                 visualize_heatmap(attn, im_name, vis_folder,mean=True)
 
@@ -361,3 +538,8 @@ if __name__ == "__main__":
         with open(result_file, 'w') as f:
             f.write('corloc,%.1f,,\n'%(100*np.sum(corloc)/cnt))
         print('File saved at %s'%result_file)
+    if all_image_means:
+        dataset_mean = sum(all_image_means) / len(all_image_means)
+        print(f"\n→ Dataset-wide mean patches inside per GT box: {dataset_mean:.2f}")
+    for h in hooks:
+        h.remove()

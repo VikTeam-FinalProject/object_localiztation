@@ -84,7 +84,8 @@ import matplotlib.pyplot as plt
 #         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
 #         Image.fromarray(image).save(pltname)
 
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, char=None):
+# The most recent one
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, char=None, perbox_counts=None, outside_counts=None, gt_bboxes=None):
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
@@ -110,11 +111,11 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
             (int(s_[1] * scales[1] + (size_[1] / 2)), int(s_[0] * scales[0] + (size_[0] / 2))),
             (0, 255, 0), -1,
         )
-    position = (10, 40) 
-    font_scale = 2
+    position = (10, 30) 
+    font_scale = 0.5
     font = cv2.FONT_HERSHEY_SIMPLEX
-    color = (255, 255, 0) 
-    thickness = 8
+    color = (0, 255, 255) 
+    thickness = 4
     cv2.putText(
         image,
         char,
@@ -158,7 +159,29 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (255, 215, 0), 1, # Teal
             )
+        y_cursor = 50
+        if perbox_counts is not None:
+            # perbox potentials line
+            msg = f"Inside: {perbox_counts}"
+            cv2.putText(image, msg, (10, y_cursor),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.4,
+                        (0, 255, 255), 2, cv2.LINE_AA)
+            y_cursor += 20
 
+        if outside_counts is not None:
+            # outside potentials line
+            msg = f"Outside: {outside_counts}"
+            cv2.putText(image, msg, (10, y_cursor),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.4,
+                        (0, 255, 255), 2, cv2.LINE_AA)
+
+        if gt_bboxes is not None:
+            for i, gt in enumerate(gt_bboxes):
+                x0, y0, x1, y1 = map(int, gt)
+                cv2.rectangle(image, (x0, y0), (x1, y1), (0, 255, 0), 2)
+
+        
+        
         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
         Image.fromarray(image).save(pltname)
         print(f"Predictions saved at {pltname}.")
@@ -209,6 +232,8 @@ def visualize_fms(A, seed, scores, dims, scales, output_folder, im_name):
     )
     plt.imsave(fname=f"{output_folder}/deg_{im_name}.png", arr=im_deg)
     print(f"Image saved at {output_folder}/deg_{im_name}.png .")
+
+
 
 def visualize_seed_expansion(image, pred, seed, pred_seed, scales, dims, vis_folder, im_name):
     """
