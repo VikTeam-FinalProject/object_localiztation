@@ -18,7 +18,7 @@ import torch.nn as nn
 import sys
 import dino.vision_transformer as vits
 
-from dinov2.models.vision_transformer import vit_small,vit_large
+from dinov2.models.vision_transformer import vit_small,vit_large,vit_base
 def get_model(arch, patch_size, device):
     if "dinov2_vits14_pretrain" in arch:
         model = vit_small(patch_size=14,       
@@ -38,6 +38,12 @@ def get_model(arch, patch_size, device):
                     init_values=1.0,
                     block_chunks=0,
                     num_register_tokens=4
+                )
+    elif "dinov2_vitb14_pretrain" in arch:
+        model = vit_base(patch_size=14,
+                         img_size=526,
+                    init_values=1.0,
+                    block_chunks=0
                 )
     else:
         model = vits.__dict__[arch](patch_size=patch_size, num_classes=0)

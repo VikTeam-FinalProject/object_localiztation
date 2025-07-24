@@ -21,6 +21,7 @@ from PIL import Image
 import os
 import matplotlib.pyplot as plt
 
+# The original
 # def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None):
 #     """
 #     Visualization of the predicted box and the corresponding seed patch.
@@ -85,20 +86,32 @@ import matplotlib.pyplot as plt
 #         Image.fromarray(image).save(pltname)
 
 # The most recent one
-def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, char=None, perbox_counts=None, outside_counts=None, gt_bboxes=None):
+def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, plot_seed=False, potentials=None, char=None, perbox_counts=None, outside_counts=None, gt_bboxes=None, mask=None):
     """
     Visualization of the predicted box and the corresponding seed patch.
     """
     w_featmap, h_featmap = dims
     # Plot the box
-    cv2.rectangle(
-        image,
-        (int(pred[0]), int(pred[1])),
-        (int(pred[2]), int(pred[3])),
-        (255, 0, 0), 3,
-    )
     im_name = im_name.split("\\")[-1]
+    mask_color=(0,0,200)    
+    mask_alpha=0.3
+    if mask is not None:
+        # ensure mask is single‐channel uint8 with 0/255
+        h, w, _ = image.shape
+        mask = cv2.resize(mask, (w, h), interpolation=cv2.INTER_NEAREST)
+        # binarize
+        mask_bin = (mask > 0).astype(np.uint8)[:,:,None]
+        # build colored overlay
+        colored_mask = np.zeros_like(image, dtype=np.uint8)
+        colored_mask[:] = mask_color
+        # alpha‐blend
+        alpha = mask_bin * mask_alpha
+        image = (image*(1-alpha) + colored_mask*alpha).astype(np.uint8)
 
+    if gt_bboxes is not None:
+        for box in gt_bboxes:
+            xmin, ymin, xmax, ymax = map(int, box)
+            cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
     if plot_seed:
         if type(seed) == torch.Tensor:
             s_ = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
@@ -111,6 +124,7 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
             (int(s_[1] * scales[1] + (size_[1] / 2)), int(s_[0] * scales[0] + (size_[0] / 2))),
             (0, 255, 0), -1,
         )
+
     position = (10, 30) 
     font_scale = 0.5
     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -126,10 +140,8 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
         thickness,
     )
 
-
     if potentials is not None:
         # plot half of potentials
-        
         for seed in potentials[:len(potentials)//2]:
             if type(seed) == torch.Tensor:
                 s = np.unravel_index(seed.cpu().numpy(), (w_featmap, h_featmap))
@@ -142,7 +154,7 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
                 ),
-                (0, 0, 255), 1, # Purple
+                (0, 0, 255), 1, # Blue
             )
         # plot the other half of potentials
         for seed in potentials[len(potentials)//2:]:
@@ -157,8 +169,9 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                 ),
                 (int(s[1] * scales[1] + (size[1] / 2)), int(s[0] * scales[0] + (size[0] / 2)),
                 ),
-                (255, 215, 0), 1, # Teal
+                (255, 255, 0), 1, # Yellow
             )
+
         y_cursor = 50
         if perbox_counts is not None:
             # perbox potentials line
@@ -167,6 +180,7 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
                         cv2.FONT_HERSHEY_SIMPLEX, 0.4,
                         (0, 255, 255), 2, cv2.LINE_AA)
             y_cursor += 20
+
 
         if outside_counts is not None:
             # outside potentials line
@@ -184,7 +198,10 @@ def visualize_predictions(image, pred, seed, scales, dims, vis_folder, im_name, 
         
         pltname = f"{vis_folder}/LOST_{im_name}_potentials.png"
         Image.fromarray(image).save(pltname)
+    
         print(f"Predictions saved at {pltname}.")
+
+
 
 
 def visualize_fms(A, seed, scores, dims, scales, output_folder, im_name):

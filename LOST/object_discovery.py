@@ -19,38 +19,218 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def lost(feats, dims, scales, init_image_size, k_patches=100, dynamic_thres=False):
-    """
-    Implementation of LOST method.
-    Inputs
-        feats: the pixel/patch features of an image
-        dims: dimension of the map from which the features are used
-        scales: from image to map scale
-        init_image_size: size of the image
-        k_patches: number of k patches retrieved that are compared to the seed at seed expansion
-    Outputs
-        pred: box predictions
-        A: binary affinity matrix
-        scores: lowest degree scores for all patches
-        seed: selected patch corresponding to an object
-    """
-    print(feats.shape)
-    A = (feats @ feats.transpose(1, 2)).squeeze()
-    sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches)
-    seed = sorted_patches[0] if len(sorted_patches) > 0 else 0
-    row, col = torch.unravel_index(seed, dims)
-    print(f"seed: {seed}, row: {row}, col: {col}")
-    if k_patches == -1:
-        not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in sorted_patches]
-        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
-    else:
-        potentials = sorted_patches[:k_patches]
-        not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in potentials]
-        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
-    pred, _ = detect_box(dims, scales=scales, object_patches=not_potentials_filtered_index,
-                         initial_im_size=init_image_size[1:])
-    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, jumps
+def visualize_index(N,idxs):
+    flat = idxs.reshape(-1).cpu()
 
+    counts = torch.bincount(flat, minlength=N)  # [N]
+
+    # Vẽ bar chart
+    x = torch.arange(N).numpy()
+    y = counts.numpy()
+
+    plt.figure(figsize=(6, 4))
+    plt.bar(x, y, color='c')
+    plt.xlabel("Index")
+    plt.ylabel("Số cặp có chứa index")
+    plt.title("Tần suất xuất hiện của mỗi index")
+    plt.xticks(x)
+    plt.grid(axis='y', alpha=0.5)
+    plt.savefig("counts.png")
+
+def test_magnitude_vs_dot(A,feats, feats_):
+    """
+    feats, feats_: [1, N, D]  (batch size = 1)
+    Trả về:
+      thresh: ngưỡng mean(dot)
+      idxs:   tensor [K,2] các cặp (i,j) sao cho dot>thresh
+      dot:    tensor [K]           các giá trị dot tương ứng
+      norm:   tensor [K]           các giá trị ||v_i||*||v_j||
+      cos:    tensor [K]           các giá trị cosine = dot/norm
+    """
+    # 1) Dot-matrix [N,N]
+    # 2) Norm-vectors [N]
+    N = feats.shape[1]  # [1, N, D]
+    norms_f  = feats.norm(p=2, dim=-1).squeeze(0)     # [N]
+    norms_f_ = feats_.norm(p=2, dim=-1).squeeze(0)    # [N]
+
+    # 3) Norm-product matrix [N,N]
+    P = norms_f.unsqueeze(1) * norms_f_.unsqueeze(0)  # [N, N]
+    print(P.shape)
+    # 4) Cosine matrix [N,N]
+    C = A / (P + 1e-8)
+
+    # 5) Threshold
+    thresh = A.mean()
+    # 6) Mask và advanced indexing
+    mask = torch.triu(P, diagonal=1) > thresh
+    idxs = mask.nonzero(as_tuple=False)
+    num_selected = mask.sum().item()
+    torch.set_printoptions(profile="full")
+    # 2) Tổng số cặp
+    total_pairs = N*(N-1)/2
+    # 3) Tỷ lệ %
+    ratio = num_selected / total_pairs * 100.0
+    visualize_index(N,idxs)
+
+    # exit()
+    dot_vals      = A[mask]         # [K]
+    norm_vals     = P[mask]         # [K]
+    cosine_vals   = C[mask]         # [K]
+
+    return thresh, idxs, dot_vals, norm_vals, cosine_vals
+
+def check_affinity_outliers(A: torch.Tensor, threshold_std: float = 3.0) -> torch.Tensor:
+    # Flatten A and detect outliers (ignore diagonal if needed)
+    A_flat = A.flatten()
+
+    mean, std = A_flat.mean(), A_flat.std()
+    outliers = (A_flat - mean).abs() > threshold_std * std
+    return outliers.reshape(A.shape)
+
+# def lost(feats,feats_, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, artifact_idx=None):
+#     """
+#     Implementation of LOST method.
+#     Inputs
+#         feats: the pixel/patch features of an image
+#         dims: dimension of the map from which the features are used
+#         scales: from image to map scale
+#         init_image_size: size of the image
+#         k_patches: number of k patches retrieved that are compared to the seed at seed expansion
+#     Outputs
+#         pred: box predictions
+#         A: binary affinity matrix
+#         scores: lowest degree scores for all patches
+#         seed: selected patch corresponding to an object
+#     """
+#     A = (feats @ feats_.transpose(1, 2)).squeeze()
+#     affinity_outliers = check_affinity_outliers(A)
+
+#     diag = A.diag()
+#     off_diag = A - torch.diag(diag)
+#     #thresh, idxs, dot_vals, norm_vals, cosine_vals = test_magnitude_vs_dot(A, feats, feats_)
+
+#     #test_magnitude_vs_dot(A, feats, feats_)
+#     sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches, ar_idx=artifact_idx)
+
+#     seed = sorted_patches[0] if len(sorted_patches) > 0 else 0
+#     if k_patches == -1:
+#         not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in sorted_patches]
+#         not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
+#     else:
+#         potentials = sorted_patches[:k_patches]
+#         # Should be empty or very small
+#         not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in potentials]
+#         not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
+#     pred, _ = detect_box(dims, scales=scales, object_patches=not_potentials_filtered_index,
+#                          initial_im_size=init_image_size[1:])
+    
+#     return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, jumps #, idxs
+
+def lost(
+    feats, feats_, dims, scales, init_image_size,
+    k_patches=100, dynamic_thres=False, artifact_idx=None,
+    custom_scores = None,  # NEW arg
+):
+    """
+    Implementation of LOST method with optional custom_scores override.
+    """
+    # 1️⃣ If the user passed us fused attention scores, skip affinity/patch_scoring
+    if custom_scores is not None:
+        # custom_scores: shape (N_patches,) on torch device
+        scores = custom_scores.detach().numpy()  # to numpy for downstream
+        # argsort ascending → lowest‐degree first
+        sorted_patches = list(np.argsort(scores))
+        jumps = None
+    else:
+        # ⚙️ original LOST path
+        A = (feats @ feats_.transpose(1, 2)).squeeze()
+        affinity_outliers = check_affinity_outliers(A)
+
+        # drop self‐similarity
+        diag = A.diag()
+        off_diag = A - torch.diag(diag)
+
+        sorted_patches, scores, jumps = patch_scoring(
+            A, dynamic_thres, k_patches=k_patches, ar_idx=artifact_idx
+        )
+        scores = scores.cpu().numpy()
+        sorted_patches = [int(p) for p in sorted_patches]
+
+    seed = sorted_patches[0] if sorted_patches else 0
+
+    # 2️⃣ derive the “potential” patch indices exactly as before
+    if k_patches == -1:
+        chosen = sorted_patches
+    else:
+        chosen = sorted_patches[:k_patches]
+
+    # convert flat indices → box patches
+    not_potentials_xy = [np.unravel_index(p, dims) for p in chosen]
+    not_potentials_filtered_index = [
+        np.ravel_multi_index(xy, dims) for xy in not_potentials_xy
+    ]
+
+    # 3️⃣ final box from LOST’s detect_box
+    pred, _ = detect_box(
+        dims,
+        scales=scales,
+        object_patches=not_potentials_filtered_index,
+        initial_im_size=init_image_size[1:],
+    )
+
+    return (
+        np.asarray(pred),
+        None if custom_scores is not None else A,  # affinity only if original path
+        scores,
+        seed,
+        not_potentials_filtered_index,
+        jumps,
+    )
+
+def compute_dynamic_k(image_size, base_k=100, scale_factor=0.0005):
+    """
+    Compute k_patches based on image area.
+    Args:
+        image_size: Tuple (height, width) of the image.
+        base_k: Base number of patches (for a reference image size).
+        scale_factor: Scaling factor to adjust k_patches proportionally.
+    Returns:
+        Adjusted k_patches (int).
+    """
+    height, width = image_size
+    image_area = height * width
+    dynamic_k = int(scale_factor * image_area)
+    return max(dynamic_k, 10)
+
+def compute_k_from_bboxes(gt_bbxs, image_size, base_k=25):
+    """
+    Compute dynamic k_patches based on GT bounding boxes.
+    
+    Args:
+        gt_bbxs: np.array of shape (N, 4) - bounding boxes
+        image_size: tuple (H, W)
+        base_k: starting value to scale from
+
+    Returns:
+        int - dynamically computed k_patches
+    """
+    if gt_bbxs is None or len(gt_bbxs) == 0:
+        return base_k
+
+    H, W = image_size
+    img_area = H * W
+
+    # Calculate area for each box
+    box_areas = (gt_bbxs[:, 2] - gt_bbxs[:, 0]) * (gt_bbxs[:, 3] - gt_bbxs[:, 1])
+    total_bbox_area = np.sum(box_areas)
+    box_density = len(gt_bbxs) / (H * W)
+
+    # Adjust k using both density and area coverage
+    area_ratio = total_bbox_area / img_area
+    scale_factor = (box_density * 1e5) + area_ratio
+
+    dynamic_k = int(base_k * (1 + scale_factor * 2.0))
+    return max(25, min(dynamic_k, 500))
 
 def dbscan_filter(patches_xy):
     if len(patches_xy) == 0:
@@ -68,7 +248,7 @@ def dbscan_filter(patches_xy):
     return [patches_xy[i] for i in range(len(labels)) if labels[i] == most_common_element]
 
 
-def patch_scoring(M, dynamic_threshold, k_patches):
+def patch_scoring(M, dynamic_threshold, k_patches, ar_idx=None):
     """
     Patch scoring based on the inverse degree.
         dynamic_threshold: set to True will override the threshold value by mean of the matrix
@@ -77,14 +257,16 @@ def patch_scoring(M, dynamic_threshold, k_patches):
     A = M.clone()
     A.fill_diagonal_(0)
     cent = torch.sum(A > threshold, dim=1).float()
-
+    total_elements = A.numel() - A.shape[0]  # trừ đi phần tử đường chéo
+    num_above_threshold = torch.sum(A > threshold).item()
+    # Tính tỉ lệ phần trăm
+    percent_above = (num_above_threshold / total_elements) * 100
     sel = torch.argsort(cent, descending=False)
     cent = cent[sel]
     jumps = []
     if k_patches == -1:
         jumps = [abs(int(float((cent[i] - cent[i - 1]).cpu().numpy()))) for i in range(1, len(cent))]
         # plot_jumps(jumps)
-
         # replace first 10% of the jumps with 0
         num_10_percent = int(len(jumps) * 0.1)
         jumps[:num_10_percent] = [0]*num_10_percent

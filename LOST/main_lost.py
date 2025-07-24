@@ -26,10 +26,11 @@ import torch.nn.functional as F
 from artifact_det import detect_artifacts
 from datasets import ImageDataset, Dataset, bbox_iou
 from networks import get_model
-from object_discovery import lost, detect_box, dino_seg
+from object_discovery import lost, detect_box, dino_seg, compute_dynamic_k, compute_k_from_bboxes
 from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion, visualize_heatmap
-from count_patches_inside import potentials_in_boxes
-
+from count_patches_inside import *
+from PIL import Image
+from gate import AttentionReweightAndGate
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Unsupervised object discovery with LOST.")
     parser.add_argument(
@@ -45,7 +46,9 @@ if __name__ == "__main__":
             "resnet50_imagenet",
             "dinov2_vitl14_pretrain",
             "dinov2_vits14_pretrain",
+            "dinov2_vitb14_pretrain",
             "dinov2_vitl14_reg4_pretrain",
+            "dinov2_vitg14_pretrain",
         ],
         help="Model architecture.",
     )
@@ -111,6 +114,22 @@ if __name__ == "__main__":
         help="Which features to use",
     )
     parser.add_argument(
+    "--start_idx",
+    type=int,
+    default=0,
+    help="Skip images before this index (zero-based) in the dataset",
+)
+#     parser.add_argument(
+#         '--dynamic_k', 
+#         action='store_true',
+#         help='Enable dynamic k_patches based on image size')
+#     parser.add_argument(
+#     '--dynamic_k_bbox',
+#     action='store_true',
+#     help='Enable dynamic k_patches based on ground-truth bounding boxes'
+# )
+
+    parser.add_argument(
         "--k_patches",
         type=int,
         default=100,
@@ -155,6 +174,8 @@ if __name__ == "__main__":
     # Model
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model = get_model(args.arch, args.patch_size, device)
+    # wrap your ViT in our helper
+    rewg = AttentionReweightAndGate(model, patch_size=args.patch_size).to(device)
 
     # -------------------------------------------------------------------------------------------------------
     # Directories
@@ -193,19 +214,33 @@ if __name__ == "__main__":
     hard_ds = []
     all_blocks_out = []            # global list, reused each image
 
-    def make_hook():
-        def fn(module, inp, out):
-            # out shape: (B, N_tokens, D). keep batch-0, drop CLS
-            all_blocks_out.append(out[0, 1:].detach())   # (N_patches, D)
-        return fn
+    # def make_hook():
+    #     def fn(module, inp, out):
+    #         # out shape: (B, N_tokens, D). keep batch-0, drop CLS
+    #         all_blocks_out.append(out[0, 1:].detach())   # (N_patches, D)
+    #     return fn
 
-    hooks = [blk.register_forward_hook(make_hook()) for blk in model.blocks]
+    # hooks = [blk.register_forward_hook(make_hook()) for blk in model.blocks]
     all_image_means = []
+    total_semantic_images = 0
+    total_k_less_than_5percent = 0
+    total_k_less_than_20percent = 0
+    total_k_less_than_5percent_potential = 0
+    total_k_less_than_20percent_potential = 0
+
+    start = args.start_idx
     for im_id, inp in enumerate(pbar):
         # ------------ IMAGE PROCESSING -------------------------------------------
-        all_blocks_out.clear() 
+        if im_id < start:
+            continue
+        all_blocks_out.clear()
         img = inp[0]
         init_image_size = img.shape
+        image_size = init_image_size[1:3]  # (height, width)
+
+# Override k_patches if dynamic mode is enabled
+        
+        
         # Get the name of the image
         im_name = dataset.get_image_name(inp[1])
         # Pass in case of no gt boxes in the image
@@ -223,7 +258,9 @@ if __name__ == "__main__":
         img = paded
 
         # Move to gpu
+
         #img = img.cuda(non_blocking=True)
+
         # Size for transformers
         w_featmap = img.shape[-2] // args.patch_size
         h_featmap = img.shape[-1] // args.patch_size
@@ -231,12 +268,19 @@ if __name__ == "__main__":
         gt_bbxs = None   
         if not args.no_evaluation:
             gt_bbxs, gt_cls = dataset.extract_gt(inp[1], im_name)
-            print("bbox", gt_bbxs)
-            if gt_bbxs is not None:
-                # Discard images with no gt annotations
-                # Happens only in the case of VOC07 and VOC12
-                if gt_bbxs.shape[0] == 0 and args.no_hard:
-                    continue
+        #     print("bbox", gt_bbxs)
+        #     if args.dynamic_k:  # Add this flag to your argument parser
+        #         args.k_patches = compute_dynamic_k(image_size)
+        #         print("k patch size ", args.k_patches)
+        #     elif args.dynamic_k_bbox and not args.no_evaluation and gt_bbxs is not None:
+        #         args.k_patches = compute_k_from_bboxes(gt_bbxs, image_size)
+        #         print(f"[Dynamic K from BBox] k_patches set to {args.k_patches}")
+        #     print("image shape", init_image_size)
+        #     if gt_bbxs is not None:
+        #         # Discard images with no gt annotations
+        #         # Happens only in the case of VOC07 and VOC12
+        #         if gt_bbxs.shape[0] == 0 and args.no_hard:
+        #             continue
 
         # ------------ EXTRACT FEATURES -------------------------------------------
         with torch.no_grad():
@@ -244,6 +288,7 @@ if __name__ == "__main__":
             # ------------ FORWARD PASS -------------------------------------------
             if "vit" in args.arch:
                 # Store the outputs of qkv layer from the last attention layer
+                # ==================================
                 feat_out = {}
                 def hook_fn_forward_qkv(module, input, output):
                     feat_out["qkv"] = output
@@ -251,7 +296,7 @@ if __name__ == "__main__":
 
                 # Forward pass in the model
                 attentions = model.get_last_selfattention(img[None, :, :, :])
-
+                print("attn shape: ", attentions.shape)
                 # Scaling factor
                 scales = [args.patch_size, args.patch_size]
 
@@ -268,6 +313,7 @@ if __name__ == "__main__":
                 else:
 
                     attn = attentions[0, :, 0, 1:].reshape(nh,-1)
+                    
                     if args.artifact_remove:
 
                         def det_artifact(attn):
@@ -288,18 +334,31 @@ if __name__ == "__main__":
                         .permute(2, 0, 3, 1, 4)
                     )
                     q, k, v = qkv[0], qkv[1], qkv[2]
+                   
+
+                    q_cls = q[:, :, 0, :]  #
+                    q_all = q[:, :, 1:, :]
+                    print(q_all.shape)
+                    print(q_cls.shape)
+                    attn1 = torch.einsum("bhd,bhnd->bhn", q_cls, q_all)  # (1, 6, 1008)
+                    print(attn1.shape)
+                    attn1 = attn1 / (64**0.5)
+                    attn1 = torch.softmax(attn1, dim=-1).squeeze()
+                    attn1 = attn1.reshape(nh, w_featmap, h_featmap)
+                    attn1 = nn.functional.interpolate(attn1.unsqueeze(0),
+                                                        scale_factor=args.patch_size,
+                                                        mode='nearest')[0].cpu().numpy()
+
                     k = k.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     q = q.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     v = v.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
 
-                    # Modality selection
                     feats1 = None
                     if args.which_features == "k":
                         feats = k[:, 1:, :]
-                        feats1 = q[:,1:, :]
+                        #feats1 = q[:, 1:, :]
                     elif args.which_features == "q":
                         feats = q[:, 1:, :]
-
                     elif args.which_features == "v":
                         feats = v[:, 1:, :]
                     if 'reg' in args.arch:
@@ -308,8 +367,9 @@ if __name__ == "__main__":
         # ------------ Apply LOST -------------------------------------------
         if not args.dinoseg:
             # Apply LOST
+            # The larger bboxes, the less patches
             def k_from_bboxes(gt_boxes, img_h, img_w, patch_size,
-                  scale_factor=0.3, k_min=50, k_max=200):
+                  scale_factor=0.5, k_min=70, k_max=500):
                 """
                 Estimate k (number of lowest-degree patches) from GT boxes.
                 - gt_boxes:  (N,4)  ndarray | tensor  [x0,y0,x1,y1] in pixels
@@ -323,13 +383,60 @@ if __name__ == "__main__":
                 areas = (gt_boxes[:,2] - gt_boxes[:,0]) * (gt_boxes[:,3] - gt_boxes[:,1])
                 gt_area   = areas.sum()
                 img_area  = img_h * img_w
+                if gt_area > img_area:
+                    return k_min  # fallback when GT area is larger than image area
                 # fraction of the image covered by all objects
                 frac = float(gt_area) / (img_area + 1e-6)
-                # how many patches does that fraction correspond to?
-                tot_patches = math.ceil(img_h / patch_size) * math.ceil(img_w / patch_size)
-                k_est = int(scale_factor * frac * tot_patches)
-                print(f"Estimated k={k_est} from GT boxes,")
-                return max(k_min, min(k_est, k_max))
+
+                inv_frac = 1.0 - min(max(frac, 0.0), 1.0)
+
+                # total number of patches
+                n_rows = math.ceil(img_h / patch_size)
+                n_cols = math.ceil(img_w / patch_size)
+                tot_patches = n_rows * n_cols
+
+                # estimate and clamp
+                k_est = int(inv_frac * scale_factor * tot_patches)
+                k_clamped = max(k_min, min(k_est, k_max))
+                return k_clamped
+
+            # The larger bboxes, the more patches
+            # def k_from_bboxes(gt_boxes, img_h, img_w, patch_size,
+            #       scale_factor=0.5, k_min=70, k_max=500):
+            #     """
+            #     Estimate k (number of lowest-degree patches) from GT boxes,
+            #     so that larger GT area produces a larger k.
+
+            #     - gt_boxes:  (N,4) ndarray | tensor [x0,y0,x1,y1] in pixels
+            #     - img_h, img_w: original image size
+            #     - patch_size:   ViT patch edge length
+            #     Returns k between k_min and k_max.
+            #     """
+            #     # fallback when no GT
+            #     if gt_boxes is None or len(gt_boxes) == 0:
+            #         return k_min
+
+            #     # total GT area
+            #     areas = (gt_boxes[:,2] - gt_boxes[:,0]) * (gt_boxes[:,3] - gt_boxes[:,1])
+            #     gt_area  = areas.sum()
+            #     img_area = img_h * img_w
+
+            #     # fraction of the image covered by all objects
+            #     frac = float(gt_area) / (img_area + 1e-6)
+            #     # clamp to [0,1]
+            #     frac = min(max(frac, 0.0), 1.0)
+
+            #     # total number of patches
+            #     n_rows     = math.ceil(img_h / patch_size)
+            #     n_cols     = math.ceil(img_w / patch_size)
+            #     tot_patches = n_rows * n_cols
+
+            #     # now larger frac → larger k_est
+            #     k_est = int(frac * scale_factor * tot_patches)
+
+            #     # clamp into [k_min, k_max]
+            #     k_clamped = max(k_min, min(k_est, k_max))
+            #     return k_clamped
             if args.dynamic_k:
                 cur_k = k_from_bboxes(
                     gt_bbxs,                         # can be None in inference mode
@@ -340,16 +447,60 @@ if __name__ == "__main__":
             else:
                 cur_k = args.k_patches
             print(f"Using k={cur_k} patches for {im_name}")
+            img_tensor = img[None].to(device)  # shape (1,C,H,W)
 
-            
+            # ▶️ Step 1+2 fused attention scores:
+            print("img_tensor shape", img_tensor.shape)
+            fused_scores = rewg(img_tensor)  # shape (1, N_tokens)
             pred, A, scores, seed, potentials, jumps = lost(
                 feats,
+                feats1 if feats1 is not None else feats,
                 [w_featmap, h_featmap],
                 scales,
                 init_image_size,
                 k_patches=cur_k,
                 dynamic_thres="dinov2" in args.arch,
+                artifact_idx = art_id if args.artifact_remove else None,
+                custom_scores=fused_scores
             )
+            VOC12_SEG_DIR = "datasets/VOC2012/VOCdevkit/VOC2012/SegmentationClass"
+            
+            mask_path = os.path.join(VOC12_SEG_DIR, im_name.replace('.jpg','.png'))
+            if not os.path.isfile(mask_path):
+                print(f"[{im_name}] no segmentation mask found, skipping image")
+                continue
+            total_semantic_images += 1
+            mask = np.array(Image.open(mask_path))
+            # assume mask pixels > 0 are “semantic object”
+            mask = (mask > 0).astype(np.uint8)
+
+            total, in_k = count_semantic_patches(
+                potentials,
+                mask,
+                args.patch_size,
+                w_featmap,
+                h_featmap
+            )
+
+            print(f"{im_name}:")
+            print(f"  patches covering object region: {total}/{w_featmap*h_featmap}")
+            print(f"  of those, {in_k}/{len(potentials)} are among LOST patches")
+            frac = (in_k / total) * 100 if total else 0 # number of k_patches / total)number of semantics (area of cover)
+            if frac > 30:
+                total_k_less_than_5percent += 1
+            if frac > 50:
+                total_k_less_than_20percent += 1
+
+            frac_potential = (in_k / len(potentials)) * 100 if len(potentials) else 0 # num of k patches / total potentials (accuracy)
+            if frac_potential > 30:
+                total_k_less_than_5percent_potential += 1
+            if frac_potential > 50:
+                total_k_less_than_20percent_potential += 1
+            if total_semantic_images:
+                print(f"→ {total_k_less_than_5percent}/{total_semantic_images} images had >30% of patches covering semantic object")
+                print(f"{total_k_less_than_20percent}/{total_semantic_images} images had >50% of patches covering semantic object")
+                print(f"→ {total_k_less_than_5percent_potential}/{total_semantic_images} images had >30% of potentials LOST patches covering semantic object")
+                print(f"→ {total_k_less_than_20percent_potential}/{total_semantic_images} images had >50% of potentials LOST patches covering semantic object")
             
             # ------------------------------------------------------------------
             # 2.  inside the image loop, AFTER you have `potentials`
@@ -462,23 +613,21 @@ if __name__ == "__main__":
 
             # ------Count patches in GT box-----------------------------------------
             
-            per_box_counts = []
-            outside_cnt    = 0
-            if (not args.no_evaluation) and (gt_bbxs is not None):
-                per_box_counts, outside_cnt = potentials_in_boxes(
-                                            potentials, w_featmap, h_featmap,
-                                            args.patch_size, gt_bbxs)
-                print(f"Potentials per GT box  : {per_box_counts}")
-                print(f"Potentials outside all : {outside_cnt} / {len(potentials)}")
+            # per_box_counts = []
+            # outside_cnt    = 0
+            # if (not args.no_evaluation) and (gt_bbxs is not None):
+            #     per_box_counts, outside_cnt = potentials_in_boxes(
+            #                                 potentials, w_featmap, h_featmap,
+            #                                 args.patch_size, gt_bbxs)
+            #     print(f"Potentials per GT box  : {per_box_counts}")
+            #     print(f"Potentials outside all : {outside_cnt} / {len(potentials)}")
+            #     if per_box_counts:
+            #         mean_per_box = sum(per_box_counts) / len(per_box_counts)
+            #     else:
+            #         mean_per_box = 0.0
+            #     print(f"Mean patches inside per GT box: {mean_per_box:.2f}")
 
-                if per_box_counts:
-                    mean_per_box = sum(per_box_counts) / len(per_box_counts)
-                else:
-                    mean_per_box = 0.0
-                print(f"Mean patches inside per GT box: {mean_per_box:.2f}")
-
-                all_image_means.append(mean_per_box)
-
+            #     all_image_means.append(mean_per_box)
 
             # ------------ Visualizations -------------------------------------------
             if args.visualize == "fms":
@@ -497,11 +646,15 @@ if __name__ == "__main__":
                 visualize_seed_expansion(image, pred, seed, pred_seed, scales, [w_featmap, h_featmap], vis_folder, im_name)
 
             elif args.visualize == "pred":
-                
                 image = dataset.load_image(im_name)
-                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, char=args.which_features, perbox_counts=per_box_counts, outside_counts=outside_cnt, gt_bboxes=gt_bbxs)
+                #visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, char=args.which_features, perbox_counts=per_box_counts, outside_counts=outside_cnt, gt_bboxes=gt_bbxs)
+                visualize_predictions(image, pred, seed, scales, [w_featmap, h_featmap], vis_folder, im_name, plot_seed=True, potentials=potentials, char=args.which_features, perbox_counts=in_k, gt_bboxes=gt_bbxs, mask=mask)
+
+                
             elif args.visualize == "heatmap":
-                visualize_heatmap(attn, im_name, vis_folder,mean=True)
+                visualize_heatmap(attn1, im_name, vis_folder,mean=True)
+            
+            del A, scores, attn, qkv, feats, feats1, potentials, jumps
 
         # Save the prediction
         preds_dict[im_name] = pred
@@ -538,8 +691,15 @@ if __name__ == "__main__":
         with open(result_file, 'w') as f:
             f.write('corloc,%.1f,,\n'%(100*np.sum(corloc)/cnt))
         print('File saved at %s'%result_file)
-    if all_image_means:
-        dataset_mean = sum(all_image_means) / len(all_image_means)
-        print(f"\n→ Dataset-wide mean patches inside per GT box: {dataset_mean:.2f}")
-    for h in hooks:
-        h.remove()
+    # if all_image_means:
+    #     dataset_mean = sum(all_image_means) / len(all_image_means)
+    #     print(f"\n→ Dataset-wide mean patches inside per GT box: {dataset_mean:.2f}")
+    if total_semantic_images:
+        print(f"→ {total_k_less_than_5percent}/{total_semantic_images} images had <5% of patches covering semantic object")
+        print(f"{total_k_less_than_20percent}/{total_semantic_images} images had <20% of patches covering semantic object")
+        print(f"→ {total_k_less_than_5percent_potential}/{total_semantic_images} images had <5% of potentials LOST patches covering semantic object")
+        print(f"→ {total_k_less_than_20percent_potential}/{total_semantic_images} images had <20% of potentials LOST patches covering semantic object")
+            
+    
+    # for h in hooks:
+    #     h.remove()
