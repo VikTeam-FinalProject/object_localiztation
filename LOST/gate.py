@@ -26,6 +26,7 @@ class AttentionReweightAndGate(nn.Module):
         # storage for each block's raw QKV
         self._qkvs = [None] * L
         for i, blk in enumerate(self.vit.blocks):
+            print("block", i)
             # hook into the qkv projection of each block
             blk.attn.qkv.register_forward_hook(self._make_hook(i))
 
@@ -41,7 +42,8 @@ class AttentionReweightAndGate(nn.Module):
 
         all_layer_scores = []
         for l, qkv in enumerate(self._qkvs):
-            print("qkv shape:", qkv.shape)
+            
+            #print("qkv shape:", qkv.shape)
             B, N_tokens, total_dim = qkv.shape
             H      = self.vit.num_heads
             D_head = total_dim // (3 * H)

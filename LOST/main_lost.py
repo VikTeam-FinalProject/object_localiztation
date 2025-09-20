@@ -24,7 +24,7 @@ from tqdm import tqdm
 import math 
 import torch.nn.functional as F
 from artifact_det import detect_artifacts
-from datasets import ImageDataset, Dataset, bbox_iou
+from dataset import ImageDataset, Dataset, bbox_iou
 from networks import get_model
 from object_discovery import lost, detect_box, dino_seg, compute_dynamic_k, compute_k_from_bboxes
 from visualizations import visualize_fms, visualize_predictions, visualize_seed_expansion, visualize_heatmap
@@ -86,6 +86,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--artifact_remove", action="store_true", help="Remove artifacts from the image."
     )
+    parser.add_argument(
+        "--artifact_detect", action="store_true", help = "Verify that if artifact is sink"
+    )
     # Evaluation setup
     parser.add_argument("--no_hard", action="store_true", help="Only used in the case of the VOC_all setup (see the paper).")
     parser.add_argument("--no_evaluation", action="store_true", help="Compute the evaluation.")
@@ -95,7 +98,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--visualize",
         type=str,
-        choices=["fms", "seed_expansion", "pred", None, "heatmap"],
+        choices=["fms", "seed_expansion", "pred", None, "heatmap", "svd"],
         default=None,
         help="Select the different type of visualizations.",
     )
@@ -149,6 +152,17 @@ if __name__ == "__main__":
 
     # Dynamic threshold
     parser.add_argument("--dynamic_thres", action="store_true", help="Use dynamic thresholding.")
+    parser.add_argument(
+    "--use_sinder", 
+    action="store_true", 
+    help="Use Sinder for artifact detection."
+)
+    parser.add_argument(
+    "--detect_sinks",
+    action="store_true",
+    help="Detect and mask attention sink tokens (as in 'What are you sinking?')."
+)
+
 
     # masked artifact
     args = parser.parse_args()
@@ -173,7 +187,64 @@ if __name__ == "__main__":
     # -------------------------------------------------------------------------------------------------------
     # Model
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    print("Using device:", device)
     model = get_model(args.arch, args.patch_size, device)
+    from pathlib import Path
+    import sys
+    from pathlib import Path
+
+    # add SINDER repo to sys.path
+    sinder_path = "/Users/tringuyen/Documents/Multimodal_Research/object_localiztation/sinder"
+    if sinder_path not in sys.path:
+        sys.path.append(sinder_path)
+
+    # now safe to import
+    from sinder.utils import load_model
+    from sinder.singular_defect import singular_defect_directions
+    import sinder
+    def load_model(model_name, checkpoint=None):
+        print(f'using {model_name} model')
+        model = torch.hub.load(
+            repo_or_dir=Path(sinder.__file__).parent.parent,
+            source='local',
+            model=model_name,
+        )
+        if checkpoint is not None:
+            states = torch.load(checkpoint, map_location='cpu')
+            model.load_state_dict(states, strict=False)
+        #model = model.cuda()
+        model.eval()
+        model.interpolate_antialias = True
+        model.singular_defects = singular_defect_directions(model)
+        print(f'model loaded. patch size: {model.patch_size}')
+
+
+        return model
+    #model = load_model('dinov2_vitg14')
+    import torch.nn.functional as F
+
+    # def get_last_selfattention(self, x):
+    #     """
+    #     Forward once and grab last block's attention weights.
+    #     """
+    #     attn_weights = None
+
+    #     def hook_fn(module, input, output):
+    #         nonlocal attn_weights
+    #         attn_weights = module.attn_drop(output)  # or just output if drop not applied
+
+    #     # hook into the last attention layer
+    #     handle = self.blocks[-1].attn.attn_drop.register_forward_hook(hook_fn)
+
+    #     # forward pass
+    #     _ = self.forward(x)
+
+    #     handle.remove()
+    #     return attn_weights
+
+    # # Attach to model dynamically
+    # setattr(model, "get_last_selfattention", get_last_selfattention.__get__(model))
+
     # wrap your ViT in our helper
     rewg = AttentionReweightAndGate(model, patch_size=args.patch_size).to(device)
 
@@ -221,6 +292,17 @@ if __name__ == "__main__":
     #     return fn
 
     # hooks = [blk.register_forward_hook(make_hook()) for blk in model.blocks]
+
+    feat_out_id = {}
+
+    def make_hook(layer_id):
+        def hook_fn(module, input, output):
+            feat_out_id[layer_id] = output.detach()  # store qkv for this layer
+        return hook_fn
+
+    for i, blk in enumerate(model.blocks):
+        blk.attn.qkv.register_forward_hook(make_hook(i))
+
     all_image_means = []
     total_semantic_images = 0
     total_k_less_than_5percent = 0
@@ -294,9 +376,9 @@ if __name__ == "__main__":
                     feat_out["qkv"] = output
                 model._modules["blocks"][-1]._modules["attn"]._modules["qkv"].register_forward_hook(hook_fn_forward_qkv)
 
-                # Forward pass in the model
+                # # Forward pass in the model
                 attentions = model.get_last_selfattention(img[None, :, :, :])
-                print("attn shape: ", attentions.shape)
+               # print("attn shape: ", attentions.shape)
                 # Scaling factor
                 scales = [args.patch_size, args.patch_size]
 
@@ -315,19 +397,27 @@ if __name__ == "__main__":
                     attn = attentions[0, :, 0, 1:].reshape(nh,-1)
                     
                     if args.artifact_remove:
-
                         def det_artifact(attn):
                             max_indices = torch.argmax(attn, dim=1)  # shape: (nh,)
                             counts = torch.bincount(max_indices)
                             idx = torch.argmax(counts)
                             return idx.item()
+                        
 
                         art_id = det_artifact(attn)
                         attn[:,art_id] = 0
-                    attn = attn.reshape(nh, w_featmap, h_featmap)
-                    attn = nn.functional.interpolate(attn.unsqueeze(0),
-                                                     scale_factor=args.patch_size,
-                                                     mode='nearest')[0].cpu().numpy()
+                    import torch
+                    import torch.nn.functional as F
+
+                    
+
+                    # Put it back later
+                    # attn = attn.reshape(nh, w_featmap, h_featmap)
+                    # attn = nn.functional.interpolate(attn.unsqueeze(0),
+                    #                                  scale_factor=args.patch_size,
+                    #                                  mode='nearest')[0].cpu().numpy()
+
+
                     qkv = (
                         feat_out["qkv"]
                         .reshape(nb_im, nb_tokens, 3, nh, -1 // nh)
@@ -338,27 +428,263 @@ if __name__ == "__main__":
 
                     q_cls = q[:, :, 0, :]  #
                     q_all = q[:, :, 1:, :]
+                    k_cls = k[:, :, 0, :]  
+                    k_all = k[:, :, 1:, :]
+
+                    q_cls = F.normalize(q_cls, p=2, dim=-1, eps=1e-8)   # (B, H, D), normalized
+                    k_all = F.normalize(k_all, p=2, dim=-1, eps=1e-8)  
                     print(q_all.shape)
                     print(q_cls.shape)
-                    attn1 = torch.einsum("bhd,bhnd->bhn", q_cls, q_all)  # (1, 6, 1008)
-                    print(attn1.shape)
+                    attn1 = torch.einsum("bhd ,bhnd->bhn", q_cls, k_all)  # (1, 6, 1008)
+                    
+                    #attn1 = torch.einsum("bhd,bhd->hd", q_cls, q_cls)
+                    print("att shape", attn.shape)
+                    print("attn1 shape", attn1.shape)
+
                     attn1 = attn1 / (64**0.5)
-                    attn1 = torch.softmax(attn1, dim=-1).squeeze()
+
+                    #attn1 = torch.softmax(attn1, dim=-1).squeeze()
+                    
+                        
+                    def apply_sinder_artifact_detection(model, attn, w_featmap, h_featmap, mask_thr=4, skip_less_than=3):
+                        
+                        print("Computing Sinder singular defect directions...")
+                        anomalies = singular_defect_directions(model)
+
+                        if anomalies and len(anomalies) > 0:
+                            final_anomaly = anomalies[-1] if isinstance(anomalies, list) else anomalies
+                            num_patches = w_featmap * h_featmap
+                            if len(final_anomaly) > num_patches:
+                                final_anomaly = final_anomaly[:num_patches]
+                            elif len(final_anomaly) < num_patches:
+                                padding = torch.zeros(num_patches - len(final_anomaly), device=final_anomaly.device)
+                                final_anomaly = torch.cat([final_anomaly, padding])
+
+                            anomaly_scores = torch.abs(final_anomaly)
+
+                            # Threshold using mean + mask_thr * std
+                            mean, std = anomaly_scores.mean(), anomaly_scores.std()
+                            threshold_val = mean + mask_thr * std
+                            artifact_mask = anomaly_scores > threshold_val
+                            artifact_indices = torch.where(artifact_mask)[0]
+
+                            # Apply skip_less_than
+                            if len(artifact_indices) < skip_less_than:
+                                print(f"Too few artifacts ({len(artifact_indices)}), skipping")
+                                return []
+
+                            print(f"Sinder detected {len(artifact_indices)} artifacts with mask_thr={mask_thr}")
+                            print(f"Artifact indices: {artifact_indices.tolist()}")
+
+                            return artifact_indices.tolist()
+                        else:
+                            print("No anomalies detected by Sinder")
+                            return []
+
+                        
+                        
+                                
+                    if args.use_sinder:
+                        # Use Sinder for artifact detection
+                        artifact_indices = apply_sinder_artifact_detection(
+                            model, attn, w_featmap, h_featmap
+                        )
+                        
+                        # Remove artifacts from attention
+                        for art_id in artifact_indices:
+                            if art_id < attn.shape[1]:  # Ensure index is valid
+                                attn[:, art_id] = 0.0
+                    if args.artifact_remove:
+                        def det_artifact(attn_2d: torch.Tensor) -> int:
+                            """
+                            attn_2d: (H, N) attention per head.
+                            Returns the token index that most heads spike on (the artifact column).
+                            """
+                            # index of max token per head
+                            max_indices = torch.argmax(attn_2d, dim=1)  # (H,)
+                            # count how many heads pick each token
+                            counts = torch.bincount(max_indices, minlength=attn_2d.size(1))  # (N,)
+                            return int(torch.argmax(counts))
+                        
+
+                        art_id = det_artifact(attn1)
+                        attn1[:, art_id] = 0.0
+                        attn1 = attn1 / (attn1.sum(dim=1, keepdim=True) + 1e-8)
+                    def detect_attention_sinks(attn: torch.Tensor, tau=0.9, gamma=0.3):
+                        """
+                        Detect attention sink tokens.
+
+                        Args:
+                            attn: (H, N) tensor of attention weights per head (already softmaxed).
+                            tau: percentile threshold (e.g., top 10%).
+                            gamma: fraction of heads that must spike on the same token.
+
+                        Returns:
+                            sink_indices: list of token indices considered sinks.
+                        """
+                        H, N = attn.shape
+                        sink_counts = torch.zeros(N, device=attn.device)
+
+                        # For each head, count tokens above tau-percentile
+                        for h in range(H):
+                            thresh = torch.quantile(attn[h], tau)
+                            mask = attn[h] >= thresh
+                            sink_counts += mask.float()
+
+                        # Normalize to [0,1]
+                        sink_freq = sink_counts / H
+
+                        # Tokens where ≥ gamma fraction of heads spiked
+                        sink_indices = torch.where(sink_freq >= gamma)[0]
+
+                        return sink_indices.tolist()
+                    
+                    if args.detect_sinks:
+                        sink_indices = detect_attention_sinks(attn1, tau=0.99, gamma=1)
+                        print(f"Detected attention sinks: {sink_indices}")
+
+                        # Zero out sinks if you want to remove their influence
+                        for sink_id in sink_indices:
+                            print(f"Masking sink token {sink_id} with attention sum {attn1[:, sink_id].sum().item():.4f}")
+                            attn1[:, sink_id] = 0.0
+
+                        # Renormalize
+                        attn1 = attn1 / (attn1.sum(dim=1, keepdim=True) + 1e-8)
+                    import matplotlib.pyplot as plt
+                    if args.artifact_detect:
+                        def save_heatmap(arr, save_path, title=""):
+                            """
+                            Save a 2D NumPy array as a heatmap.
+                            """
+                            os.makedirs(os.path.dirname(save_path), exist_ok=True)
+                            plt.figure(figsize=(5, 5))
+                            plt.imshow(arr, cmap="viridis")
+                            plt.colorbar()
+                            plt.title(title)
+                            plt.tight_layout()
+                            plt.savefig(save_path)
+                            plt.close()
+                        def detect_artifact_and_divergence(attn: torch.Tensor):
+                            """
+                            Detect artifact sink token and compute KL divergence before/after masking.
+                            
+                            Args:
+                                attn: (H, N) tensor of attention weights per head (softmaxed).
+                                    H = #heads, N = #tokens.
+                            
+                            Returns:
+                                artifact_idx: int, index of detected artifact token
+                                agreement: float, fraction of heads that spike on artifact_idx
+                                divergences: list of KL divergence values, one per head
+                            """
+                            H, N = attn.shape
+
+                            # 1. Detect artifact index based on majority argmax
+                            max_indices = torch.argmax(attn, dim=1)  # (H,)
+                            counts = torch.bincount(max_indices, minlength=N)
+                            artifact_idx = torch.argmax(counts).item()
+                            agreement = counts[artifact_idx].item() / H
+
+                            # 2. Compute KL divergence per head (original vs. masked)
+                            divergences = []
+                            for h in range(H):
+                                p = attn[h]  # (N,)
+                                p = p / (p.sum() + 1e-8)  # normalize to prob
+                                eps = 1e-8
+                                # Mask artifact index
+                                q = p.clone()
+                                q[artifact_idx] = 1e-8
+                                q = q / (q.sum() + 1e-8)  # renormalize
+                                #p = torch.softmax(p, dim=-1).squeeze()
+                                #q = torch.softmax(q, dim=-1).squeeze()
+                                p = p.clamp(min=eps)
+                                q = q.clamp(min=eps)
+                                # KL(p || q)
+                                kl = F.kl_div(q.log(), p, reduction="sum").item()
+                                divergences.append(kl)
+
+                                before = attn[h].view(w_featmap, h_featmap)
+                                after  = q.view(w_featmap, h_featmap)
+
+                                base_name = im_name.replace(".jpg", f"_head{h:02d}")
+                                save_heatmap(before, os.path.join(vis_folder ,"heatmap", base_name + "_before.png"),
+                                            title=f"Head {h} Before (KL={kl:.4f})")
+                                save_heatmap(after, os.path.join(vis_folder , "heatmap", base_name + "_after.png"),
+                                            title=f"Head {h} After (KL={kl:.4f})")
+
+                            return artifact_idx, agreement, divergences
+                        attn1 = attn1.squeeze(0)
+                        artifact_idx, agreement, divergences = detect_artifact_and_divergence(attn1)
+
+                        print(f"Artifact index: {artifact_idx}")
+                        print(f"Head agreement: {agreement:.2f}")
+                        for i, d in enumerate(divergences):
+                            print(f"Head {i}: KL divergence = {d:.4f}")
+
+                    #attn1 = torch.softmax(attn1, dim=-1).squeeze()
+                    print("attn1 shape", attn1.shape)
+                    print("nh", nh)
+                    print("w_featmap", w_featmap)
+                    print("h_featmap", h_featmap)
                     attn1 = attn1.reshape(nh, w_featmap, h_featmap)
                     attn1 = nn.functional.interpolate(attn1.unsqueeze(0),
                                                         scale_factor=args.patch_size,
                                                         mode='nearest')[0].cpu().numpy()
+                    
+                    print("attn1 shape after interpolation", attn1.shape)
+
+
+                    # B, H, N, D = q_all.shape                     # (1, 16, 1152, 64)
+
+                    # sim = torch.einsum('b h n d, b h m d -> b h n m', q_all, q_all)
+                    # sim = sim / math.sqrt(D)                      # scale
+                    # attn1 = sim.softmax(dim=-1)                   # (B, H, N, N)
+
+                    # # ---- collapse the last dimension ----
+                    # attn1 = attn1.mean(dim=-1)                    # → (B, H, N) ❶
+                    # #  or: attn1 = attn1.max(dim=-1).values      #   (choose the reduction you want)
+
+                    # attn1 = attn1.squeeze(0)                      # → (H, N)     ❷
+                    # attn1 = attn1.reshape(H, w_featmap, h_featmap)# → (16, 32, 36)
+
+                    # attn1 = F.interpolate(attn1.unsqueeze(0),     # upscale to pixel space
+                    #                     scale_factor=args.patch_size,
+                    #                     mode='nearest')[0].cpu().numpy()
+
+
 
                     k = k.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     q = q.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     v = v.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
+                    from svd import compute_svd_visualize
+                    for layer_id, qkv_out in feat_out_id.items():
+                        nb_im, nb_tokens, nhd = qkv_out.shape  # shape: (B, N, 3*D)
+                        layer_id = int(layer_id)
+                        nh = model.blocks[layer_id].attn.num_heads
+                        d = nhd // (3*nh)
 
+                        qkv = qkv_out.reshape(nb_im, nb_tokens, 3, nh, d).permute(2, 0, 3, 1, 4)
+                        q, k, v = qkv[0], qkv[1], qkv[2]  # (B, H, N, D)
+
+                        # flatten (B,H,N,D) → (B*N, D)
+                        q = q.transpose(1,2).reshape(nb_im, nb_tokens, -1)
+                        k = k.transpose(1,2).reshape(nb_im, nb_tokens, -1)
+                        #q = q / q.norm(p=2, dim=-1, keepdim=True)
+                        #k = k / k.norm(p=2, dim=-1, keepdim=True)
+                        save_dir = os.path.join(vis_folder, "svd", im_name.replace(".jpg", ""))
+                        save_path = os.path.join(save_dir, f"layer_{layer_id}.png")
+                        # visualize
+                        #compute_svd_visualize(q, k, n_components=3, title=f"SVD of Q/K — Layer {layer_id}", save_path=None) 
+                    #if args.visualize == "svd":
+                    #   compute_svd_visualize(q, k, n_components=2, title="SVD Projection of Q and K")
                     feats1 = None
                     if args.which_features == "k":
-                        feats = k[:, 1:, :]
+                        feats = q[:, 1:, :]  # skip CLS
+                        feats1 = k[:, 1:, :]
                         #feats1 = q[:, 1:, :]
                     elif args.which_features == "q":
                         feats = q[:, 1:, :]
+                        feats1 = q[:, 1:, :]
                     elif args.which_features == "v":
                         feats = v[:, 1:, :]
                     if 'reg' in args.arch:
@@ -368,75 +694,75 @@ if __name__ == "__main__":
         if not args.dinoseg:
             # Apply LOST
             # The larger bboxes, the less patches
-            def k_from_bboxes(gt_boxes, img_h, img_w, patch_size,
-                  scale_factor=0.5, k_min=70, k_max=500):
-                """
-                Estimate k (number of lowest-degree patches) from GT boxes.
-                - gt_boxes:  (N,4)  ndarray | tensor  [x0,y0,x1,y1] in pixels
-                - img_h, img_w:      original image size in pixels
-                - patch_size:        ViT patch edge length in pixels
-                Returns an integer between k_min and k_max.
-                """
-                if gt_boxes is None or len(gt_boxes) == 0:
-                    return k_min                        # fallback when no GT
-                # total GT area
-                areas = (gt_boxes[:,2] - gt_boxes[:,0]) * (gt_boxes[:,3] - gt_boxes[:,1])
-                gt_area   = areas.sum()
-                img_area  = img_h * img_w
-                if gt_area > img_area:
-                    return k_min  # fallback when GT area is larger than image area
-                # fraction of the image covered by all objects
-                frac = float(gt_area) / (img_area + 1e-6)
-
-                inv_frac = 1.0 - min(max(frac, 0.0), 1.0)
-
-                # total number of patches
-                n_rows = math.ceil(img_h / patch_size)
-                n_cols = math.ceil(img_w / patch_size)
-                tot_patches = n_rows * n_cols
-
-                # estimate and clamp
-                k_est = int(inv_frac * scale_factor * tot_patches)
-                k_clamped = max(k_min, min(k_est, k_max))
-                return k_clamped
-
-            # The larger bboxes, the more patches
             # def k_from_bboxes(gt_boxes, img_h, img_w, patch_size,
             #       scale_factor=0.5, k_min=70, k_max=500):
             #     """
-            #     Estimate k (number of lowest-degree patches) from GT boxes,
-            #     so that larger GT area produces a larger k.
-
-            #     - gt_boxes:  (N,4) ndarray | tensor [x0,y0,x1,y1] in pixels
-            #     - img_h, img_w: original image size
-            #     - patch_size:   ViT patch edge length
-            #     Returns k between k_min and k_max.
+            #     Estimate k (number of lowest-degree patches) from GT boxes.
+            #     - gt_boxes:  (N,4)  ndarray | tensor  [x0,y0,x1,y1] in pixels
+            #     - img_h, img_w:      original image size in pixels
+            #     - patch_size:        ViT patch edge length in pixels
+            #     Returns an integer between k_min and k_max.
             #     """
-            #     # fallback when no GT
             #     if gt_boxes is None or len(gt_boxes) == 0:
-            #         return k_min
-
+            #         return k_min                        # fallback when no GT
             #     # total GT area
             #     areas = (gt_boxes[:,2] - gt_boxes[:,0]) * (gt_boxes[:,3] - gt_boxes[:,1])
-            #     gt_area  = areas.sum()
-            #     img_area = img_h * img_w
-
+            #     gt_area   = areas.sum()
+            #     img_area  = img_h * img_w
+            #     if gt_area > img_area:
+            #         return k_min  # fallback when GT area is larger than image area
             #     # fraction of the image covered by all objects
             #     frac = float(gt_area) / (img_area + 1e-6)
-            #     # clamp to [0,1]
-            #     frac = min(max(frac, 0.0), 1.0)
+
+            #     inv_frac = 1.0 - min(max(frac, 0.0), 1.0)
 
             #     # total number of patches
-            #     n_rows     = math.ceil(img_h / patch_size)
-            #     n_cols     = math.ceil(img_w / patch_size)
+            #     n_rows = math.ceil(img_h / patch_size)
+            #     n_cols = math.ceil(img_w / patch_size)
             #     tot_patches = n_rows * n_cols
 
-            #     # now larger frac → larger k_est
-            #     k_est = int(frac * scale_factor * tot_patches)
-
-            #     # clamp into [k_min, k_max]
+            #     # estimate and clamp
+            #     k_est = int(inv_frac * scale_factor * tot_patches)
             #     k_clamped = max(k_min, min(k_est, k_max))
             #     return k_clamped
+
+            # The larger bboxes, the more patches
+            def k_from_bboxes(gt_boxes, img_h, img_w, patch_size,
+                  scale_factor=0.5, k_min=70, k_max=500):
+                """
+                Estimate k (number of lowest-degree patches) from GT boxes,
+                so that larger GT area produces a larger k.
+
+                - gt_boxes:  (N,4) ndarray | tensor [x0,y0,x1,y1] in pixels
+                - img_h, img_w: original image size
+                - patch_size:   ViT patch edge length
+                Returns k between k_min and k_max.
+                """
+                # fallback when no GT
+                if gt_boxes is None or len(gt_boxes) == 0:
+                    return k_min
+
+                # total GT area
+                areas = (gt_boxes[:,2] - gt_boxes[:,0]) * (gt_boxes[:,3] - gt_boxes[:,1])
+                gt_area  = areas.sum()
+                img_area = img_h * img_w
+
+                # fraction of the image covered by all objects
+                frac = float(gt_area) / (img_area + 1e-6)
+                # clamp to [0,1]
+                frac = min(max(frac, 0.0), 1.0)
+
+                # total number of patches
+                n_rows     = math.ceil(img_h / patch_size)
+                n_cols     = math.ceil(img_w / patch_size)
+                tot_patches = n_rows * n_cols
+
+                # now larger frac → larger k_est
+                k_est = int(frac * scale_factor * tot_patches)
+
+                # clamp into [k_min, k_max]
+                k_clamped = max(k_min, min(k_est, k_max))
+                return k_clamped
             if args.dynamic_k:
                 cur_k = k_from_bboxes(
                     gt_bbxs,                         # can be None in inference mode
@@ -461,7 +787,7 @@ if __name__ == "__main__":
                 k_patches=cur_k,
                 dynamic_thres="dinov2" in args.arch,
                 artifact_idx = art_id if args.artifact_remove else None,
-                custom_scores=fused_scores
+                # custom_scores=fused_scores
             )
             VOC12_SEG_DIR = "datasets/VOC2012/VOCdevkit/VOC2012/SegmentationClass"
             

@@ -35,3 +35,43 @@ def potentials_in_boxes(
 
     outside_count = int((~covered).sum())
     return per_box_counts, outside_count
+
+def get_patches_in_mask(mask: np.ndarray,
+                        patch_size: int,
+                        w_fmap: int,
+                        h_fmap: int) -> np.ndarray:
+    """
+    mask: H x W binary (1=foreground) numpy array
+    patch_size: size of one square patch in pixels
+    w_fmap, h_fmap: number of patches along height and width
+    returns: 1D array of length w_fmap*h_fmap, True if that patch-center is in mask
+    """
+    # build grid of patch-centers
+    # row idx goes 0..w_fmap-1, col idx 0..h_fmap-1
+    rows = np.repeat(np.arange(w_fmap), h_fmap)
+    cols = np.tile(np.arange(h_fmap), w_fmap)
+    # center coords
+    ys = (rows + 0.5) * patch_size
+    xs = (cols + 0.5) * patch_size
+    # clamp in case image not exactly multiple
+    ys = np.minimum(ys.astype(int), mask.shape[0]-1)
+    xs = np.minimum(xs.astype(int), mask.shape[1]-1)
+    inside = mask[ys, xs] > 0
+    return inside  # boolean array length w_fmap*h_fmap
+
+def count_semantic_patches(potentials: List[int],
+                           mask: np.ndarray,
+                           patch_size: int,
+                           w_fmap: int,
+                           h_fmap: int) -> Tuple[int,int]:
+    """
+    potentials: list of top-k patch indices (0 .. w_fmap*h_fmap-1)
+    mask: H x W binary semantic mask
+    returns (total_in_semantics, potentials_in_semantics)
+    """
+    inside_all = get_patches_in_mask(mask, patch_size, w_fmap, h_fmap)
+    total_in = int(inside_all.sum())
+    # now see which of your potentials land in the mask
+    pot_array = np.array(potentials, dtype=int)
+    total_pot_in = int(inside_all[pot_array].sum())
+    return total_in, total_pot_in

@@ -125,7 +125,7 @@ if __name__ == "__main__":
         paded = torch.zeros(size_im)
         paded[:, : img.shape[1], : img.shape[2]] = img
         img = paded
-        img = img.cuda(non_blocking=True)
+        #img = img.cuda(non_blocking=True)
 
         w_featmap = img.shape[-2] // args.patch_size
         h_featmap = img.shape[-1] // args.patch_size

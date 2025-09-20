@@ -87,105 +87,107 @@ def check_affinity_outliers(A: torch.Tensor, threshold_std: float = 3.0) -> torc
     outliers = (A_flat - mean).abs() > threshold_std * std
     return outliers.reshape(A.shape)
 
-# def lost(feats,feats_, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, artifact_idx=None):
-#     """
-#     Implementation of LOST method.
-#     Inputs
-#         feats: the pixel/patch features of an image
-#         dims: dimension of the map from which the features are used
-#         scales: from image to map scale
-#         init_image_size: size of the image
-#         k_patches: number of k patches retrieved that are compared to the seed at seed expansion
-#     Outputs
-#         pred: box predictions
-#         A: binary affinity matrix
-#         scores: lowest degree scores for all patches
-#         seed: selected patch corresponding to an object
-#     """
-#     A = (feats @ feats_.transpose(1, 2)).squeeze()
-#     affinity_outliers = check_affinity_outliers(A)
-
-#     diag = A.diag()
-#     off_diag = A - torch.diag(diag)
-#     #thresh, idxs, dot_vals, norm_vals, cosine_vals = test_magnitude_vs_dot(A, feats, feats_)
-
-#     #test_magnitude_vs_dot(A, feats, feats_)
-#     sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches, ar_idx=artifact_idx)
-
-#     seed = sorted_patches[0] if len(sorted_patches) > 0 else 0
-#     if k_patches == -1:
-#         not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in sorted_patches]
-#         not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
-#     else:
-#         potentials = sorted_patches[:k_patches]
-#         # Should be empty or very small
-#         not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in potentials]
-#         not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
-#     pred, _ = detect_box(dims, scales=scales, object_patches=not_potentials_filtered_index,
-#                          initial_im_size=init_image_size[1:])
-    
-#     return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, jumps #, idxs
-
-def lost(
-    feats, feats_, dims, scales, init_image_size,
-    k_patches=100, dynamic_thres=False, artifact_idx=None,
-    custom_scores = None,  # NEW arg
-):
+def lost(feats,feats_, dims, scales, init_image_size, k_patches=100, dynamic_thres=False, artifact_idx=None):
     """
-    Implementation of LOST method with optional custom_scores override.
+    Implementation of LOST method.
+    Inputs
+        feats: the pixel/patch features of an image
+        dims: dimension of the map from which the features are used
+        scales: from image to map scale
+        init_image_size: size of the image
+        k_patches: number of k patches retrieved that are compared to the seed at seed expansion
+    Outputs
+        pred: box predictions
+        A: binary affinity matrix
+        scores: lowest degree scores for all patches
+        seed: selected patch corresponding to an object
     """
-    # 1️⃣ If the user passed us fused attention scores, skip affinity/patch_scoring
-    if custom_scores is not None:
-        # custom_scores: shape (N_patches,) on torch device
-        scores = custom_scores.detach().numpy()  # to numpy for downstream
-        # argsort ascending → lowest‐degree first
-        sorted_patches = list(np.argsort(scores))
-        jumps = None
-    else:
-        # ⚙️ original LOST path
-        A = (feats @ feats_.transpose(1, 2)).squeeze()
-        affinity_outliers = check_affinity_outliers(A)
+    feats = feats/ feats.norm(p=2, dim=-1, keepdim=True)
+    feats_ = feats_/ feats_.norm(p=2, dim=-1, keepdim=True)
+    A = (feats @ feats_.transpose(1, 2)).squeeze()
+    affinity_outliers = check_affinity_outliers(A)
 
-        # drop self‐similarity
-        diag = A.diag()
-        off_diag = A - torch.diag(diag)
+    diag = A.diag()
+    off_diag = A - torch.diag(diag)
+    #thresh, idxs, dot_vals, norm_vals, cosine_vals = test_magnitude_vs_dot(A, feats, feats_)
 
-        sorted_patches, scores, jumps = patch_scoring(
-            A, dynamic_thres, k_patches=k_patches, ar_idx=artifact_idx
-        )
-        scores = scores.cpu().numpy()
-        sorted_patches = [int(p) for p in sorted_patches]
+    #test_magnitude_vs_dot(A, feats, feats_)
+    sorted_patches, scores, jumps = patch_scoring(A, dynamic_thres, k_patches=k_patches, ar_idx=artifact_idx)
 
-    seed = sorted_patches[0] if sorted_patches else 0
-
-    # 2️⃣ derive the “potential” patch indices exactly as before
+    seed = sorted_patches[0] if len(sorted_patches) > 0 else 0
     if k_patches == -1:
-        chosen = sorted_patches
+        not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in sorted_patches]
+        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
     else:
-        chosen = sorted_patches[:k_patches]
+        potentials = sorted_patches[:k_patches]
+        # Should be empty or very small
+        not_potentials_xy = [np.unravel_index(p.cpu(), dims) for p in potentials]
+        not_potentials_filtered_index = [np.ravel_multi_index(p, dims) for p in not_potentials_xy]
+    pred, _ = detect_box(dims, scales=scales, object_patches=not_potentials_filtered_index,
+                         initial_im_size=init_image_size[1:])
+    
+    return np.asarray(pred), A, scores, seed, not_potentials_filtered_index, jumps #, idxs
 
-    # convert flat indices → box patches
-    not_potentials_xy = [np.unravel_index(p, dims) for p in chosen]
-    not_potentials_filtered_index = [
-        np.ravel_multi_index(xy, dims) for xy in not_potentials_xy
-    ]
+# def lost(
+#     feats, feats_, dims, scales, init_image_size,
+#     k_patches=100, dynamic_thres=False, artifact_idx=None,
+#     custom_scores = None,  # NEW arg
+# ):
+#     """
+#     Implementation of LOST method with optional custom_scores override.
+#     """
+#     # 1️⃣ If the user passed us fused attention scores, skip affinity/patch_scoring
+#     if custom_scores is not None:
+#         # custom_scores: shape (N_patches,) on torch device
+#         scores = custom_scores.detach().numpy()  # to numpy for downstream
+#         # argsort ascending → lowest‐degree first
+#         sorted_patches = list(np.argsort(-scores))
+#         jumps = None
+#     else:
+#         # ⚙️ original LOST path
+#         A = (feats @ feats_.transpose(1, 2)).squeeze()
+#         affinity_outliers = check_affinity_outliers(A)
 
-    # 3️⃣ final box from LOST’s detect_box
-    pred, _ = detect_box(
-        dims,
-        scales=scales,
-        object_patches=not_potentials_filtered_index,
-        initial_im_size=init_image_size[1:],
-    )
+#         # drop self‐similarity
+#         diag = A.diag()
+#         off_diag = A - torch.diag(diag)
 
-    return (
-        np.asarray(pred),
-        None if custom_scores is not None else A,  # affinity only if original path
-        scores,
-        seed,
-        not_potentials_filtered_index,
-        jumps,
-    )
+#         sorted_patches, scores, jumps = patch_scoring(
+#             A, dynamic_thres, k_patches=k_patches, ar_idx=artifact_idx
+#         )
+#         scores = scores.cpu().numpy()
+#         sorted_patches = [int(p) for p in sorted_patches]
+
+#     seed = sorted_patches[0] if sorted_patches else 0
+
+#     # 2️⃣ derive the “potential” patch indices exactly as before
+#     if k_patches == -1:
+#         chosen = sorted_patches
+#     else:
+#         chosen = sorted_patches[:k_patches]
+
+#     # convert flat indices → box patches
+#     not_potentials_xy = [np.unravel_index(p, dims) for p in chosen]
+#     not_potentials_filtered_index = [
+#         np.ravel_multi_index(xy, dims) for xy in not_potentials_xy
+#     ]
+
+#     # 3️⃣ final box from LOST’s detect_box
+#     pred, _ = detect_box(
+#         dims,
+#         scales=scales,
+#         object_patches=not_potentials_filtered_index,
+#         initial_im_size=init_image_size[1:],
+#     )
+
+#     return (
+#         np.asarray(pred),
+#         None if custom_scores is not None else A,  # affinity only if original path
+#         scores,
+#         seed,
+#         not_potentials_filtered_index,
+#         jumps,
+#     )
 
 def compute_dynamic_k(image_size, base_k=100, scale_factor=0.0005):
     """
@@ -262,6 +264,8 @@ def patch_scoring(M, dynamic_threshold, k_patches, ar_idx=None):
     # Tính tỉ lệ phần trăm
     percent_above = (num_above_threshold / total_elements) * 100
     sel = torch.argsort(cent, descending=False)
+    #print("cent", cent)
+    #print("sel", sel)
     cent = cent[sel]
     jumps = []
     if k_patches == -1:
