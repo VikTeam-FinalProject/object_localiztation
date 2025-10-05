@@ -237,3 +237,37 @@ def compute_svd_single(x, y, n_components=2, title="SVD Projection"):
 
 # Example usage after you get q and k from the forward pass:
 # compute_svd_visualize(q, k)
+import matplotlib.pyplot as plt
+
+def visualize_qk_attention(attn, artifact_idx=None, save_path=None, title="Q×K Attention"):
+    """
+    Visualize CLS→patch attention (H, N) as heatmap, optionally highlighting artifact tokens.
+    
+    Args:
+        attn: torch.Tensor (H, N) attention logits (not normalized).
+        artifact_idx: int or list of ints, detected artifact tokens.
+        save_path: where to save heatmap.
+    """
+    attn = attn.detach().cpu().numpy()  # (H, N)
+    
+    plt.figure(figsize=(10, 6))
+    plt.imshow(attn, aspect="auto", cmap="viridis")
+    plt.colorbar(label="Attention weight")
+    plt.xlabel("Patch tokens")
+    plt.ylabel("Heads")
+    plt.title(title)
+
+    # Highlight artifact tokens
+    if artifact_idx is not None:
+        if isinstance(artifact_idx, int):
+            artifact_idx = [artifact_idx]
+        for idx in artifact_idx:
+            plt.axvline(x=idx, color="red", linestyle="--", linewidth=1.2)
+
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        plt.savefig(save_path, dpi=150, bbox_inches="tight")
+        print(f"Saved attention heatmap to {save_path}")
+        plt.close()
+    else:
+        plt.show()

@@ -299,9 +299,17 @@ if __name__ == "__main__":
         def hook_fn(module, input, output):
             feat_out_id[layer_id] = output.detach()  # store qkv for this layer
         return hook_fn
+    layer_attns = {}
 
+    def make_attn_hook(layer_id):
+        def hook_fn(module, input, output):
+            # output here is attn probabilities (after softmax)
+            # shape: (B, H, N, N)
+            layer_attns[layer_id] = output.detach().cpu()
+        return hook_fn
     for i, blk in enumerate(model.blocks):
         blk.attn.qkv.register_forward_hook(make_hook(i))
+        blk.attn.attn_drop.register_forward_hook(make_attn_hook(i))
 
     all_image_means = []
     total_semantic_images = 0
@@ -311,6 +319,7 @@ if __name__ == "__main__":
     total_k_less_than_20percent_potential = 0
 
     start = args.start_idx
+    all_image_means = []
     for im_id, inp in enumerate(pbar):
         # ------------ IMAGE PROCESSING -------------------------------------------
         if im_id < start:
@@ -431,21 +440,23 @@ if __name__ == "__main__":
                     k_cls = k[:, :, 0, :]  
                     k_all = k[:, :, 1:, :]
 
-                    q_cls = F.normalize(q_cls, p=2, dim=-1, eps=1e-8)   # (B, H, D), normalized
-                    k_all = F.normalize(k_all, p=2, dim=-1, eps=1e-8)  
+                   # q_cls = F.normalize(q_cls, p=2, dim=-1, eps=1e-8)   # (B, H, D), normalized
+                   # k_all = F.normalize(k_all, p=2, dim=-1, eps=1e-8)  
+                   
                     print(q_all.shape)
                     print(q_cls.shape)
-                    attn1 = torch.einsum("bhd ,bhnd->bhn", q_cls, k_all)  # (1, 6, 1008)
+                    #attn1 = torch.einsum("bhd ,bhnd->bhn", q_cls, k_all)  # (1, 6, 1008)
                     
                     #attn1 = torch.einsum("bhd,bhd->hd", q_cls, q_cls)
-                    print("att shape", attn.shape)
-                    print("attn1 shape", attn1.shape)
+                    # print("att shape", attn.shape)
+                    # print("attn1 shape", attn1.shape)
 
-                    attn1 = attn1 / (64**0.5)
+                    # attn1 = attn1 / (64**0.5)
 
                     #attn1 = torch.softmax(attn1, dim=-1).squeeze()
                     
-                        
+                    attn2 = torch.matmul(q_cls.unsqueeze(-2), k_all.transpose(-2,-1)).squeeze(-2).squeeze(0)
+                    attn2 = attn2 / (math.sqrt(q_cls.size(-1)))
                     def apply_sinder_artifact_detection(model, attn, w_featmap, h_featmap, mask_thr=4, skip_less_than=3):
                         
                         print("Computing Sinder singular defect directions...")
@@ -564,74 +575,290 @@ if __name__ == "__main__":
                             plt.tight_layout()
                             plt.savefig(save_path)
                             plt.close()
+                        
                         def detect_artifact_and_divergence(attn: torch.Tensor):
                             """
                             Detect artifact sink token and compute KL divergence before/after masking.
-                            
+
                             Args:
-                                attn: (H, N) tensor of attention weights per head (softmaxed).
+                                attn: (H, N) tensor of attention logits or weights per head.
                                     H = #heads, N = #tokens.
-                            
+
                             Returns:
                                 artifact_idx: int, index of detected artifact token
                                 agreement: float, fraction of heads that spike on artifact_idx
-                                divergences: list of KL divergence values, one per head
+                                stats: dict with per-head KL values and reductions
                             """
                             H, N = attn.shape
 
-                            # 1. Detect artifact index based on majority argmax
-                            max_indices = torch.argmax(attn, dim=1)  # (H,)
+                            # 1. Convert to probabilities
+                            p_all = F.softmax(attn, dim=-1)  # (H, N)
+
+                            # 2. Detect artifact index (majority vote of argmax)
+                            max_indices = torch.argmax(p_all, dim=1)  # (H,)
+                            counts = torch.bincount(max_indices, minlength=N)
+                            artifact_idx = torch.argmax(counts).item()
+                            agreement = counts[artifact_idx].item() / H
+                            divergences = []
+                            # 3. KL computations
+                            stats = {"KL_original": [], "KL_without_sinks": [], "KL_reduction": []}
+                            u = torch.full((N,), 1.0 / N, device=attn.device)  # uniform baseline
+
+                            for h in range(H):
+                                p = p_all[h].clamp(min=1e-8)  # original probs
+
+                                # ---- KL(original vs uniform)
+                                kl_orig = F.kl_div(u.log(), p, reduction="sum").item()
+
+                                # ---- mask artifact token, re-softmax
+                                masked = attn[h].clone()
+                                masked[artifact_idx] = -1e9  # mask sink
+                                q = F.softmax(masked, dim=0).clamp(min=1e-8)
+
+                                # ---- KL(without sinks vs uniform)
+                                kl_nosink = F.kl_div(u.log(), q, reduction="sum").item()
+
+                                # ---- Reduction
+                                kl_reduction = kl_orig - kl_nosink
+                                kl = F.kl_div(q.log(), p, reduction="sum").item()
+                                divergences.append(kl)
+                                stats["KL_original"].append(kl_orig)
+                                stats["KL_without_sinks"].append(kl_nosink)
+                                stats["KL_reduction"].append(kl_reduction)
+
+                            return divergences, stats
+
+                        def detect_artifact_and_kl_reduction(attn: torch.Tensor):
+                            """
+                            Detect sink token and compute KL reduction per head.
+
+                            Args:
+                                attn: (H, N) tensor of attention logits (not normalized).
+                                    H = #heads, N = #tokens.
+
+                            Returns:
+                                artifact_idx: int, index of detected artifact token
+                                agreement: float, fraction of heads that spike on artifact_idx
+                                kl_to_avg: list of KL(p_h || avg_p) per head
+                                kl_without_sinks: list of KL(q_h || avg_q) per head
+                                kl_reduction: list of KL reduction values per head
+                            """
+                            H, N = attn.shape
+
+                            # 1. Normalize attention
+                            p_all = F.softmax(attn, dim=1)  # (H, N)
+
+                            # 2. Detect artifact by majority argmax
+                            max_indices = torch.argmax(p_all, dim=1)
                             counts = torch.bincount(max_indices, minlength=N)
                             artifact_idx = torch.argmax(counts).item()
                             agreement = counts[artifact_idx].item() / H
 
-                            # 2. Compute KL divergence per head (original vs. masked)
-                            divergences = []
+                            # 3. Mask artifact → renormalize
+                            masked_logits = attn.clone()
+                            masked_logits[:, artifact_idx] = 1e-8
+                            q_all = F.softmax(masked_logits, dim=1)  # (H, N)
+                            
+                            # 4. Average distributions
+                            avg_p = p_all.mean(dim=0)  # (N,)
+                            avg_q = q_all.mean(dim=0)  # (N,)
+
+                            # 5. Compute KLs
+                            kl_to_avg, kl_without_sinks, kl_reduction = [], [], []
                             for h in range(H):
-                                p = attn[h]  # (N,)
-                                p = p / (p.sum() + 1e-8)  # normalize to prob
+                                # p = p_all[h]
+                                # q = q_all[h]
                                 eps = 1e-8
-                                # Mask artifact index
-                                q = p.clone()
-                                q[artifact_idx] = 1e-8
-                                q = q / (q.sum() + 1e-8)  # renormalize
-                                #p = torch.softmax(p, dim=-1).squeeze()
-                                #q = torch.softmax(q, dim=-1).squeeze()
-                                p = p.clamp(min=eps)
-                                q = q.clamp(min=eps)
-                                # KL(p || q)
-                                kl = F.kl_div(q.log(), p, reduction="sum").item()
-                                divergences.append(kl)
+                                p = p_all[h].clamp(min=eps)      # (N,)
+                                q = q_all[h].clamp(min=eps)      # (N,)
+                                avg_p = avg_p.clamp(min=eps)
+                                avg_q = avg_q.clamp(min=eps)
 
-                                before = attn[h].view(w_featmap, h_featmap)
-                                after  = q.view(w_featmap, h_featmap)
 
-                                base_name = im_name.replace(".jpg", f"_head{h:02d}")
-                                save_heatmap(before, os.path.join(vis_folder ,"heatmap", base_name + "_before.png"),
-                                            title=f"Head {h} Before (KL={kl:.4f})")
-                                save_heatmap(after, os.path.join(vis_folder , "heatmap", base_name + "_after.png"),
-                                            title=f"Head {h} After (KL={kl:.4f})")
+                                # KL(p_h || avg_p)
+                                kl1 = F.kl_div( p.log(),avg_p, reduction="sum").item()
+                                # KL(q_h || avg_q)
+                                kl2 = F.kl_div(q.log(),avg_q, reduction="sum").item()
 
-                            return artifact_idx, agreement, divergences
-                        attn1 = attn1.squeeze(0)
-                        artifact_idx, agreement, divergences = detect_artifact_and_divergence(attn1)
+                                kl_to_avg.append(kl1)
+                                kl_without_sinks.append(kl2)
+                                kl_reduction.append(kl1 - kl2)
+                                print(f"Head {h} \n KL to avg: {kl1:.4f}")
+                                print(f"KL without sinks: {kl2:.4f}")
+                                print(f"KL Reduction: {kl1 - kl2:.4f}")
+                            avg_kl_to_avg = float(sum(kl_to_avg) / H)
+                            avg_kl_without_sinks = float(sum(kl_without_sinks) / H)
+                            avg_kl_reduction = float(sum(kl_reduction) / H)
+                            print("Average KL to avg:", avg_kl_to_avg)
+                            print("Average KL without sinks:", avg_kl_without_sinks)
+                            print("Average KL reduction:", avg_kl_reduction)
+                            return {
+                                "artifact_idx": artifact_idx,
+                                "agreement": float(agreement),
+                                "kl_to_avg": kl_to_avg,
+                                "kl_without_sinks": kl_without_sinks,
+                                "kl_reduction": kl_reduction,
 
-                        print(f"Artifact index: {artifact_idx}")
-                        print(f"Head agreement: {agreement:.2f}")
-                        for i, d in enumerate(divergences):
-                            print(f"Head {i}: KL divergence = {d:.4f}")
+                            }
+                        # def detect_artifact_and_divergence(attn: torch.Tensor):
+                        #     """
+                        #     Detect artifact sink token and compute KL divergence before/after masking.
+                            
+                        #     Args:
+                        #         attn: (H, N) tensor of attention weights per head (softmaxed).
+                        #             H = #heads, N = #tokens.
+                            
+                        #     Returns:
+                        #         artifact_idx: int, index of detected artifact token
+                        #         agreement: float, fraction of heads that spike on artifact_idx
+                        #         divergences: list of KL divergence values, one per head
+                        #     """
+                        #     H, N = attn.shape
+
+                        #     # 1. Detect artifact index based on majority argmax
+                            
+                        #     p_all = F.softmax(attn, dim=-1)  # (H, N)
+                        #     #p_all = attn 
+                        #     # 1. Detect artifact index based on majority argmax
+                        #     max_indices = torch.argmax(p_all, dim=1)  # (H,)
+                        #     counts = torch.bincount(max_indices, minlength=N)
+                        #     artifact_idx = torch.argmax(counts).item()
+                        #     agreement = counts[artifact_idx].item() / H
+
+                        #     # 2. Compute KL divergence per head (original vs. masked)
+                        #     divergences = []
+                        #     delta_matrices = torch.zeros_like(p_all)
+                            
+
+
+                        #     for h in range(H):
+                        #         p = p_all[h]  # already softmaxed (N,)
+
+                        #         # Mask artifact index, then softmax again
+                        #         masked = attn[h].clone()              # raw row (logits or probs input)
+                        #         masked[artifact_idx] = 1e-8  # remove sink token
+                        #         q = F.softmax(masked, dim=0)          # re-softmax (N,)
+
+                        #         # KL(p || q)
+                        #         kl = F.kl_div(q.log(), p, reduction="sum").item()
+                        #         divergences.append(kl)
+                        #         delta_matrices[h] = p - q
+
+                        #     print(divergences)
+                        #     return divergences,delta_matrices
+                        
+
+
+                        # def detect_artifact_and_divergence(attn: torch.Tensor):
+                        #     """
+                        #     Detect artifact sink token and compute KL divergence before/after masking.
+                            
+                        #     Args:
+                        #         attn: (H, N) tensor of attention weights per head (softmaxed).
+                        #             H = #heads, N = #tokens.
+                            
+                        #     Returns:
+                        #         artifact_idx: int, index of detected artifact token
+                        #         agreement: float, fraction of heads that spike on artifact_idx
+                        #         divergences: list of KL divergence values, one per head
+                        #     """
+                        #     H, N = attn.shape
+                        #     attn = F.softmax(attn, dim=1)  # (H, N)
+                        #     # 1. Detect artifact index based on majority argmax
+                        #     max_indices = torch.argmax(attn, dim=1)  # (H,)
+                        #     counts = torch.bincount(max_indices, minlength=N)
+                        #     artifact_idx = torch.argmax(counts).item()
+                        #     agreement = counts[artifact_idx].item() / H
+
+                        #     # 2. Compute KL divergence per head (original vs. masked)
+                        #     divergences = []
+                        #     for h in range(H):
+                        #         p = attn[h]  # (N,)
+                        #         p = p / (p.sum() + 1e-8)  # normalize to prob
+                        #         eps = 1e-8
+                        #         # Mask artifact index
+                        #         q = p.clone()
+                        #         q[artifact_idx] = 1e-8
+                        #         q = q / (q.sum() + 1e-8)  # renormalize
+                        #         #p = torch.softmax(p, dim=-1).squeeze()
+                        #         #q = torch.softmax(q, dim=-1).squeeze()
+                        #         p = p.clamp(min=eps)
+                        #         q = q.clamp(min=eps)
+                        #         # KL(p || q)
+                        #         kl = F.kl_div(q.log(), p, reduction="sum").item()
+                        #         divergences.append(kl)
+
+                        #         before = attn[h].view(w_featmap, h_featmap)
+                        #         after  = q.view(w_featmap, h_featmap)
+
+                        #         base_name = im_name.replace(".jpg", f"_head{h:02d}")
+                        #         save_heatmap(before, os.path.join(vis_folder ,"heatmap", base_name + "_before.png"),
+                        #                     title=f"Head {h} Before (KL={kl:.4f})")
+                        #         save_heatmap(after, os.path.join(vis_folder , "heatmap", base_name + "_after.png"),
+                        #                     title=f"Head {h} After (KL={kl:.4f})")
+
+                        #     return artifact_idx, agreement, divergences
+                        #attn1 = attn1.squeeze(0)
+                        #artifact_idx, agreement, divergences = detect_artifact_and_divergence(attn1)
+                        
+                        #divergences, delta_matrices = detect_artifact_and_divergence(attn2)
+
+                        # divergences, stats = detect_artifact_and_divergence(attn2)
+                        # print("mean KL original:", np.mean(stats["KL_original"]))
+                        # print("mean KL reduction:", np.mean(stats["KL_reduction"]))
+                        
+                        #  for i, d in enumerate(divergences):
+                        #     print(f"Head {i}: KL divergence = {d:.4f}")
+                        # # Print mean across images
+                        # all_image_means.append(np.mean(divergences))
+                        # mean_divergence = np.mean(all_image_means)
+                        # print("current image mean divergence:", np.mean(divergences))
+                        # print(f"Mean KL divergence across {len(all_image_means)} images: {mean_divergence:.4f}")
+                        
+
+                        
+                        # stats = detect_artifact_and_kl_reduction(attn2)
+                        # all_image_means.append(np.mean(stats["kl_reduction"]))
+                        # mean_kl_reduction = np.mean(all_image_means)
+                        # print("Mean KL reduction this image:", mean_kl_reduction)
+
+                        
+                        # kl_results = {}
+
+                        # for layer_id, attn_probs in layer_attns.items():
+                        #     # attn_probs: (B,H,N,N)
+                        #     attn_new = attn_probs[0,:,0,1:]   # e.g. CLS→tokens, shape (H,N-1)
+                            
+                        #     stats = detect_artifact_and_kl_reduction(attn_new)  # your function
+                        #     kl_results[layer_id] = {
+                        #         "artifact_idx": stats["artifact_idx"],
+                        #         "agreement": stats["agreement"],
+                        #         "avg_kl_reduction": float(np.mean(stats["kl_reduction"]))
+                        #     }
+                        # layerwise_means = {i: [] for i in range(len(model.blocks))}
+
+
+                        # for layer_id, stats in kl_results.items():
+                        #     layerwise_means[layer_id].append(stats["avg_kl_reduction"])
+                        #     print(f"Layer Avg KL reduction = {stats['avg_kl_reduction']:.4f}")
+
+                        # after all images:
+                        # for layer_id, vals in layerwise_means.items():
+                        #     mean_val = np.mean(vals)
+                        #     print(f"Layer {layer_id}: dataset mean KL reduction = {mean_val:.4f}")
+
+
+                        
+                       
 
                     #attn1 = torch.softmax(attn1, dim=-1).squeeze()
-                    print("attn1 shape", attn1.shape)
-                    print("nh", nh)
-                    print("w_featmap", w_featmap)
-                    print("h_featmap", h_featmap)
-                    attn1 = attn1.reshape(nh, w_featmap, h_featmap)
-                    attn1 = nn.functional.interpolate(attn1.unsqueeze(0),
-                                                        scale_factor=args.patch_size,
-                                                        mode='nearest')[0].cpu().numpy()
-                    
-                    print("attn1 shape after interpolation", attn1.shape)
+
+
+#                    attn1 = attn1.reshape(nh, w_featmap, h_featmap)
+#                   attn1 = nn.functional.interpolate(attn1.unsqueeze(0),
+#                                                        scale_factor=args.patch_size,
+#                                                       mode='nearest')[0].cpu().numpy()
+
 
 
                     # B, H, N, D = q_all.shape                     # (1, 16, 1152, 64)
@@ -656,7 +883,8 @@ if __name__ == "__main__":
                     k = k.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     q = q.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
                     v = v.transpose(1, 2).reshape(nb_im, nb_tokens, -1)
-                    from svd import compute_svd_visualize
+                    from svd import compute_svd_visualize, visualize_qk_attention
+                    layerwise_results = {}
                     for layer_id, qkv_out in feat_out_id.items():
                         nb_im, nb_tokens, nhd = qkv_out.shape  # shape: (B, N, 3*D)
                         layer_id = int(layer_id)
@@ -666,6 +894,63 @@ if __name__ == "__main__":
                         qkv = qkv_out.reshape(nb_im, nb_tokens, 3, nh, d).permute(2, 0, 3, 1, 4)
                         q, k, v = qkv[0], qkv[1], qkv[2]  # (B, H, N, D)
 
+                        q_cls = q[:, :, 0, :]      # (B, H, D)
+                        q_all = q[:, :, 1:, :]     # (B, H, N-1, D)
+                        k_cls = k[:, :, 0, :]
+                        k_all = k[:, :, 1:, :]
+
+                        # CLS → patch attention logits (B=1 case, so squeeze later)
+                        attn3 = torch.matmul(
+                            q_cls.unsqueeze(-2),          # (B, H, 1, D)
+                            k_all.transpose(-2, -1)       # (B, H, D, N-1)
+                        ).squeeze(-2).squeeze(0)          # → (H, N-1)
+
+                        attn3 = attn3 / math.sqrt(q_cls.size(-1))  # scale
+
+                        # Now run your KL reduction function
+                        stats = detect_artifact_and_kl_reduction(attn3)
+
+                        layerwise_results[layer_id] = {
+                            "artifact_idx": stats["artifact_idx"],
+                            "agreement": stats["agreement"],
+                            "kl_to_avg": stats["kl_to_avg"],
+                            "kl_without_sinks": stats["kl_without_sinks"],
+                            "avg_kl_reduction": float(np.mean(stats["kl_reduction"]))
+    }
+                        layerwise_means = {i: [] for i in range(len(model.blocks))}
+                        num_layers = len(model.blocks)
+                        mid = num_layers // 2
+                        early_kl = []
+                        late_kl = []
+
+                        log_path = "kl_reduction_log.txt"
+
+                        with open(log_path, "a") as f:
+                            for layer_id, stats in layerwise_results.items():
+                                layerwise_means[layer_id].append(stats["avg_kl_reduction"])
+                                
+                                line = f"Layer {layer_id} Avg KL reduction = {stats['avg_kl_reduction']:.4f}"
+                                print(line)
+                                f.write(line + "\n")
+
+                                if layer_id < mid:
+                                    early_kl.append(stats["avg_kl_reduction"])
+                                else:
+                                    late_kl.append(stats["avg_kl_reduction"])
+
+                            early_val = np.mean(early_kl) if early_kl else 'N/A'
+                            late_val = np.mean(late_kl) if late_kl else 'N/A'
+
+                            early_line = f"Early layers avg KL reduction: {early_val}"
+                            late_line = f"Late layers avg KL reduction: {late_val}"
+
+                            print(early_line)
+                            print(late_line)
+
+                            f.write(early_line + "\n")
+                            f.write(late_line + "\n\n")   # extra newline for readability
+
+                        
                         # flatten (B,H,N,D) → (B*N, D)
                         q = q.transpose(1,2).reshape(nb_im, nb_tokens, -1)
                         k = k.transpose(1,2).reshape(nb_im, nb_tokens, -1)
@@ -673,6 +958,9 @@ if __name__ == "__main__":
                         #k = k / k.norm(p=2, dim=-1, keepdim=True)
                         save_dir = os.path.join(vis_folder, "svd", im_name.replace(".jpg", ""))
                         save_path = os.path.join(save_dir, f"layer_{layer_id}.png")
+                        visualize_qk_attention(attn3, artifact_idx=stats["artifact_idx"], 
+                        save_path=save_path, 
+                        title=f"Layer {layer_id} CLS→patch Q×K Attention")
                         # visualize
                         #compute_svd_visualize(q, k, n_components=3, title=f"SVD of Q/K — Layer {layer_id}", save_path=None) 
                     #if args.visualize == "svd":
@@ -978,6 +1266,7 @@ if __name__ == "__main__":
 
                 
             elif args.visualize == "heatmap":
+                continue
                 visualize_heatmap(attn1, im_name, vis_folder,mean=True)
             
             del A, scores, attn, qkv, feats, feats1, potentials, jumps

@@ -1,0 +1,3819 @@
+Layer 0 Avg KL reduction = -0.1646
+Early layers avg KL reduction: -0.16461676359176636
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Early layers avg KL reduction: -0.5412377486936748
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Early layers avg KL reduction: -0.36053161742165685
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Early layers avg KL reduction: -0.2703507256228477
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Early layers avg KL reduction: -0.21630331575870515
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Early layers avg KL reduction: -0.1802339980689188
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Early layers avg KL reduction: -0.15343172715178557
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Early layers avg KL reduction: -0.13425181165803224
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Early layers avg KL reduction: -0.21125511245595086
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Early layers avg KL reduction: -0.2373069111723453
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Early layers avg KL reduction: -0.3908557412214577
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.045142531394958496
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.3817479822319001
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.3772500475558142
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Layer 15 Avg KL reduction = -0.0138
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.2863758213352412
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Layer 15 Avg KL reduction = -0.0138
+Layer 16 Avg KL reduction = -0.0123
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.23156163739040495
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Layer 15 Avg KL reduction = -0.0138
+Layer 16 Avg KL reduction = -0.0123
+Layer 17 Avg KL reduction = -0.1984
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.2260382977159073
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Layer 15 Avg KL reduction = -0.0138
+Layer 16 Avg KL reduction = -0.0123
+Layer 17 Avg KL reduction = -0.1984
+Layer 18 Avg KL reduction = -0.3346
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.24154827018667543
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Layer 15 Avg KL reduction = -0.0138
+Layer 16 Avg KL reduction = -0.0123
+Layer 17 Avg KL reduction = -0.1984
+Layer 18 Avg KL reduction = -0.3346
+Layer 19 Avg KL reduction = -0.5096
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.27505857724463567
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Layer 15 Avg KL reduction = -0.0138
+Layer 16 Avg KL reduction = -0.0123
+Layer 17 Avg KL reduction = -0.1984
+Layer 18 Avg KL reduction = -0.3346
+Layer 19 Avg KL reduction = -0.5096
+Layer 20 Avg KL reduction = -0.0257
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.24735670428102216
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Layer 15 Avg KL reduction = -0.0138
+Layer 16 Avg KL reduction = -0.0123
+Layer 17 Avg KL reduction = -0.1984
+Layer 18 Avg KL reduction = -0.3346
+Layer 19 Avg KL reduction = -0.5096
+Layer 20 Avg KL reduction = -0.0257
+Layer 21 Avg KL reduction = -0.3390
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.2565249334555119
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Layer 15 Avg KL reduction = -0.0138
+Layer 16 Avg KL reduction = -0.0123
+Layer 17 Avg KL reduction = -0.1984
+Layer 18 Avg KL reduction = -0.3346
+Layer 19 Avg KL reduction = -0.5096
+Layer 20 Avg KL reduction = -0.0257
+Layer 21 Avg KL reduction = -0.3390
+Layer 22 Avg KL reduction = -0.1356
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.2455272929827598
+
+Layer 0 Avg KL reduction = -0.1646
+Layer 1 Avg KL reduction = -0.9179
+Layer 2 Avg KL reduction = 0.0009
+Layer 3 Avg KL reduction = 0.0002
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0001
+Layer 6 Avg KL reduction = 0.0074
+Layer 7 Avg KL reduction = 0.0000
+Layer 8 Avg KL reduction = -0.8273
+Layer 9 Avg KL reduction = -0.4718
+Layer 10 Avg KL reduction = -1.9263
+Layer 11 Avg KL reduction = -0.2627
+Layer 12 Avg KL reduction = -0.0451
+Layer 13 Avg KL reduction = -0.7184
+Layer 14 Avg KL reduction = -0.3683
+Layer 15 Avg KL reduction = -0.0138
+Layer 16 Avg KL reduction = -0.0123
+Layer 17 Avg KL reduction = -0.1984
+Layer 18 Avg KL reduction = -0.3346
+Layer 19 Avg KL reduction = -0.5096
+Layer 20 Avg KL reduction = -0.0257
+Layer 21 Avg KL reduction = -0.3390
+Layer 22 Avg KL reduction = -0.1356
+Layer 23 Avg KL reduction = -1.2001
+Early layers avg KL reduction: -0.3801793288051461
+Late layers avg KL reduction: -0.32507887587416917
+
+Layer 0 Avg KL reduction = -0.2186
+Early layers avg KL reduction: -0.2185581848025322
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Early layers avg KL reduction: -0.566481345333159
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Early layers avg KL reduction: -0.37766443549965817
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Early layers avg KL reduction: -0.2831419683643617
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Early layers avg KL reduction: -0.22665506140328945
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Early layers avg KL reduction: -0.1887888084553803
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Early layers avg KL reduction: -0.16213870743688727
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Early layers avg KL reduction: -0.1419055591977667
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Early layers avg KL reduction: -0.22033602172612315
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Early layers avg KL reduction: -0.24813038029242307
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Early layers avg KL reduction: -0.40313349293798884
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.06760224280878901
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.4368470929330215
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.42362614852997166
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Layer 15 Avg KL reduction = -0.0150
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.321474029624369
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Layer 15 Avg KL reduction = -0.0150
+Layer 16 Avg KL reduction = -0.0126
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.259691084548831
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Layer 15 Avg KL reduction = -0.0150
+Layer 16 Avg KL reduction = -0.0126
+Layer 17 Avg KL reduction = -0.2589
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.2595625518200298
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Layer 15 Avg KL reduction = -0.0150
+Layer 16 Avg KL reduction = -0.0126
+Layer 17 Avg KL reduction = -0.2589
+Layer 18 Avg KL reduction = -0.1913
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.24981305402304446
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Layer 15 Avg KL reduction = -0.0150
+Layer 16 Avg KL reduction = -0.0126
+Layer 17 Avg KL reduction = -0.2589
+Layer 18 Avg KL reduction = -0.1913
+Layer 19 Avg KL reduction = -0.4716
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.2775410932954401
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Layer 15 Avg KL reduction = -0.0150
+Layer 16 Avg KL reduction = -0.0126
+Layer 17 Avg KL reduction = -0.2589
+Layer 18 Avg KL reduction = -0.1913
+Layer 19 Avg KL reduction = -0.4716
+Layer 20 Avg KL reduction = 0.0395
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.24231701633996433
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Layer 15 Avg KL reduction = -0.0150
+Layer 16 Avg KL reduction = -0.0126
+Layer 17 Avg KL reduction = -0.2589
+Layer 18 Avg KL reduction = -0.1913
+Layer 19 Avg KL reduction = -0.4716
+Layer 20 Avg KL reduction = 0.0395
+Layer 21 Avg KL reduction = -0.4627
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.26435856940224767
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Layer 15 Avg KL reduction = -0.0150
+Layer 16 Avg KL reduction = -0.0126
+Layer 17 Avg KL reduction = -0.2589
+Layer 18 Avg KL reduction = -0.1913
+Layer 19 Avg KL reduction = -0.4716
+Layer 20 Avg KL reduction = 0.0395
+Layer 21 Avg KL reduction = -0.4627
+Layer 22 Avg KL reduction = -0.1310
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.25223752263594756
+
+Layer 0 Avg KL reduction = -0.2186
+Layer 1 Avg KL reduction = -0.9144
+Layer 2 Avg KL reduction = -0.0000
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0007
+Layer 5 Avg KL reduction = 0.0005
+Layer 6 Avg KL reduction = -0.0022
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8478
+Layer 9 Avg KL reduction = -0.4983
+Layer 10 Avg KL reduction = -1.9532
+Layer 11 Avg KL reduction = -0.2474
+Layer 12 Avg KL reduction = -0.0676
+Layer 13 Avg KL reduction = -0.8061
+Layer 14 Avg KL reduction = -0.3972
+Layer 15 Avg KL reduction = -0.0150
+Layer 16 Avg KL reduction = -0.0126
+Layer 17 Avg KL reduction = -0.2589
+Layer 18 Avg KL reduction = -0.1913
+Layer 19 Avg KL reduction = -0.4716
+Layer 20 Avg KL reduction = 0.0395
+Layer 21 Avg KL reduction = -0.4627
+Layer 22 Avg KL reduction = -0.1310
+Layer 23 Avg KL reduction = -1.2030
+Early layers avg KL reduction: -0.39015497773652896
+Late layers avg KL reduction: -0.33146636731301743
+
+Layer 0 Avg KL reduction = -0.6266
+Early layers avg KL reduction: -0.6265911087393761
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Early layers avg KL reduction: -0.7471454162150621
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Early layers avg KL reduction: -0.4963197892842193
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Early layers avg KL reduction: -0.37225259467959404
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Early layers avg KL reduction: -0.2966753841377795
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Early layers avg KL reduction: -0.24712322046980262
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Early layers avg KL reduction: -0.21215777511575393
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Early layers avg KL reduction: -0.18570048088440672
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Early layers avg KL reduction: -0.2585327193244464
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Early layers avg KL reduction: -0.27933297157287595
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Early layers avg KL reduction: -0.43145082323727285
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.07963078143075109
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.43967010744381696
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.41556416925353307
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Layer 15 Avg KL reduction = -0.0279
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.3186515760025941
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Layer 15 Avg KL reduction = -0.0279
+Layer 16 Avg KL reduction = -0.0254
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.26001022099517285
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Layer 15 Avg KL reduction = -0.0279
+Layer 16 Avg KL reduction = -0.0254
+Layer 17 Avg KL reduction = -0.2282
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.25470145283422124
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Layer 15 Avg KL reduction = -0.0279
+Layer 16 Avg KL reduction = -0.0254
+Layer 17 Avg KL reduction = -0.2282
+Layer 18 Avg KL reduction = -0.3385
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.2666720452918006
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Layer 15 Avg KL reduction = -0.0279
+Layer 16 Avg KL reduction = -0.0254
+Layer 17 Avg KL reduction = -0.2282
+Layer 18 Avg KL reduction = -0.3385
+Layer 19 Avg KL reduction = -0.6063
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.30912146079936065
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Layer 15 Avg KL reduction = -0.0279
+Layer 16 Avg KL reduction = -0.0254
+Layer 17 Avg KL reduction = -0.2282
+Layer 18 Avg KL reduction = -0.3385
+Layer 19 Avg KL reduction = -0.6063
+Layer 20 Avg KL reduction = -0.0582
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.2812380391535246
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Layer 15 Avg KL reduction = -0.0279
+Layer 16 Avg KL reduction = -0.0254
+Layer 17 Avg KL reduction = -0.2282
+Layer 18 Avg KL reduction = -0.3385
+Layer 19 Avg KL reduction = -0.6063
+Layer 20 Avg KL reduction = -0.0582
+Layer 21 Avg KL reduction = -0.1705
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.27015942356083544
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Layer 15 Avg KL reduction = -0.0279
+Layer 16 Avg KL reduction = -0.0254
+Layer 17 Avg KL reduction = -0.2282
+Layer 18 Avg KL reduction = -0.3385
+Layer 19 Avg KL reduction = -0.6063
+Layer 20 Avg KL reduction = -0.0582
+Layer 21 Avg KL reduction = -0.1705
+Layer 22 Avg KL reduction = -0.1537
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.2595688166647134
+
+Layer 0 Avg KL reduction = -0.6266
+Layer 1 Avg KL reduction = -0.8677
+Layer 2 Avg KL reduction = 0.0053
+Layer 3 Avg KL reduction = -0.0001
+Layer 4 Avg KL reduction = 0.0056
+Layer 5 Avg KL reduction = 0.0006
+Layer 6 Avg KL reduction = -0.0024
+Layer 7 Avg KL reduction = -0.0005
+Layer 8 Avg KL reduction = -0.8412
+Layer 9 Avg KL reduction = -0.4665
+Layer 10 Avg KL reduction = -1.9526
+Layer 11 Avg KL reduction = -0.2468
+Layer 12 Avg KL reduction = -0.0796
+Layer 13 Avg KL reduction = -0.7997
+Layer 14 Avg KL reduction = -0.3674
+Layer 15 Avg KL reduction = -0.0279
+Layer 16 Avg KL reduction = -0.0254
+Layer 17 Avg KL reduction = -0.2282
+Layer 18 Avg KL reduction = -0.3385
+Layer 19 Avg KL reduction = -0.6063
+Layer 20 Avg KL reduction = -0.0582
+Layer 21 Avg KL reduction = -0.1705
+Layer 22 Avg KL reduction = -0.1537
+Layer 23 Avg KL reduction = -0.7583
+Early layers avg KL reduction: -0.41606554986598593
+Late layers avg KL reduction: -0.30113371688639745
+
+Layer 0 Avg KL reduction = -0.0770
+Early layers avg KL reduction: -0.0770205706357956
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Early layers avg KL reduction: -0.4975146846845746
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Early layers avg KL reduction: -0.33209323106954497
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Early layers avg KL reduction: -0.24874775868374854
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Early layers avg KL reduction: -0.19782244032248855
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Early layers avg KL reduction: -0.16463316899413863
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Early layers avg KL reduction: -0.14114986266940832
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Early layers avg KL reduction: -0.12346793129108846
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Early layers avg KL reduction: -0.19942631324132284
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Early layers avg KL reduction: -0.23208300387486816
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Early layers avg KL reduction: -0.385964930226857
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.058019922114908695
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.4188741991529241
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.411255571913595
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Layer 15 Avg KL reduction = -0.0187
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.3131052300450392
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Layer 15 Avg KL reduction = -0.0187
+Layer 16 Avg KL reduction = -0.0125
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.25298477336764336
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Layer 15 Avg KL reduction = -0.0187
+Layer 16 Avg KL reduction = -0.0125
+Layer 17 Avg KL reduction = -0.3209
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.2643112284131348
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Layer 15 Avg KL reduction = -0.0187
+Layer 16 Avg KL reduction = -0.0125
+Layer 17 Avg KL reduction = -0.3209
+Layer 18 Avg KL reduction = -0.2859
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.2674024353868195
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Layer 15 Avg KL reduction = -0.0187
+Layer 16 Avg KL reduction = -0.0125
+Layer 17 Avg KL reduction = -0.3209
+Layer 18 Avg KL reduction = -0.2859
+Layer 19 Avg KL reduction = -0.4702
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.29275168263120577
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Layer 15 Avg KL reduction = -0.0187
+Layer 16 Avg KL reduction = -0.0125
+Layer 17 Avg KL reduction = -0.3209
+Layer 18 Avg KL reduction = -0.2859
+Layer 19 Avg KL reduction = -0.4702
+Layer 20 Avg KL reduction = 0.0082
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.25930827561145026
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Layer 15 Avg KL reduction = -0.0187
+Layer 16 Avg KL reduction = -0.0125
+Layer 17 Avg KL reduction = -0.3209
+Layer 18 Avg KL reduction = -0.2859
+Layer 19 Avg KL reduction = -0.4702
+Layer 20 Avg KL reduction = 0.0082
+Layer 21 Avg KL reduction = -0.0983
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.24320381139405073
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Layer 15 Avg KL reduction = -0.0187
+Layer 16 Avg KL reduction = -0.0125
+Layer 17 Avg KL reduction = -0.3209
+Layer 18 Avg KL reduction = -0.2859
+Layer 19 Avg KL reduction = -0.4702
+Layer 20 Avg KL reduction = 0.0082
+Layer 21 Avg KL reduction = -0.0983
+Layer 22 Avg KL reduction = -0.0618
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.22671283074569973
+
+Layer 0 Avg KL reduction = -0.0770
+Layer 1 Avg KL reduction = -0.9180
+Layer 2 Avg KL reduction = -0.0013
+Layer 3 Avg KL reduction = 0.0013
+Layer 4 Avg KL reduction = 0.0059
+Layer 5 Avg KL reduction = 0.0013
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = 0.0003
+Layer 8 Avg KL reduction = -0.8071
+Layer 9 Avg KL reduction = -0.5260
+Layer 10 Avg KL reduction = -1.9248
+Layer 11 Avg KL reduction = -0.2482
+Layer 12 Avg KL reduction = -0.0580
+Layer 13 Avg KL reduction = -0.7797
+Layer 14 Avg KL reduction = -0.3960
+Layer 15 Avg KL reduction = -0.0187
+Layer 16 Avg KL reduction = -0.0125
+Layer 17 Avg KL reduction = -0.3209
+Layer 18 Avg KL reduction = -0.2859
+Layer 19 Avg KL reduction = -0.4702
+Layer 20 Avg KL reduction = 0.0082
+Layer 21 Avg KL reduction = -0.0983
+Layer 22 Avg KL reduction = -0.0618
+Layer 23 Avg KL reduction = -0.0407
+Early layers avg KL reduction: -0.374487132144471
+Late layers avg KL reduction: -0.21120834726995477
+
+Layer 0 Avg KL reduction = -0.5693
+Early layers avg KL reduction: -0.5692679435014725
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Early layers avg KL reduction: -0.7493424294516444
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Early layers avg KL reduction: -0.499593513396879
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Early layers avg KL reduction: -0.37507409043610096
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Early layers avg KL reduction: -0.2997084254398942
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Early layers avg KL reduction: -0.249793702038005
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Early layers avg KL reduction: -0.21267536781462176
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Early layers avg KL reduction: -0.18619786819908768
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Early layers avg KL reduction: -0.25490294334789115
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Early layers avg KL reduction: -0.2725639204028994
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Early layers avg KL reduction: -0.4243975896811621
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.05058101983740926
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.38382159220054746
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.3861382561735809
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Layer 15 Avg KL reduction = -0.0183
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.2941727082943544
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Layer 15 Avg KL reduction = -0.0183
+Layer 16 Avg KL reduction = -0.0244
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.2402271660976112
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Layer 15 Avg KL reduction = -0.0183
+Layer 16 Avg KL reduction = -0.0244
+Layer 17 Avg KL reduction = -0.2110
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.23535558651201427
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Layer 15 Avg KL reduction = -0.0183
+Layer 16 Avg KL reduction = -0.0244
+Layer 17 Avg KL reduction = -0.2110
+Layer 18 Avg KL reduction = -0.1904
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.22893117827230267
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Layer 15 Avg KL reduction = -0.0183
+Layer 16 Avg KL reduction = -0.0244
+Layer 17 Avg KL reduction = -0.2110
+Layer 18 Avg KL reduction = -0.1904
+Layer 19 Avg KL reduction = -0.3019
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.23805023258319125
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Layer 15 Avg KL reduction = -0.0183
+Layer 16 Avg KL reduction = -0.0244
+Layer 17 Avg KL reduction = -0.2110
+Layer 18 Avg KL reduction = -0.1904
+Layer 19 Avg KL reduction = -0.3019
+Layer 20 Avg KL reduction = -0.0632
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.21861712774261832
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Layer 15 Avg KL reduction = -0.0183
+Layer 16 Avg KL reduction = -0.0244
+Layer 17 Avg KL reduction = -0.2110
+Layer 18 Avg KL reduction = -0.1904
+Layer 19 Avg KL reduction = -0.3019
+Layer 20 Avg KL reduction = -0.0632
+Layer 21 Avg KL reduction = -0.1343
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.21018949341960252
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Layer 15 Avg KL reduction = -0.0183
+Layer 16 Avg KL reduction = -0.0244
+Layer 17 Avg KL reduction = -0.2110
+Layer 18 Avg KL reduction = -0.1904
+Layer 19 Avg KL reduction = -0.3019
+Layer 20 Avg KL reduction = -0.0632
+Layer 21 Avg KL reduction = -0.1343
+Layer 22 Avg KL reduction = -0.0404
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.1947576287202537
+
+Layer 0 Avg KL reduction = -0.5693
+Layer 1 Avg KL reduction = -0.9294
+Layer 2 Avg KL reduction = -0.0001
+Layer 3 Avg KL reduction = -0.0015
+Layer 4 Avg KL reduction = 0.0018
+Layer 5 Avg KL reduction = -0.0002
+Layer 6 Avg KL reduction = 0.0100
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8045
+Layer 9 Avg KL reduction = -0.4315
+Layer 10 Avg KL reduction = -1.9427
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0506
+Layer 13 Avg KL reduction = -0.7171
+Layer 14 Avg KL reduction = -0.3908
+Layer 15 Avg KL reduction = -0.0183
+Layer 16 Avg KL reduction = -0.0244
+Layer 17 Avg KL reduction = -0.2110
+Layer 18 Avg KL reduction = -0.1904
+Layer 19 Avg KL reduction = -0.3019
+Layer 20 Avg KL reduction = -0.0632
+Layer 21 Avg KL reduction = -0.1343
+Layer 22 Avg KL reduction = -0.0404
+Layer 23 Avg KL reduction = -0.5314
+Early layers avg KL reduction: -0.40901969803962857
+Late layers avg KL reduction: -0.22281223896425217
+
+Layer 0 Avg KL reduction = -1.1615
+Early layers avg KL reduction: -1.1615287810564041
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Early layers avg KL reduction: -0.9772204281762242
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Early layers avg KL reduction: -0.6521513224579394
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Early layers avg KL reduction: -0.48900314362253994
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Early layers avg KL reduction: -0.39173735911026597
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Early layers avg KL reduction: -0.3266730992278705
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Early layers avg KL reduction: -0.28004502724590047
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Early layers avg KL reduction: -0.24515485981828533
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Early layers avg KL reduction: -0.3077031701751467
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Early layers avg KL reduction: -0.31882231815252454
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Early layers avg KL reduction: -0.461593444141644
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.07898320001550019
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.41356435522902757
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.3964850100843857
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Layer 15 Avg KL reduction = -0.0244
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.3034657565294765
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Layer 15 Avg KL reduction = -0.0244
+Layer 16 Avg KL reduction = -0.0207
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.24690740243531764
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Layer 15 Avg KL reduction = -0.0244
+Layer 16 Avg KL reduction = -0.0207
+Layer 17 Avg KL reduction = -0.2038
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.2397151307668537
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Layer 15 Avg KL reduction = -0.0244
+Layer 16 Avg KL reduction = -0.0207
+Layer 17 Avg KL reduction = -0.2038
+Layer 18 Avg KL reduction = -0.5579
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.2851631173730961
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Layer 15 Avg KL reduction = -0.0244
+Layer 16 Avg KL reduction = -0.0207
+Layer 17 Avg KL reduction = -0.2038
+Layer 18 Avg KL reduction = -0.5579
+Layer 19 Avg KL reduction = -0.5577
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.3192306397249922
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Layer 15 Avg KL reduction = -0.0244
+Layer 16 Avg KL reduction = -0.0207
+Layer 17 Avg KL reduction = -0.2038
+Layer 18 Avg KL reduction = -0.5579
+Layer 19 Avg KL reduction = -0.5577
+Layer 20 Avg KL reduction = -0.0373
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.28790451115411186
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Layer 15 Avg KL reduction = -0.0244
+Layer 16 Avg KL reduction = -0.0207
+Layer 17 Avg KL reduction = -0.2038
+Layer 18 Avg KL reduction = -0.5579
+Layer 19 Avg KL reduction = -0.5577
+Layer 20 Avg KL reduction = -0.0373
+Layer 21 Avg KL reduction = -0.1391
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.2730256973300129
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Layer 15 Avg KL reduction = -0.0244
+Layer 16 Avg KL reduction = -0.0207
+Layer 17 Avg KL reduction = -0.2038
+Layer 18 Avg KL reduction = -0.5579
+Layer 19 Avg KL reduction = -0.5577
+Layer 20 Avg KL reduction = -0.0373
+Layer 21 Avg KL reduction = -0.1391
+Layer 22 Avg KL reduction = -0.1343
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.2604163480837914
+
+Layer 0 Avg KL reduction = -1.1615
+Layer 1 Avg KL reduction = -0.7929
+Layer 2 Avg KL reduction = -0.0020
+Layer 3 Avg KL reduction = 0.0004
+Layer 4 Avg KL reduction = -0.0027
+Layer 5 Avg KL reduction = -0.0014
+Layer 6 Avg KL reduction = -0.0003
+Layer 7 Avg KL reduction = -0.0009
+Layer 8 Avg KL reduction = -0.8081
+Layer 9 Avg KL reduction = -0.4189
+Layer 10 Avg KL reduction = -1.8893
+Layer 11 Avg KL reduction = -0.2443
+Layer 12 Avg KL reduction = -0.0790
+Layer 13 Avg KL reduction = -0.7481
+Layer 14 Avg KL reduction = -0.3623
+Layer 15 Avg KL reduction = -0.0244
+Layer 16 Avg KL reduction = -0.0207
+Layer 17 Avg KL reduction = -0.2038
+Layer 18 Avg KL reduction = -0.5579
+Layer 19 Avg KL reduction = -0.5577
+Layer 20 Avg KL reduction = -0.0373
+Layer 21 Avg KL reduction = -0.1391
+Layer 22 Avg KL reduction = -0.1343
+Layer 23 Avg KL reduction = -1.2936
+Early layers avg KL reduction: -0.4434894128741386
+Late layers avg KL reduction: -0.34651791634193313
+
+Layer 0 Avg KL reduction = -0.6511
+Early layers avg KL reduction: -0.6511386707425117
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Early layers avg KL reduction: -0.8055102415382862
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Early layers avg KL reduction: -0.5369580381860336
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Early layers avg KL reduction: -0.4028828137088567
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Early layers avg KL reduction: -0.3225331211462617
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Early layers avg KL reduction: -0.26858552847988904
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Early layers avg KL reduction: -0.2304608075480376
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Early layers avg KL reduction: -0.2016866805497557
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Early layers avg KL reduction: -0.2679250433316661
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Early layers avg KL reduction: -0.2873569513205439
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Early layers avg KL reduction: -0.43729446519335563
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.0653313142247498
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.4020063988864422
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.39064807755251724
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Layer 15 Avg KL reduction = -0.0145
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.29660464089829475
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Layer 15 Avg KL reduction = -0.0145
+Layer 16 Avg KL reduction = -0.0133
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.23994073141366243
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Layer 15 Avg KL reduction = -0.0145
+Layer 16 Avg KL reduction = -0.0133
+Layer 17 Avg KL reduction = -0.2139
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.23559511515001455
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Layer 15 Avg KL reduction = -0.0145
+Layer 16 Avg KL reduction = -0.0133
+Layer 17 Avg KL reduction = -0.2139
+Layer 18 Avg KL reduction = -0.3324
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.24942135252058506
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Layer 15 Avg KL reduction = -0.0145
+Layer 16 Avg KL reduction = -0.0133
+Layer 17 Avg KL reduction = -0.2139
+Layer 18 Avg KL reduction = -0.3324
+Layer 19 Avg KL reduction = -0.5339
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.284986027283594
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Layer 15 Avg KL reduction = -0.0145
+Layer 16 Avg KL reduction = -0.0133
+Layer 17 Avg KL reduction = -0.2139
+Layer 18 Avg KL reduction = -0.3324
+Layer 19 Avg KL reduction = -0.5339
+Layer 20 Avg KL reduction = -0.0066
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.25405130442231894
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Layer 15 Avg KL reduction = -0.0145
+Layer 16 Avg KL reduction = -0.0133
+Layer 17 Avg KL reduction = -0.2139
+Layer 18 Avg KL reduction = -0.3324
+Layer 19 Avg KL reduction = -0.5339
+Layer 20 Avg KL reduction = -0.0066
+Layer 21 Avg KL reduction = -0.2219
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.2508322952315211
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Layer 15 Avg KL reduction = -0.0145
+Layer 16 Avg KL reduction = -0.0133
+Layer 17 Avg KL reduction = -0.2139
+Layer 18 Avg KL reduction = -0.3324
+Layer 19 Avg KL reduction = -0.5339
+Layer 20 Avg KL reduction = -0.0066
+Layer 21 Avg KL reduction = -0.2219
+Layer 22 Avg KL reduction = -0.0753
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.2348782509904016
+
+Layer 0 Avg KL reduction = -0.6511
+Layer 1 Avg KL reduction = -0.9599
+Layer 2 Avg KL reduction = 0.0001
+Layer 3 Avg KL reduction = -0.0007
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.7978
+Layer 9 Avg KL reduction = -0.4622
+Layer 10 Avg KL reduction = -1.9367
+Layer 11 Avg KL reduction = -0.2528
+Layer 12 Avg KL reduction = -0.0653
+Layer 13 Avg KL reduction = -0.7387
+Layer 14 Avg KL reduction = -0.3679
+Layer 15 Avg KL reduction = -0.0145
+Layer 16 Avg KL reduction = -0.0133
+Layer 17 Avg KL reduction = -0.2139
+Layer 18 Avg KL reduction = -0.3324
+Layer 19 Avg KL reduction = -0.5339
+Layer 20 Avg KL reduction = -0.0066
+Layer 21 Avg KL reduction = -0.2219
+Layer 22 Avg KL reduction = -0.0753
+Layer 23 Avg KL reduction = -0.7825
+Early layers avg KL reduction: -0.421916322899051
+Late layers avg KL reduction: -0.2805148493498564
+
+Layer 0 Avg KL reduction = -0.3853
+Early layers avg KL reduction: -0.38526973873376846
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Early layers avg KL reduction: -0.5990387797355652
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Early layers avg KL reduction: -0.39991417177952826
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Early layers avg KL reduction: -0.29890411638189107
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Early layers avg KL reduction: -0.23915061242878438
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Early layers avg KL reduction: -0.19909028223870942
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Early layers avg KL reduction: -0.17093560907856695
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Early layers avg KL reduction: -0.14957003187737428
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Early layers avg KL reduction: -0.23091846287974882
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Early layers avg KL reduction: -0.25217804599087684
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Early layers avg KL reduction: -0.40234410849569197
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.0771571530494839
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.4146599603118375
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.40154731762595475
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Layer 15 Avg KL reduction = -0.0230
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.30690403323387727
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Layer 15 Avg KL reduction = -0.0230
+Layer 16 Avg KL reduction = -0.0110
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.247719152411446
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Layer 15 Avg KL reduction = -0.0230
+Layer 16 Avg KL reduction = -0.0110
+Layer 17 Avg KL reduction = -0.2389
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.24624206160660833
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Layer 15 Avg KL reduction = -0.0230
+Layer 16 Avg KL reduction = -0.0110
+Layer 17 Avg KL reduction = -0.2389
+Layer 18 Avg KL reduction = -0.5668
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.29203310339445515
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Layer 15 Avg KL reduction = -0.0230
+Layer 16 Avg KL reduction = -0.0110
+Layer 17 Avg KL reduction = -0.2389
+Layer 18 Avg KL reduction = -0.5668
+Layer 19 Avg KL reduction = -0.5621
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.32578582045971416
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Layer 15 Avg KL reduction = -0.0230
+Layer 16 Avg KL reduction = -0.0110
+Layer 17 Avg KL reduction = -0.2389
+Layer 18 Avg KL reduction = -0.5668
+Layer 19 Avg KL reduction = -0.5621
+Layer 20 Avg KL reduction = -0.0441
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.29449132247827947
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Layer 15 Avg KL reduction = -0.0230
+Layer 16 Avg KL reduction = -0.0110
+Layer 17 Avg KL reduction = -0.2389
+Layer 18 Avg KL reduction = -0.5668
+Layer 19 Avg KL reduction = -0.5621
+Layer 20 Avg KL reduction = -0.0441
+Layer 21 Avg KL reduction = -0.1256
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.2776052388129756
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Layer 15 Avg KL reduction = -0.0230
+Layer 16 Avg KL reduction = -0.0110
+Layer 17 Avg KL reduction = -0.2389
+Layer 18 Avg KL reduction = -0.5668
+Layer 19 Avg KL reduction = -0.5621
+Layer 20 Avg KL reduction = -0.0441
+Layer 21 Avg KL reduction = -0.1256
+Layer 22 Avg KL reduction = -0.1505
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.26605470425618644
+
+Layer 0 Avg KL reduction = -0.3853
+Layer 1 Avg KL reduction = -0.8128
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0041
+Layer 4 Avg KL reduction = -0.0001
+Layer 5 Avg KL reduction = 0.0012
+Layer 6 Avg KL reduction = -0.0020
+Layer 7 Avg KL reduction = -0.0000
+Layer 8 Avg KL reduction = -0.8817
+Layer 9 Avg KL reduction = -0.4435
+Layer 10 Avg KL reduction = -1.9040
+Layer 11 Avg KL reduction = -0.2270
+Layer 12 Avg KL reduction = -0.0772
+Layer 13 Avg KL reduction = -0.7522
+Layer 14 Avg KL reduction = -0.3753
+Layer 15 Avg KL reduction = -0.0230
+Layer 16 Avg KL reduction = -0.0110
+Layer 17 Avg KL reduction = -0.2389
+Layer 18 Avg KL reduction = -0.5668
+Layer 19 Avg KL reduction = -0.5621
+Layer 20 Avg KL reduction = -0.0441
+Layer 21 Avg KL reduction = -0.1256
+Layer 22 Avg KL reduction = -0.1505
+Layer 23 Avg KL reduction = -1.1031
+Early layers avg KL reduction: -0.38772986955397454
+Late layers avg KL reduction: -0.3358089796383865
+
+Layer 0 Avg KL reduction = -0.4363
+Early layers avg KL reduction: -0.4363395720720291
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Early layers avg KL reduction: -0.6602581469342113
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Early layers avg KL reduction: -0.43974796480809647
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Early layers avg KL reduction: -0.32961216528201476
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Early layers avg KL reduction: -0.26356357731856406
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Early layers avg KL reduction: -0.21917855339900902
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Early layers avg KL reduction: -0.18789817342933798
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Early layers avg KL reduction: -0.16445033668424003
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Early layers avg KL reduction: -0.23835626179869804
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Early layers avg KL reduction: -0.2676154781365767
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Early layers avg KL reduction: -0.4203892206476832
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.05416286690160632
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.38837635703384876
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.3894497761502862
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Layer 15 Avg KL reduction = -0.0206
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.29723531974013895
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Layer 15 Avg KL reduction = -0.0206
+Layer 16 Avg KL reduction = -0.0159
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.2409588135778904
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Layer 15 Avg KL reduction = -0.0206
+Layer 16 Avg KL reduction = -0.0159
+Layer 17 Avg KL reduction = -0.2620
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.24446132166000703
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Layer 15 Avg KL reduction = -0.0206
+Layer 16 Avg KL reduction = -0.0159
+Layer 17 Avg KL reduction = -0.2620
+Layer 18 Avg KL reduction = -0.2238
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.2415083032766623
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Layer 15 Avg KL reduction = -0.0206
+Layer 16 Avg KL reduction = -0.0159
+Layer 17 Avg KL reduction = -0.2620
+Layer 18 Avg KL reduction = -0.2238
+Layer 19 Avg KL reduction = -0.3644
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.2568675755173899
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Layer 15 Avg KL reduction = -0.0206
+Layer 16 Avg KL reduction = -0.0159
+Layer 17 Avg KL reduction = -0.2620
+Layer 18 Avg KL reduction = -0.2238
+Layer 19 Avg KL reduction = -0.3644
+Layer 20 Avg KL reduction = -0.0210
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.2306566239438123
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Layer 15 Avg KL reduction = -0.0206
+Layer 16 Avg KL reduction = -0.0159
+Layer 17 Avg KL reduction = -0.2620
+Layer 18 Avg KL reduction = -0.2238
+Layer 19 Avg KL reduction = -0.3644
+Layer 20 Avg KL reduction = -0.0210
+Layer 21 Avg KL reduction = -0.1369
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.2212770042940974
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Layer 15 Avg KL reduction = -0.0206
+Layer 16 Avg KL reduction = -0.0159
+Layer 17 Avg KL reduction = -0.2620
+Layer 18 Avg KL reduction = -0.2238
+Layer 19 Avg KL reduction = -0.3644
+Layer 20 Avg KL reduction = -0.0210
+Layer 21 Avg KL reduction = -0.1369
+Layer 22 Avg KL reduction = -0.0464
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.20537482557648962
+
+Layer 0 Avg KL reduction = -0.4363
+Layer 1 Avg KL reduction = -0.8842
+Layer 2 Avg KL reduction = 0.0013
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = 0.0006
+Layer 5 Avg KL reduction = 0.0027
+Layer 6 Avg KL reduction = -0.0002
+Layer 7 Avg KL reduction = -0.0003
+Layer 8 Avg KL reduction = -0.8296
+Layer 9 Avg KL reduction = -0.5309
+Layer 10 Avg KL reduction = -1.9481
+Layer 11 Avg KL reduction = -0.2400
+Layer 12 Avg KL reduction = -0.0542
+Layer 13 Avg KL reduction = -0.7226
+Layer 14 Avg KL reduction = -0.3916
+Layer 15 Avg KL reduction = -0.0206
+Layer 16 Avg KL reduction = -0.0159
+Layer 17 Avg KL reduction = -0.2620
+Layer 18 Avg KL reduction = -0.2238
+Layer 19 Avg KL reduction = -0.3644
+Layer 20 Avg KL reduction = -0.0210
+Layer 21 Avg KL reduction = -0.1369
+Layer 22 Avg KL reduction = -0.0464
+Layer 23 Avg KL reduction = -0.1568
+Early layers avg KL reduction: -0.4053589108128411
+Late layers avg KL reduction: -0.20132440134572485
+
+Layer 0 Avg KL reduction = -0.4503
+Early layers avg KL reduction: -0.45026738196611404
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Early layers avg KL reduction: -0.6991249658167362
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Early layers avg KL reduction: -0.4652514108456671
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Early layers avg KL reduction: -0.3485784154618159
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Early layers avg KL reduction: -0.2786039147526026
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Early layers avg KL reduction: -0.23210954681659737
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Early layers avg KL reduction: -0.19903668388724327
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Early layers avg KL reduction: -0.17199684120714664
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Early layers avg KL reduction: -0.23657611084895003
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Early layers avg KL reduction: -0.2491775531321764
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Early layers avg KL reduction: -0.40261155112900515
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.045334989205002785
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.37625535286497325
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.38050493062473834
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Layer 15 Avg KL reduction = -0.0232
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.29117088962811977
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Layer 15 Avg KL reduction = -0.0232
+Layer 16 Avg KL reduction = -0.0181
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.2365661883726716
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Layer 15 Avg KL reduction = -0.0232
+Layer 16 Avg KL reduction = -0.0181
+Layer 17 Avg KL reduction = -0.1844
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.2278637238778174
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Layer 15 Avg KL reduction = -0.0232
+Layer 16 Avg KL reduction = -0.0181
+Layer 17 Avg KL reduction = -0.1844
+Layer 18 Avg KL reduction = -0.3704
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.24822461485330546
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Layer 15 Avg KL reduction = -0.0232
+Layer 16 Avg KL reduction = -0.0181
+Layer 17 Avg KL reduction = -0.1844
+Layer 18 Avg KL reduction = -0.3704
+Layer 19 Avg KL reduction = -0.4102
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.26847315405029804
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Layer 15 Avg KL reduction = -0.0232
+Layer 16 Avg KL reduction = -0.0181
+Layer 17 Avg KL reduction = -0.1844
+Layer 18 Avg KL reduction = -0.3704
+Layer 19 Avg KL reduction = -0.4102
+Layer 20 Avg KL reduction = 0.0119
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.2373251593671739
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Layer 15 Avg KL reduction = -0.0232
+Layer 16 Avg KL reduction = -0.0181
+Layer 17 Avg KL reduction = -0.1844
+Layer 18 Avg KL reduction = -0.3704
+Layer 19 Avg KL reduction = -0.4102
+Layer 20 Avg KL reduction = 0.0119
+Layer 21 Avg KL reduction = -0.1283
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.22641931609250604
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Layer 15 Avg KL reduction = -0.0232
+Layer 16 Avg KL reduction = -0.0181
+Layer 17 Avg KL reduction = -0.1844
+Layer 18 Avg KL reduction = -0.3704
+Layer 19 Avg KL reduction = -0.4102
+Layer 20 Avg KL reduction = 0.0119
+Layer 21 Avg KL reduction = -0.1283
+Layer 22 Avg KL reduction = -0.0910
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.21410884433002633
+
+Layer 0 Avg KL reduction = -0.4503
+Layer 1 Avg KL reduction = -0.9480
+Layer 2 Avg KL reduction = 0.0025
+Layer 3 Avg KL reduction = 0.0014
+Layer 4 Avg KL reduction = 0.0013
+Layer 5 Avg KL reduction = 0.0004
+Layer 6 Avg KL reduction = -0.0006
+Layer 7 Avg KL reduction = 0.0173
+Layer 8 Avg KL reduction = -0.7532
+Layer 9 Avg KL reduction = -0.3626
+Layer 10 Avg KL reduction = -1.9370
+Layer 11 Avg KL reduction = -0.2399
+Layer 12 Avg KL reduction = -0.0453
+Layer 13 Avg KL reduction = -0.7072
+Layer 14 Avg KL reduction = -0.3890
+Layer 15 Avg KL reduction = -0.0232
+Layer 16 Avg KL reduction = -0.0181
+Layer 17 Avg KL reduction = -0.1844
+Layer 18 Avg KL reduction = -0.3704
+Layer 19 Avg KL reduction = -0.4102
+Layer 20 Avg KL reduction = 0.0119
+Layer 21 Avg KL reduction = -0.1283
+Layer 22 Avg KL reduction = -0.0910
+Layer 23 Avg KL reduction = -1.2511
+Early layers avg KL reduction: -0.3890532630806168
+Late layers avg KL reduction: -0.3005282068237041
+
+Layer 0 Avg KL reduction = -0.1733
+Early layers avg KL reduction: -0.1733267903327942
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Early layers avg KL reduction: -0.5293024317361414
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Layer 2 Avg KL reduction = -0.0017
+Early layers avg KL reduction: -0.35342748183757067
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0008
+Early layers avg KL reduction: -0.2648722731973976
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = -0.0011
+Early layers avg KL reduction: -0.21212207861244678
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0010
+Early layers avg KL reduction: -0.17660701655161878
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0010
+Layer 6 Avg KL reduction = -0.0017
+Early layers avg KL reduction: -0.15162534699110047
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0010
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = 0.0001
+Early layers avg KL reduction: -0.1326637433085125
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0010
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = 0.0001
+Layer 8 Avg KL reduction = -0.8532
+Early layers avg KL reduction: -0.2127241297469785
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0010
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = 0.0001
+Layer 8 Avg KL reduction = -0.8532
+Layer 9 Avg KL reduction = -0.5241
+Early layers avg KL reduction: -0.24386402673553675
+Late layers avg KL reduction: N/A
+
+Layer 0 Avg KL reduction = -0.1733
+Layer 1 Avg KL reduction = -0.8853
+Layer 2 Avg KL reduction = -0.0017
+Layer 3 Avg KL reduction = 0.0008
+Layer 4 Avg KL reduction = -0.0011
+Layer 5 Avg KL reduction = 0.0010
+Layer 6 Avg KL reduction = -0.0017
+Layer 7 Avg KL reduction = 0.0001
+Layer 8 Avg KL reduction = -0.8532
+Layer 9 Avg KL reduction = -0.5241
+Layer 10 Avg KL reduction = -1.9179
+Early layers avg KL reduction: -0.39605132056484843
+Late layers avg KL reduction: N/A
+
