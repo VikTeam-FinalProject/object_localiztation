@@ -60,7 +60,13 @@ ibot:
   head_hidden_dim: 2048
 train:
   batch_size_per_gpu: 64
-  dataset_path: ImageNet:split=TRAIN
+  #dataset_path: ImageNet:split=TRAIN
+  dataset_path: ImageNet:split=TRAIN:root=/N/slate/trihnguy/object_localiztation/LOST/datasets/imagenet-mini:extra=.
+
+#  dataset_path: 
+#    name: ImageNet
+#    split: TRAIN
+#    root: /N/slate/trihnguy/object_localiztation/LOST/datasets/imagenet-mini
   output_dir: .
   saveckp_freq: 20
   seed: 0

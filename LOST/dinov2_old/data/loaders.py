@@ -84,8 +84,9 @@ def make_dataset(
     logger.info(f'using dataset: "{dataset_str}"')
 
     class_, kwargs = _parse_dataset_str(dataset_str)
+    
     dataset = class_(transform=transform, target_transform=target_transform, **kwargs)
-
+    #dataset = ImageNet(transform=transform, target_transform="train")
     logger.info(f"# of dataset samples: {len(dataset):,d}")
 
     # Aggregated datasets do not expose (yet) these attributes, so add them.

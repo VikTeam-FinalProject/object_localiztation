@@ -11,10 +11,43 @@ from .transforms import (
     GaussianBlur,
     make_normalize_transform,
 )
+from PIL import Image, UnidentifiedImageError
+import numpy as np
 
+def safe_image_open(image):
+    from PIL import Image, UnidentifiedImageError
+    import numpy as np
+
+    # If it's already a PIL image, just return it safely
+    if isinstance(image, Image.Image):
+        try:
+            return image.convert("RGB")
+        except Exception:
+            return Image.fromarray(np.zeros((224, 224, 3), dtype=np.uint8))
+
+    # Otherwise, open from path
+    try:
+        with Image.open(image) as img:
+            return img.convert("RGB")
+    except (UnidentifiedImageError, OSError, ValueError):
+        # Return black placeholder if corrupt
+        return None  # signal skip
+    return None
 
 logger = logging.getLogger("dinov2")
+class SafeColorJitter(transforms.ColorJitter):
+    def __init__(self, brightness=0, contrast=0, saturation=0, hue=0):
+        super().__init__(brightness, contrast, saturation, hue)
 
+    def get_params(self, brightness, contrast, saturation, hue):
+        # Clamp hue factor safely to [-0.5, 0.5]
+        fn_idx, brightness_factor, contrast_factor, saturation_factor, hue_factor = \
+            super().get_params(brightness, contrast, saturation, hue)
+        if isinstance(hue_factor, tuple):
+            hue_factor = tuple(max(-0.5, min(0.5, f)) for f in hue_factor)
+        else:
+            hue_factor = max(-0.5, min(0.5, hue_factor))
+        return fn_idx, brightness_factor, contrast_factor, saturation_factor, hue_factor
 
 class DataAugmentationDINO(object):
     def __init__(
@@ -63,8 +96,9 @@ class DataAugmentationDINO(object):
         color_jittering = transforms.Compose(
             [
                 transforms.RandomApply(
-                    [transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.2, hue=0.1)],
-                    p=0.8,
+                    [transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.2)],
+                #[SafeColorJitter(brightness=0.4, contrast=0.4, saturation=0.2, hue=0.1)],    
+                p=0.8,
                 ),
                 transforms.RandomGrayscale(p=0.2),
             ]
@@ -94,6 +128,9 @@ class DataAugmentationDINO(object):
         self.local_transfo = transforms.Compose([color_jittering, local_transfo_extra, self.normalize])
 
     def __call__(self, image):
+        image = safe_image_open(image)
+        if image is None:
+           raise StopIteration 
         output = {}
 
         # global crops:

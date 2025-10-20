@@ -1,5 +1,3 @@
-# Copyright (c) Meta Platforms, Inc. and affiliates.
-#
 # This source code is licensed under the Apache License, Version 2.0
 # found in the LICENSE file in the root directory of this source tree.
 
@@ -11,7 +9,7 @@ from functools import partial
 import math
 import logging
 from typing import Sequence, Tuple, Union, Callable
-
+import torch.nn.functional as F
 import torch
 import torch.nn as nn
 import torch.utils.checkpoint
@@ -230,27 +228,105 @@ class DinoVisionTransformer(nn.Module):
             )
 
         return x
+    
+    import torch
+    import torch.nn.functional as F
+
+    def compute_patch_cosine_similarity(self, patch_tokens):
+        """
+        patch_tokens: Tensor of shape [N, D] (one image's patch embeddings)
+        Returns cosine similarity matrix [N, N]
+        """
+        normed = F.normalize(patch_tokens, p=2, dim=-1)
+        sim_matrix = normed @ normed.T  # [N, N]
+        return sim_matrix
+    def detect_attention_sinks(self, attn: torch.Tensor, tau, gamma):
+                        """
+                        Detect attention sink tokens.
+
+                        Args:
+                            attn: (H, N) tensor of attention weights per head (already softmaxed).
+                            tau: percentile threshold (e.g., top 10%).
+                            gamma: fraction of heads that must spike on the same token.
+
+                        Returns:
+                            sink_indices: list of token indices considered sinks.
+                        """
+                        H, N = attn.shape
+                        sink_counts = torch.zeros(N, device=attn.device)
+
+                        # For each head, count tokens above tau-percentile
+                        for h in range(H):
+                            thresh = torch.quantile(attn[h], tau)
+                            mask = attn[h] >= thresh
+                            sink_counts += mask.float()
+
+                        # Normalize to [0,1]
+                        sink_freq = sink_counts / H
+
+                        # Tokens where ≥ gamma fraction of heads spiked
+                        sink_indices = torch.where(sink_freq >= gamma)[0]
+
+                        return sink_indices.tolist()
 
     def forward_features_list(self, x_list, masks_list):
         x = [self.prepare_tokens_with_masks(x, masks) for x, masks in zip(x_list, masks_list)]
+
+    #      Forward through transformer blocks
         for blk in self.blocks:
-            x = blk(x)
+            x = blk(x, return_attention=False)
 
         all_x = x
         output = []
-        for x, masks in zip(all_x, masks_list):
-            x_norm = self.norm(x)
-            output.append(
-                {
-                    "x_norm_clstoken": x_norm[:, 0],
-                    "x_norm_regtokens": x_norm[:, 1 : self.num_register_tokens + 1],
-                    "x_norm_patchtokens": x_norm[:, self.num_register_tokens + 1 :],
-                    "x_prenorm": x,
-                    "masks": masks,
-                }
-            )
-        return output
 
+        for img_idx, (x, masks) in enumerate(zip(all_x, masks_list)):
+            x_norm = self.norm(x)
+            patch_tokens = x_norm[:, self.num_register_tokens + 1 :, :]  # [B, N, D]
+       #     print("len xlist", len(x_list))
+       #     print("x list", x_list)
+       #     print("x list shape", x_list[0].shape)
+       #     print("all x", all_x[0].shape)
+       #     print("mask_list shape", masks_list[0].shape)
+            with torch.no_grad():
+                for b in range(patch_tokens.size(0)):
+    #                 # --- STEP 1: get last-layer attention ---
+                    attn = self.get_last_selfattention(x_list[img_idx][b].unsqueeze(0))  # [H, N, N]
+                    attn_mean = attn.mean(dim=(0, -1))  # Average across heads → [N, N]
+                    token_attn = attn_mean.mean(0)  # Focus on attention strength per token → [N]
+        #            print("attn", attn)
+        #            print("attn shape", attn.shape)
+        #            print("attn mean", attn_mean)
+        #            print("attn mean shape", attn_mean.shape)
+                     # --- STEP 2: detect attention sinks ---
+                    attn_mean = attn_mean.float()
+                    sink_ids = self.detect_attention_sinks(attn_mean, 0.99, 0.5)
+                    print(f"[Image {img_idx}] Sink tokens: {sink_ids}")
+                    offset = self.num_register_tokens + 1
+                    sink_ids = [s - offset for s in sink_ids if s >= offset and s - offset < patch_tokens.size(1)]
+                     # --- STEP 3: compute cosine similarity matrix ---
+                    sim_matrix = self.compute_patch_cosine_similarity(patch_tokens[b])  # [N, N]
+
+                     # If sinks exist, compute cosine similarity between each sink and all patches
+                    for s in sink_ids:
+                        sink_sim = sim_matrix[s]
+                        topk_val, topk_idx = torch.topk(sink_sim, k=5)
+                        print(f"→ Sink patch {s} top-5 similar patches: {topk_idx.tolist()} (avg sim={sink_sim.mean():.3f})")
+
+    #                 # --- STEP 4: artifact heuristic ---
+                    avg_corr = (sim_matrix.sum() - sim_matrix.trace()) / (sim_matrix.numel() - sim_matrix.size(0))
+                    if avg_corr > 0.9:
+                        print(f"⚠️ Potential artifact in Image {img_idx} (avg corr = {avg_corr.item():.3f})")
+
+            output.append(
+                 {
+                     "x_norm_clstoken": x_norm[:, 0],
+                     "x_norm_regtokens": x_norm[:, 1:self.num_register_tokens + 1],
+                     "x_norm_patchtokens": patch_tokens,
+                     "x_prenorm": x,
+                     "masks": masks,
+                 }
+             )
+        return output
     def forward_features(self, x, masks=None):
         if isinstance(x, list):
             return self.forward_features_list(x, masks)
@@ -327,7 +403,7 @@ class DinoVisionTransformer(nn.Module):
             return ret
         else:
             return self.head(ret["x_norm_clstoken"])
-
+    
     def get_last_selfattention(self, x, masks=None):
         if isinstance(x, list):
             return self.forward_features_list(x, masks)
@@ -408,3 +484,6 @@ def vit_giant2(patch_size=16, num_register_tokens=0, **kwargs):
         **kwargs,
     )
     return model
+
+
+

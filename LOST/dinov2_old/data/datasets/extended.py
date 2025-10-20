@@ -30,7 +30,13 @@ class ExtendedVisionDataset(VisionDataset):
         target = TargetDecoder(target).decode()
 
         if self.transforms is not None:
-            image, target = self.transforms(image, target)
+           try:
+             image, target = self.transforms(image, target)
+           except StopIteration:
+        # skip corrupted image and randomly pick another
+             new_idx = np.random.randint(0, len(self.samples))
+             return self.__getitem__(new_idx)            
+#image, target = self.transforms(image, target)
 
         return image, target
 
